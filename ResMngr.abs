@@ -1,0 +1,122 @@
+module ResMngr;
+export *;
+
+
+// * [0/4] TODO
+//
+// - [ ] resource qualities
+// - [ ] resource quality sets
+// - [ ] comparisons
+// - [ ] resource manager
+
+data Quality =
+    Efficiency(Int)
+    | Pathologist
+    | Radiologist
+    | Gynaecologist
+    | Orthopedic
+    | Driver
+    | VanDriver
+    | Van
+    ;
+
+data Availability = Free | Busy;
+
+interface ResourceManager {
+    List<Int> add(List<Set<Quality>> newResources);
+    List<Int> hold(List<Set<Quality>> wantedResources);
+    Unit release(List<Int> ids);
+}
+
+class ResourceManager implements ResourceManager {
+    Map<Int, Pair<Availability, Set<Quality>>> resources = map[];
+    Int resource_counter = 0;
+
+    List<Int> add(List<Set<Quality>> newResources) {
+        List<Int> result = list[];
+        foreach (r in newResources) {
+            resource_counter = resource_counter + 1;
+            resources = insert(resources, Pair(resource_counter, Pair(Free, r)));
+            result = Cons(resource_counter, result);
+        }
+        println(toString(resources));
+        return result;
+    }
+
+    List<Int> hold(List<Set<Quality>> wantedResources) {
+        List<Int> result = list[];
+        Map<Int, Pair<Availability, Set<Quality>>> lr = this.resources;
+        while (result == Nil) {
+            foreach (q in wantedResources) {
+                Bool found = False;
+                foreach (entry in entries(lr)) {
+                    if (!found
+                        && fst(snd(entry)) == Free
+                        && isSubset(q, snd(snd(entry))))
+                    {
+                        found = True;
+                        result = Cons(fst(entry), result);
+                        lr = put(lr, fst(entry), Pair(Busy, snd(snd(entry))));
+                    }
+                }
+            }
+            if (length(result) != length(wantedResources)) {
+                // we did not find all needed resources
+                println(`hold retrying:
+Resources = $this.resources$
+We want $wantedResources$`);
+                result = Nil;
+                lr = this.resources;
+                await this.resources != lr;
+                lr = this.resources;
+            } else {
+                // we're happy
+                this.resources = lr;
+            }
+        }
+        return result;
+    }
+
+    Unit release(List<Int> ids) {
+        Set<Int> all_ids = keys(resources);
+        foreach (id in ids) {
+            if (contains(all_ids, id)) {
+                Pair<Availability, Set<Quality>> entry = lookupUnsafe(resources, id);
+                resources = put(resources, id, Pair(Free, snd(entry)));
+            }
+        }
+    }
+}
+
+class Tester(ResourceManager r) {
+    Unit run() {
+        println("Tester starting");
+        List<Set<Quality>> w1 = list[set[Orthopedic]];
+
+        this!get_release(w1, 5);
+        this!get_release(w1, 5);
+        this!get_release(w1, 5);
+    }
+
+    Unit speculative_get_release(List<Set<Quality>> w, Rat time) {
+        List<Int> l1 = await r!hold(w);
+        try {
+            await duration(time);
+        } catch {
+            e => throw(e);
+        } finally {
+            r!release(l1);
+        }
+    }
+
+    Unit get_release(List<Set<Quality>> w, Rat time) {
+        println(`Trying to get $w$ at $now()$`);
+        List<Int> l1 = await r!hold(w);
+        println(`Got $l1$ at $now()$`);
+
+        await duration(time);
+
+        println(`Releasing $l1$`);
+        r!release(l1);
+    }
+}

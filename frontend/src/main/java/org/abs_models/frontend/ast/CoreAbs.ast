@@ -128,8 +128,11 @@ abstract Stmt ::= Annotation* ;
 AssignStmt: Stmt ::= Var:VarOrFieldUse Value:Exp;
 AwaitStmt: Stmt ::= Guard;
 SkipStmt: Stmt;
+AddResStmt: Stmt ::= Param:PureExp*;
+ReleaseResStmt: Stmt ::= Res:PureExp;
 SuspendStmt: Stmt;
 DurationStmt: Stmt ::= Min:PureExp Max:PureExp;
+CostStmt: Stmt ::= Min:PureExp;
 MoveCogToStmt: Stmt ::= Target:PureExp;
 ReturnStmt: Stmt ::= RetExp:Exp;
 ExpressionStmt: Stmt ::= Exp:Exp;
@@ -237,11 +240,11 @@ AsyncCall: Call;
 AwaitAsyncCall: Call;
 GetExp: EffExp ::= PureExp;
 OriginalCall: EffExp ::= Param:PureExp*; // original() is supported in traits, hence part of Core ABS.
+//HoldExp: EffExp ::= Param:PureExp*;
 
 abstract Unary : PureExp ::= Operand:PureExp;
 
 abstract Binary : PureExp ::= Left:PureExp Right:PureExp;
-
 
 //Integers
 MinusExp : Unary ;

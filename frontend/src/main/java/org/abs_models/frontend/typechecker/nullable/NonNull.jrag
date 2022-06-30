@@ -303,7 +303,11 @@ aspect Nonnull {
 
   eq NewExp.nonnull() = true;
 
+
+
   eq OriginalCall.nonnull() = false;
+
+
 
   eq VarOrFieldUse.nonnull() = nonnull_in().contains(getDecl());
 

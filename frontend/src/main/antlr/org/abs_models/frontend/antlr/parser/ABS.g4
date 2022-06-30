@@ -98,6 +98,12 @@ eff_exp : pure_exp '.' 'get'                               # GetExp
         '(' pure_exp_list ')'                             # SyncCallExp
     | ((d=delta_id | c='core') '.')? 'original'
         '(' pure_exp_list ')'                             # OriginalCallExp
+
+    | '!' m=IDENTIFIER '(' o=pure_exp ( ',' pure_exp_list)? ')'
+    'after' (f=fs)?                                       # AsyncCall1Exp
+    |  m=IDENTIFIER '(' o=pure_exp ( ',' pure_exp_list)? ')'
+    'after' (f=fs)?                                       # SyncCall1Exp
+    //| 'hold' '(' p = pure_exp_list ')' ';'                # HoldExp
     ;
 
 pure_exp : qualified_identifier '(' pure_exp_list ')'      # FunctionExp
@@ -190,7 +196,13 @@ stmt : annotations type_exp IDENTIFIER ('=' exp)? ';'                  # Vardecl
         // Prefer case expression to old-style case statement, so case
         // statement comes later
     | annotations 'case' c=pure_exp '{' casestmtbranch* '}'            # CaseStmtOld
+    | annotations 'consTime' '(' c=pure_exp ')' ';'                    # CostStmt
+    | annotations 'add' '(' p = pure_exp_list ')' ';'                  # AddResStmt
+    | annotations 'rel' '(' p = pure_exp ')' ';'                       # ReleaseResStmt
     ;
+
+fsl : var_or_field_ref '?' ( ',' var_or_field_ref '?')*;
+fs : fsl | fsl '&' fsl ;
 
 guard : var_or_field_ref '?'                              # ClaimGuard
     | 'duration' '(' min=pure_exp (',' max=pure_exp)? ')' # DurationGuard

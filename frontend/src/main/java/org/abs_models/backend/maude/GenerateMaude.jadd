@@ -254,7 +254,6 @@ aspect GenerateMaude {
     public int GetExp.numberOfRandom(Set<String> visitedFunctions) {
         return 0;
     }
-
     public void NewExp.generateMaudeAsStatement(PrintStream stream, String var, List<Annotation> annotations)
     {
         boolean inlist = false;
@@ -291,6 +290,7 @@ aspect GenerateMaude {
         }
         stream.print(") ");
     }
+
     public int NewExp.numberOfRandom(Set<String> visitedFunctions) {
         int result = 0;
         for (PureExp param : getParams()) {

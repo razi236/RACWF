@@ -456,6 +456,21 @@ public class CreateJastAddASTListener extends ABSBaseListener {
             setV(ctx, new DurationStmt(v(ctx.annotations()), v(ctx.min), (PureExp)v(ctx.min).copy()));
         }
     }
+
+    @Override public void exitCostStmt(ABSParser.CostStmtContext ctx) {
+            setV(ctx, new CostStmt(v(ctx.annotations()), v(ctx.c)));
+    }
+
+    @Override public void exitAddResStmt(ABSParser.AddResStmtContext ctx) {
+        setV(ctx, new AddResStmt(v(ctx.annotations()), v(ctx.p)));
+    }
+
+
+
+    @Override public void exitReleaseResStmt(ABSParser.ReleaseResStmtContext ctx) {
+        setV(ctx, new ReleaseResStmt(v(ctx.annotations()), v(ctx.p)));
+    }
+
     @Override public void exitThrowStmt(ABSParser.ThrowStmtContext ctx) {
         setV(ctx, new ThrowStmt(v(ctx.annotations()), v(ctx.pure_exp())));
     }
@@ -501,6 +516,9 @@ public class CreateJastAddASTListener extends ABSBaseListener {
     }
 
     // Side-effectful expressions
+    /*@Override public void exitHoldExp(ABSParser.HoldExpContext ctx) {
+        setV(ctx, new HoldExp(v(ctx.p)));
+    }*/
     @Override public void exitGetExp(ABSParser.GetExpContext ctx) {
         setV(ctx, new GetExp(v(ctx.pure_exp())));
     }
@@ -515,9 +533,24 @@ public class CreateJastAddASTListener extends ABSBaseListener {
             setV(ctx, new AsyncCall(v(ctx.o), ctx.m.getText(), v(ctx.pure_exp_list())));
         }
     }
+
+    @Override public void exitAsyncCall1Exp(ABSParser.AsyncCall1ExpContext ctx) {
+
+            setV(ctx, new AsyncCall(v(ctx.o), ctx.m.getText(), v(ctx.pure_exp_list())));
+
+    }
+
+    //@Override public void exitAsyncCallRABSExp(ABSParser.AsyncCallRABSExpContext ctx) {setV(ctx, new AsyncCall(v(ctx.o), ctx.m.getText(), v(ctx.pure_exp_list())));}
     @Override public void exitSyncCallExp(ABSParser.SyncCallExpContext ctx) {
         setV(ctx, new SyncCall(v(ctx.o), ctx.m.getText(), v(ctx.pure_exp_list())));
     }
+
+    @Override public void exitSyncCall1Exp(ABSParser.SyncCall1ExpContext ctx) {
+        setV(ctx, new SyncCall(v(ctx.o), ctx.m.getText(), v(ctx.pure_exp_list())));
+    }
+
+
+   // @Override public void exitSyncCallRABSExp(ABSParser.SyncCallRABSExpContext ctx) {setV(ctx, new SyncCall(v(ctx.o), ctx.m.getText(), v(ctx.pure_exp_list())));}
     @Override public void exitOriginalCallExp(ABSParser.OriginalCallExpContext ctx) {
         List<PureExp> l = ctx.pure_exp_list() == null
             ? new List<>()

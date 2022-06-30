@@ -215,6 +215,10 @@ aspect Null {
 
   eq GetExp.isNull() = getPureExp().isNull();
 
+
+
+
+
   eq NewExp.isNull() = false;
 
   eq OriginalCall.isNull() = false;

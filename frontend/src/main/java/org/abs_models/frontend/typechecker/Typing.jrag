@@ -168,9 +168,12 @@ aspect Typing {
         return getModel().getFutType(getCallType());
     }
 
+
+
     eq SyncCall.getType() {  
         return getCallType();
     }
+
 
     eq AwaitAsyncCall.getType() {
         return getCallType();

@@ -1215,6 +1215,7 @@ aspect GenerateJava {
     public void ModifyMethodModifier.generateJavaDynamic(PrintStream stream) { }
     public void ModifyMethodModifier.generateJava(PrintStream stream) { }
 
+
 }
 
 
