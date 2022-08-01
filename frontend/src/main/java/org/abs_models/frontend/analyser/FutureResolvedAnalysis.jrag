@@ -114,10 +114,14 @@ aspect FutureResolvedAnalysis {
   syn boolean Exp.resolved() circular [true];
 
   eq Call.resolved() = false;
+  eq Call1Exp.resolved() = false;
+  eq SyncCall1Exp.resolved() = false;
+  eq AsyncCall1Exp.resolved() = false;
+
 
   eq GetExp.resolved() = false;
 
-
+  eq HoldExp.resolved() = false;
 
 
   eq NewExp.resolved() = false;

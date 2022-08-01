@@ -192,6 +192,10 @@ aspect GenerateMaude {
         else stream.print("\"ABS.StdLib.InfDuration\"[ emp ]");
         stream.print(") ");
     }
+    public void AsyncCall1Exp.generateMaudeAsStatement(PrintStream stream, String var, List<Annotation> annotations)
+        {
+
+        }
 
     public void AwaitAsyncCall.generateMaudeAsStatement(PrintStream stream, String var, List<Annotation> annotations)
     {
@@ -217,6 +221,7 @@ aspect GenerateMaude {
         stream.print("get( '.staticfuture ; '" + var + ") ");
     }
 
+
     public void SyncCall.generateMaudeAsStatement(PrintStream stream, String var, List<Annotation> annotations)
     {
         boolean inlist = false;
@@ -234,6 +239,10 @@ aspect GenerateMaude {
         stream.print(") ; ");
         stream.print("get( '.staticfuture ; '" + var + ") ");
     }
+    public void SyncCall1Exp.generateMaudeAsStatement(PrintStream stream, String var, List<Annotation> annotations)
+        {
+
+        }
 
     public void OriginalCall.generateMaudeAsStatement(PrintStream stream, String var, List<Annotation> annotations)
     {
@@ -251,9 +260,16 @@ aspect GenerateMaude {
         getPureExp().generateMaude(stream);
         stream.print(" ; '" + var + ") ");
     }
+    public void HoldExp.generateMaudeAsStatement(PrintStream stream, String var, List<Annotation> annotations)
+        {
+
+        }
     public int GetExp.numberOfRandom(Set<String> visitedFunctions) {
         return 0;
     }
+    public int HoldExp.numberOfRandom(Set<String> visitedFunctions) {
+            return 0;
+        }
     public void NewExp.generateMaudeAsStatement(PrintStream stream, String var, List<Annotation> annotations)
     {
         boolean inlist = false;
@@ -298,6 +314,9 @@ aspect GenerateMaude {
         }
         return result;
     }
+
+    public int SyncCall1Exp.numberOfRandom(Set<String> visitedFunctions) { return 0; }
+    public int AsyncCall1Exp.numberOfRandom(Set<String> visitedFunctions) { return 0;}
 
     public void ImplementsExp.generateMaude(PrintStream stream) {
         throw new NotImplementedYetException(this); // TODO

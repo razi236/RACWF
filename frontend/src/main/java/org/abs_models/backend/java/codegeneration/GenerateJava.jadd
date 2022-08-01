@@ -753,6 +753,9 @@ aspect GenerateJava {
         getPureExp().generateJava(stream);
         stream.print(".get()");
     }
+    public void HoldExp.generateJava(PrintStream stream) {
+
+        }
 
     public void NewExp.generateJava(PrintStream stream) {
         ClassDecl decl = ((UnionType)getType()).getOriginatingClass();
@@ -1200,6 +1203,9 @@ aspect GenerateJava {
         getRight().generateJava(stream);
         stream.print(")");
     }
+    public void SyncCall1Exp.generateJava(PrintStream stream) { }
+    public void AsyncCall1Exp.generateJava(PrintStream stream) { }
+
 
     /*****/
     public void TraitUse.generateJava(PrintStream stream) { }

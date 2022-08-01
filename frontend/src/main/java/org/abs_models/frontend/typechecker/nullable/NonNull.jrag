@@ -299,7 +299,11 @@ aspect Nonnull {
 
   eq Call.nonnull() = getMethodSig().nonnull();
 
+  eq Call1Exp.nonnull() = true;
+
   eq GetExp.nonnull() = getPureExp().nonnull();
+
+  eq HoldExp.nonnull() = true;
 
   eq NewExp.nonnull() = true;
 

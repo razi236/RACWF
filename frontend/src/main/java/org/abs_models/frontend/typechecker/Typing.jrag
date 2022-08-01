@@ -54,6 +54,7 @@ aspect Typing {
     inh Model MethodSig.getModel();
     
     /* TODO: Those will lead to utter confusion when running without stdlib, as e.g. RelExps depend on Bool. */
+    syn DataTypeType Model.getResType(Type typeArg) = ((DataTypeType)getStdDataType("Res")).withTypeArgs(typeArg);
     syn Type Model.getUnitType() = getStdDataType("Unit");
     syn Type Model.getIntType() = getStdDataType("Int");
     syn Type Model.getFloatType() = getStdDataType("Float");
@@ -169,11 +170,19 @@ aspect Typing {
         return getModel().getFutType(getCallType());
     }
 
+    eq AsyncCall1Exp.getType() {
+            return getModel().getFutType(getCallType());
+        }
+
 
 
     eq SyncCall.getType() {  
         return getCallType();
     }
+
+    eq SyncCall1Exp.getType() {
+            return getCallType();
+        }
 
 
     eq AwaitAsyncCall.getType() {
@@ -194,12 +203,25 @@ aspect Typing {
    		 return UnknownType.INSTANCE;
    	 return s.getType();
     }
+
+    syn lazy Type Call1Exp.getCallType() {
+       	 MethodSig s = getMethodSig();
+       	 if (s == null)
+       		 return UnknownType.INSTANCE;
+       	 return s.getType();
+        }
     
     syn lazy MethodSig Call.getMethodSig() {
 		Type t = getCallee().getType();
 		MethodSig s = t.lookupMethod(getMethod());
 		return s;
     }
+
+    syn lazy MethodSig Call1Exp.getMethodSig() {
+    		Type t = getCallee().getType();
+    		MethodSig s = t.lookupMethod(getMethod());
+    		return s;
+        }
     
     eq GetExp.getType() { 
    	 final Type t = getPureExp().getType();
@@ -215,6 +237,10 @@ aspect Typing {
    		 return UnknownType.INSTANCE;
    	 return dt.getTypeArg(0);
     }
+
+    eq HoldExp.getType() {
+                    return getModel().getListType(getModel().getIntType());
+                    }
 
     eq NewExp.getType() {
         Decl d = lookup(new KindedName(Kind.CLASS,getClassName()));

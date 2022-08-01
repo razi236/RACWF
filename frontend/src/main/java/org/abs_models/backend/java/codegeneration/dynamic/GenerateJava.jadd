@@ -592,6 +592,10 @@ aspect GenerateJavaDynamic_Core {
         stream.print(".get()");
     }
 
+    public void HoldExp.generateJavaDynamic(PrintStream stream) { return;}
+    public void SyncCall1Exp.generateJavaDynamic(PrintStream stream) { return;}
+    public void AsyncCall1Exp.generateJavaDynamic(PrintStream stream) { return;}
+
     public void NewExp.generateJavaDynamic(PrintStream stream) {
         ClassDecl decl = ((UnionType)getType()).getOriginatingClass();
         String className = JavaBackend.getQualifiedString(decl);

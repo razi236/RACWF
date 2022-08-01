@@ -516,9 +516,9 @@ public class CreateJastAddASTListener extends ABSBaseListener {
     }
 
     // Side-effectful expressions
-    /*@Override public void exitHoldExp(ABSParser.HoldExpContext ctx) {
-        setV(ctx, new HoldExp(v(ctx.p)));
-    }*/
+    @Override public void exitHoldExp(ABSParser.HoldExpContext ctx) {
+        setV(ctx, new HoldExp(v(ctx.pure_exp_list())));
+    }
     @Override public void exitGetExp(ABSParser.GetExpContext ctx) {
         setV(ctx, new GetExp(v(ctx.pure_exp())));
     }
@@ -536,7 +536,7 @@ public class CreateJastAddASTListener extends ABSBaseListener {
 
     @Override public void exitAsyncCall1Exp(ABSParser.AsyncCall1ExpContext ctx) {
 
-            setV(ctx, new AsyncCall(v(ctx.o), ctx.m.getText(), v(ctx.pure_exp_list())));
+            setV(ctx, new AsyncCall1Exp(v(ctx.o), ctx.m.getText(), v(ctx.p), v(ctx.q), v(ctx.d)));
 
     }
 
@@ -546,7 +546,7 @@ public class CreateJastAddASTListener extends ABSBaseListener {
     }
 
     @Override public void exitSyncCall1Exp(ABSParser.SyncCall1ExpContext ctx) {
-        setV(ctx, new SyncCall(v(ctx.o), ctx.m.getText(), v(ctx.pure_exp_list())));
+        setV(ctx, new SyncCall1Exp(v(ctx.o), ctx.m.getText(), v(ctx.p), v(ctx.q), v(ctx.d)));
     }
 
 

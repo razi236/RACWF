@@ -99,11 +99,11 @@ eff_exp : pure_exp '.' 'get'                               # GetExp
     | ((d=delta_id | c='core') '.')? 'original'
         '(' pure_exp_list ')'                             # OriginalCallExp
 
-    | '!' m=IDENTIFIER '(' o=pure_exp ( ',' pure_exp_list)? ')'
-    'after' (f=fs)?                                       # AsyncCall1Exp
-    |  m=IDENTIFIER '(' o=pure_exp ( ',' pure_exp_list)? ')'
-    'after' (f=fs)?                                       # SyncCall1Exp
-    //| 'hold' '(' p = pure_exp_list ')' ';'                # HoldExp
+    | '!' m=IDENTIFIER '(' o=pure_exp ( ',' p = pure_exp_list)? ')'
+    'after' q = pure_exp_list 'dl' d = pure_exp                                     # AsyncCall1Exp
+    |  m=IDENTIFIER '(' o=pure_exp ( ',' p = pure_exp_list)? ')'
+    'after' q = pure_exp_list 'dl' d = pure_exp           # SyncCall1Exp
+    | 'hold' '(' pure_exp_list ')'                        # HoldExp
     ;
 
 pure_exp : qualified_identifier '(' pure_exp_list ')'      # FunctionExp
