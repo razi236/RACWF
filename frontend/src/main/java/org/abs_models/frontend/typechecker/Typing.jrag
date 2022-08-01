@@ -151,7 +151,7 @@ aspect Typing {
     eq ReturnStmt.getType() = getRetExp().getType();
 
     /* Type expressions */
-    //
+    /* git comment */
     syn lazy Type TypeIdUse.getType() = getDecl().getType();
     eq TypeUse.getType() = getDecl().getType().withAnnotations(findAnnotations());
     eq ParametricDataTypeUse.getType() {
