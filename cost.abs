@@ -8,17 +8,17 @@ class ABC() implements ABC
     Unit xyz(Int x)
     {
         println("Hello World $x$");
-        consTime(10);
+        consTime(10); // cost is a keyword in ABS compiler.
     }
 }
 {
     Fut<Unit> f;Fut<Unit> f1;Fut<Unit> f2;
     ABC a = new ABC();
-    f = !xyz(a,10) after f1? & f2? ;
+    f = !xyz(a,10) after f1? & f2?;
     xyz(a,20) after;
     await f?;
     f.get;
     add(list[set[Orthopedic, Efficiency(2)], set[Gynaecologist]]);
-    //Fut<List<Int>> fids = r!hold(list[set[Orthopedic, Efficiency(2)], set[Gynaecologist]]);
+    Fut<List<Int>> fids = r!hold(list[set[Orthopedic, Efficiency(2)], set[Gynaecologist]]);
     rel(fids);
 }
