@@ -4,10 +4,7 @@
  */
 package org.abs_models.backend.prettyprint;
 
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
-import java.io.PrintWriter;
+import java.io.*;
 
 import org.abs_models.Absc;
 import org.abs_models.frontend.ast.Model;
@@ -62,11 +59,34 @@ public class PrettyPrinterBackEnd extends Main {
             System.out.println("Output ABS model source code to " + loc + "...");
         }
 
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(stream), true);
+        /*PrintWriter writer = new PrintWriter(new OutputStreamWriter(stream), true);
         // Set line separator back to default value
         System.setProperty("line.separator", System.lineSeparator());
         ABSFormatter formatter = new DefaultABSFormatter(writer);
-        model.doPrettyPrint(writer, formatter);
+        model.doPrettyPrint(writer, formatter);*/
+
+        File file = new File("/Users/muhammadrizwanali/Desktop/GitHub/abstools/RABS.abs");
+
+        PrintWriter writer = null;
+
+        try
+        {
+            writer = new PrintWriter(file);
+            System.setProperty("line.separator", System.lineSeparator());
+            ABSFormatter formatter = new DefaultABSFormatter(writer);
+            model.doPrettyPrint(writer, formatter);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            if ( writer != null )
+            {
+                writer.close();
+            }
+        }
         return 0;
     }
 }
