@@ -14,7 +14,7 @@ class ABC implements ABC
 {
     Fut<Unit> f;Fut<Unit> f1;Fut<Unit> f2; List<Int> fids = list[];
     ABC a = new ABC();
-    f = !xyz(a,10) after f1&&f,f2 dl 10;
+    f = !xyz(a,10) after f1,f2 dl 10;
     xyz(a,20) after true dl 5;
     await f?;
     f.get;

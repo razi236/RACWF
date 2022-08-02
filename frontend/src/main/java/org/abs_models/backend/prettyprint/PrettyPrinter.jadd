@@ -301,7 +301,7 @@ aspect doPrettyPrinter {
 
     public void Call1Exp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
             stream.print("await ");
-            getQList().doPrettyPrint(stream, formatter, ",");
+            getQList().doPrettyPrint(stream, formatter, " ||");
             stream.print(";");
             stream.println();
             formatter.afterStmt();
