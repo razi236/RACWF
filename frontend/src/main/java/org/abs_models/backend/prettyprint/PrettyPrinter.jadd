@@ -305,7 +305,7 @@ aspect doPrettyPrinter {
             stream.print(";");
             stream.println();
             formatter.afterStmt();
-            stream.print("[Deadline: Duration (");
+            stream.print("[Deadline: Duration(");
             getD().doPrettyPrint(stream, formatter);
             stream.print(")");
             stream.print("]");

@@ -3,7 +3,7 @@ interface ABC
 {
     Unit xyz(Int x);
 }
-class ABC() implements ABC
+class ABC implements ABC
 {
     Unit xyz(Int x)
     {
