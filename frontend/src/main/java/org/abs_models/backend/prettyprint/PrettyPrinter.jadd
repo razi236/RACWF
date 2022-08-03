@@ -283,10 +283,18 @@ aspect doPrettyPrinter {
             stream.println();
             formatter.afterStmt();
         }
-        getVar().doPrettyPrint(stream, formatter);
-        stream.print(" = ");
-        getValue().doPrettyPrint(stream, formatter);
-        stream.print(";");
+        if (getValue() instanceof Call1Exp)
+        {
+            VarOrFieldUse sl = getVar();
+            getValue().doPrettyPrint(stream, formatter);
+        }
+        else
+        {
+            getVar().doPrettyPrint(stream, formatter);
+            stream.print(" = ");
+            getValue().doPrettyPrint(stream, formatter);
+            stream.print(";");
+        }
     }
 
     public void Call.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
