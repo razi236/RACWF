@@ -285,7 +285,20 @@ aspect doPrettyPrinter {
         }
         if (getValue() instanceof Call1Exp)
         {
-            VarOrFieldUse sl = getVar();
+            PureExp d = ((Call1Exp) getValue()).getD();
+            List<PureExp> q= ((Call1Exp) getValue()).getQList();
+            stream.print("await ");
+            q.doPrettyPrint(stream, formatter, " ||");
+            stream.print(";");
+            stream.println();
+            formatter.afterStmt();
+            stream.print("[Deadline: Duration(");
+            d.doPrettyPrint(stream, formatter);
+            stream.print(")");
+            stream.print("]");
+            formatter.afterStmt();
+            getVar().doPrettyPrint(stream, formatter);
+            stream.print(" = ");
             getValue().doPrettyPrint(stream, formatter);
         }
         else
@@ -308,7 +321,7 @@ aspect doPrettyPrinter {
     }
 
     public void Call1Exp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("await ");
+            /* stream.print("await ");
             getQList().doPrettyPrint(stream, formatter, " ||");
             stream.print(";");
             stream.println();
@@ -317,7 +330,7 @@ aspect doPrettyPrinter {
             getD().doPrettyPrint(stream, formatter);
             stream.print(")");
             stream.print("]");
-            formatter.afterStmt();
+            formatter.afterStmt();*/
             doPrettyPrintCallPrefix(stream, formatter);
             getCallee().doPrettyPrint(stream, formatter);
             doPrettyPrintCallType(stream, formatter);
@@ -326,7 +339,6 @@ aspect doPrettyPrinter {
             getPList().doPrettyPrint(stream, formatter, ",");
             stream.print(")");
         }
-
     abstract public void Call.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter);
 
     abstract public void Call.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter);
@@ -334,6 +346,33 @@ aspect doPrettyPrinter {
     abstract public void Call1Exp.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter);
 
     abstract public void Call1Exp.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter);
+
+    /*
+    abstract public void AssignStmt.doPrettyPrint1(PrintWriter stream, ABSFormatter formatter, VarOrFieldUse v);
+
+    public void AssignStmt.doPrettyPrint1(PrintWriter stream, ABSFormatter formatter, VarOrFieldUse v) {
+                    stream.print("await ");
+                    getQList().doPrettyPrint(stream, formatter, " ||");
+                    stream.print(";");
+                    stream.println();
+                    formatter.afterStmt();
+                    stream.print("[Deadline: Duration(");
+                    getD().doPrettyPrint(stream, formatter);
+                    stream.print(")");
+                    stream.print("]");
+                    formatter.afterStmt();
+                    v.doPrettyPrint(stream, formatter);
+                    stream.print("=");
+                    doPrettyPrintCallPrefix(stream, formatter);
+                    getCallee().doPrettyPrint(stream, formatter);
+                    doPrettyPrintCallType(stream, formatter);
+                    stream.print(getMethod().replaceAll("\\$", ""));
+                    stream.print("(");
+                    getPList().doPrettyPrint(stream, formatter, ",");
+                    stream.print(")");
+                }
+    */
+
 
     public void AsyncCall.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
         stream.print("!");
