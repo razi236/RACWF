@@ -385,6 +385,8 @@ aspect GenerateMaude {
     public int Unary.numberOfRandom(Set<String> visitedFunctions) {
         return getOperand().numberOfRandom(visitedFunctions);
     }
+    syn String ConBinary.maudeInfixOperator();
+    eq ConjunctionExp.maudeInfixOperator() = "&&";
 
     syn String Binary.maudeInfixOperator();
     eq EqExp.maudeInfixOperator() = "==";
@@ -407,9 +409,20 @@ aspect GenerateMaude {
         getRight().generateMaude(stream);
         stream.print(") ");
     }
+    public void ConBinary.generateMaude(PrintStream stream) {
+            stream.print("\"" + maudeInfixOperator() + "\"( ");
+            getLeft().generateMaude(stream);
+            stream.print(":: ");
+            getRight().generateMaude(stream);
+            stream.print(") ");
+        }
     public int Binary.numberOfRandom(Set<String> visitedFunctions) {
         return getLeft().numberOfRandom(visitedFunctions) + getRight().numberOfRandom(visitedFunctions);
     }
+
+    public int ConBinary.numberOfRandom(Set<String> visitedFunctions) {
+            return getLeft().numberOfRandom(visitedFunctions) + getRight().numberOfRandom(visitedFunctions);
+        }
 
     public void ThisExp.generateMaude(PrintStream stream) {
         stream.print("'this ");

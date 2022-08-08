@@ -692,6 +692,11 @@ public class CreateJastAddASTListener extends ABSBaseListener {
     @Override public void exitAndExp(ABSParser.AndExpContext ctx) {
         setV(ctx, new AndBoolExp(v(ctx.l), v(ctx.r)));
     }
+
+    @Override public void exitConjunction(ABSParser.ConjunctionContext ctx) {
+        setV(ctx, new ConjunctionExp(v(ctx.p), v(ctx.q)));
+    }
+
     @Override public void exitOrExp(ABSParser.OrExpContext ctx) {
         setV(ctx, new OrBoolExp(v(ctx.l), v(ctx.r)));
     }

@@ -301,6 +301,8 @@ aspect Nonnull {
 
   eq Call1Exp.nonnull() = true;
 
+  eq ConjunctionExp.nonnull() = true;
+
   eq GetExp.nonnull() = getPureExp().nonnull();
 
   eq HoldExp.nonnull() = true;

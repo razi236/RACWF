@@ -1,22 +1,24 @@
 module ABS;
 interface ABC
 {
-    Unit xyz(Int x);
+    Int xyz(Int x);
 }
 class ABC implements ABC
 {
-    Unit xyz(Int x)
+    Int xyz(Int x)
     {
         println("Hello World $x$");
         consTime(10); // cost is a keyword in ABS compiler.
+        return 0;
     }
 }
 {
-    Fut<Unit> f;Fut<Unit> f1;Fut<Unit> f2; List<Int> fids = list[];
+    Fut<Int> f;Fut<Int> f1;Fut<Int> f2; List<Int> fids = list[]; Int i=0;
     ABC a = new ABC();
-    f = !xyz(a,10) after f1 dl 10;
-    xyz(a,20) after true dl 5;
+    f = !xyz(a,10) after f&f1&f2,f1 dl 10;
+    i = xyz(a,20) after f&f2 dl 5;
     await f?;
+    f2 = !xyz(a,10) after f2,f1 dl 10;
     f.get;
     add(list[set[Orthopedic, Efficiency(2)], set[Gynaecologist]]);
     fids = hold(list[set[Orthopedic, Efficiency(2)], set[Gynaecologist]]);

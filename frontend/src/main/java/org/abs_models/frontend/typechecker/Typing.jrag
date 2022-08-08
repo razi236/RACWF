@@ -170,6 +170,10 @@ aspect Typing {
         return getModel().getFutType(getCallType());
     }
 
+    eq ConjunctionExp.getType() {
+            return getModel().getBoolType();
+        }
+
     eq AsyncCall1Exp.getType() {
             return getModel().getFutType(getCallType());
         }

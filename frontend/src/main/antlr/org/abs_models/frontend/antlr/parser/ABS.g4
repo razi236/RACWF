@@ -82,6 +82,8 @@ param_decl : annotations type_exp IDENTIFIER ;
 interface_name : qualified_type_identifier ;
 delta_id : TYPE_IDENTIFIER ;
 
+fs : var_or_field_ref '?' ('&&' var_or_field_ref '?')*;
+fs_list : (fs (',' fs)*)?  ;
 // Expressions
 
 exp :         // Try eff_exp first - some of them have a pure_exp prefix
@@ -142,6 +144,8 @@ pure_exp : qualified_identifier '(' pure_exp_list ')'      # FunctionExp
         (',' '('? t+=type_use id+=IDENTIFIER ')'? '=' e+=pure_exp)*
         'in' body=pure_exp                                 # LetExp
     | '(' pure_exp ')'                                     # ParenExp
+    | var_or_field_ref '?' ('&&' var_or_field_ref '?')*    # FutureTest
+    | p = pure_exp '&' q = pure_exp                        #Conjunction
     ;
 
 casebranch :
@@ -201,15 +205,13 @@ stmt : annotations type_exp IDENTIFIER ('=' exp)? ';'                  # Vardecl
     | annotations 'rel' '(' p = pure_exp ')' ';'                       # ReleaseResStmt
     ;
 
-fsl : var_or_field_ref '?' ( ',' var_or_field_ref '?')*;
-fs : fsl | fsl '&' fsl ;
-
 guard : var_or_field_ref '?'                              # ClaimGuard
     | 'duration' '(' min=pure_exp (',' max=pure_exp)? ')' # DurationGuard
     | e=pure_exp                                          # ExpGuard
     | l=guard '&' r=guard                                 # AndGuard
     ;
 
+guard_list : guard ( ',' guard )*;
 casestmtbranch : pattern '=>' stmt ;
 
 

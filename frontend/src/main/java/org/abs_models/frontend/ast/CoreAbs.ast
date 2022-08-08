@@ -250,6 +250,8 @@ abstract Unary : PureExp ::= Operand:PureExp;
 
 abstract Binary : PureExp ::= Left:PureExp Right:PureExp;
 
+abstract ConBinary : PureExp ::= Left:PureExp Right:PureExp;
+
 //Integers
 MinusExp : Unary ;
 
@@ -271,6 +273,7 @@ abstract BoolExp : Binary ;
 AndBoolExp : BoolExp ;
 OrBoolExp : BoolExp ;
 
+ConjunctionExp: ConBinary ;
 
 //Relations
 abstract RelationalExpr : Binary;

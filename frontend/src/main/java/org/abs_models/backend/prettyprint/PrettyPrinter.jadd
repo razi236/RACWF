@@ -20,6 +20,18 @@ aspect doPrettyPrinter {
         }
     }
 
+    public void List.doPrettyPrint(PrintWriter stream, ABSFormatter formatter, String separator, String test) {
+            if (getNumChild() > 0) {
+                getChild(0).doPrettyPrint(stream, formatter);
+                stream.print(test+" ");
+                for (int i = 1; i < getNumChild(); i++) {
+                    stream.print(separator+" ");
+                    getChild(i).doPrettyPrint(stream, formatter);
+                    stream.print(test+" ");
+                }
+            }
+        }
+
     public void List.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
         if (getNumChild() > 0) {
             getChild(0).doPrettyPrint(stream, formatter);
@@ -287,11 +299,17 @@ aspect doPrettyPrinter {
         {
             PureExp d = ((Call1Exp) getValue()).getD();
             List<PureExp> q= ((Call1Exp) getValue()).getQList();
-            stream.print("await ");
-            q.doPrettyPrint(stream, formatter, " ||");
-            stream.print(";");
-            stream.println();
+            stream.print("if (await ");
+            q.doPrettyPrint(stream, formatter, " || await ", "?");
+            stream.print(") ");
+            //stream.println();
+            formatter.beforeOpenBrace();
+            stream.println("{");
+            formatter.afterOpenBrace();
             formatter.afterStmt();
+            //stream.print(";");
+            //stream.println();
+            //formatter.afterStmt();
             stream.print("[Deadline: Duration(");
             d.doPrettyPrint(stream, formatter);
             stream.print(")");
@@ -300,6 +318,12 @@ aspect doPrettyPrinter {
             getVar().doPrettyPrint(stream, formatter);
             stream.print(" = ");
             getValue().doPrettyPrint(stream, formatter);
+            stream.print(";");
+            stream.println();
+            formatter.beforeCloseBrace();
+            formatter.afterStmt();
+            stream.print("}");
+            formatter.afterCloseBrace();
         }
         else
         {
@@ -322,7 +346,7 @@ aspect doPrettyPrinter {
 
     public void Call1Exp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
             /* stream.print("await ");
-            getQList().doPrettyPrint(stream, formatter, " ||");
+            getQList().doPrettyPrint(stream, formatter, " || await");
             stream.print(";");
             stream.println();
             formatter.afterStmt();
@@ -1206,7 +1230,24 @@ aspect doPrettyPrinter {
         formatter.afterCloseBrace();
     }
 
+    public void ConBinary.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            formatter.beforeOpenBrace();
+            //stream.print("( ");
+            //formatter.afterOpenBrace();
+            getLeft().doPrettyPrint(stream, formatter);
+            stream.print("?");
+            stream.print(" ");
+            doPrettyPrintOperator(stream, formatter);
+            stream.print(" ");
+            getRight().doPrettyPrint(stream, formatter);
+            //caformatter.beforeCloseBrace();
+            //stream.print(" )");
+            formatter.afterCloseBrace();
+        }
+
     abstract public void Binary.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter);
+
+    abstract public void ConBinary.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter);
 
     public void AddAddExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
         stream.print("+");
@@ -1231,6 +1272,10 @@ aspect doPrettyPrinter {
     public void AndBoolExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
         stream.print("&&");
     }
+
+    public void ConjunctionExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("&");
+        }
 
     public void OrBoolExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
         stream.print("||");

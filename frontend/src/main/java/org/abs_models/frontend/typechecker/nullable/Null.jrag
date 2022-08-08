@@ -213,6 +213,8 @@ aspect Null {
 
   eq Call.isNull() = false;
 
+  eq ConjunctionExp.isNull() = false;
+
   eq Call1Exp.isNull() = false;
 
   eq GetExp.isNull() = getPureExp().isNull();

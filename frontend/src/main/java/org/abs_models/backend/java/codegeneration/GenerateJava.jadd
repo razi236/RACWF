@@ -1205,6 +1205,7 @@ aspect GenerateJava {
     }
     public void SyncCall1Exp.generateJava(PrintStream stream) { }
     public void AsyncCall1Exp.generateJava(PrintStream stream) { }
+    public void ConjunctionExp.generateJava(PrintStream stream) { }
 
 
     /*****/

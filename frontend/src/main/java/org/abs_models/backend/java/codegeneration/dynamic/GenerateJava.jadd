@@ -593,6 +593,7 @@ aspect GenerateJavaDynamic_Core {
     }
 
     public void HoldExp.generateJavaDynamic(PrintStream stream) { return;}
+    public void ConjunctionExp.generateJavaDynamic(PrintStream stream) { return;}
     public void SyncCall1Exp.generateJavaDynamic(PrintStream stream) { return;}
     public void AsyncCall1Exp.generateJavaDynamic(PrintStream stream) { return;}
 

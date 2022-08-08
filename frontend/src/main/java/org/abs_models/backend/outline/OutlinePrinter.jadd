@@ -361,6 +361,9 @@ aspect doOutlinePrinter {
     public void AddAddExp.doOutlinePrintOperator(PrintWriter stream, String prefix) {
     }
 
+    public void ConjunctionExp.doOutlinePrintOperator(PrintWriter stream, String prefix) {
+        }
+
     public void SubAddExp.doOutlinePrintOperator(PrintWriter stream, String prefix) {
     }
 

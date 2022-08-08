@@ -117,6 +117,7 @@ aspect FutureResolvedAnalysis {
   eq Call1Exp.resolved() = false;
   eq SyncCall1Exp.resolved() = false;
   eq AsyncCall1Exp.resolved() = false;
+  eq ConjunctionExp.resolved() = false;
 
 
   eq GetExp.resolved() = false;
