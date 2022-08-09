@@ -46,6 +46,9 @@ aspect doPrettyPrinter {
     public void ASTNode.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
         throw new NotImplementedYetException(this);
     }
+    public void ASTNode.doPrettyPrint(PrintWriter stream, ABSFormatter formatter, VarOrFieldUse v ) {
+            throw new NotImplementedYetException(this);
+        }
 
     public void Model.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
         for (ModuleDecl d : getModuleDecls()) {
@@ -297,36 +300,8 @@ aspect doPrettyPrinter {
         }
         if (getValue() instanceof Call1Exp)
         {
-            PureExp d = ((Call1Exp) getValue()).getD();
-            List<PureExp> q= ((Call1Exp) getValue()).getQList();
-            stream.print("while (!( await ");
-            q.doPrettyPrint(stream, formatter, " || await ", "?");
-            stream.print("))");
-            //stream.println();
-            formatter.beforeOpenBrace();
-            stream.println("{");
-            formatter.afterOpenBrace();
-            formatter.afterStmt();
-            stream.print("suspend;");
-
-            formatter.beforeCloseBrace();
-            stream.println();
-            formatter.afterStmt();
-            stream.print("}");
-            stream.println();
-            formatter.afterStmt();
-            formatter.afterCloseBrace();
-            //stream.println();
-            //formatter.afterStmt();
-            stream.print("[Deadline: Duration(");
-            d.doPrettyPrint(stream, formatter);
-            stream.print(")");
-            stream.print("]");
-            formatter.afterStmt();
-            getVar().doPrettyPrint(stream, formatter);
-            stream.print(" = ");
-            getValue().doPrettyPrint(stream, formatter);
-            stream.print(";");
+            VarOrFieldUse v = getVar();
+            getValue().doPrettyPrint(stream, formatter,v);
         }
         else
         {
@@ -348,24 +323,70 @@ aspect doPrettyPrinter {
     }
 
     public void Call1Exp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            /* stream.print("await ");
-            getQList().doPrettyPrint(stream, formatter, " || await");
-            stream.print(";");
-            stream.println();
-            formatter.afterStmt();
-            stream.print("[Deadline: Duration(");
-            getD().doPrettyPrint(stream, formatter);
-            stream.print(")");
-            stream.print("]");
-            formatter.afterStmt();*/
-            doPrettyPrintCallPrefix(stream, formatter);
-            getCallee().doPrettyPrint(stream, formatter);
-            doPrettyPrintCallType(stream, formatter);
-            stream.print(getMethod().replaceAll("\\$", ""));
-            stream.print("(");
-            getPList().doPrettyPrint(stream, formatter, ",");
-            stream.print(")");
-        }
+         stream.print("while (!( await ");
+         getQList().doPrettyPrint(stream, formatter, " || await ", "?");
+         stream.print("))");
+         //stream.println();
+         formatter.beforeOpenBrace();
+         stream.println("{");
+         formatter.afterOpenBrace();
+         formatter.afterStmt();
+         stream.print("suspend;");
+         formatter.beforeCloseBrace();
+         stream.println();
+         formatter.afterStmt();
+         stream.print("}");
+         stream.println();
+         formatter.afterStmt();
+         formatter.afterCloseBrace();
+         stream.print("[Deadline: Duration(");
+         getD().doPrettyPrint(stream, formatter);
+         stream.print(")");
+         stream.print("]");
+         formatter.afterStmt();
+        doPrettyPrintCallPrefix(stream, formatter);
+        getCallee().doPrettyPrint(stream, formatter);
+        doPrettyPrintCallType(stream, formatter);
+        stream.print(getMethod().replaceAll("\\$", ""));
+        stream.print("(");
+        getPList().doPrettyPrint(stream, formatter, ",");
+        stream.print(")");
+    }
+    public void Call1Exp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter, VarOrFieldUse v) {
+         stream.print("while (!( await ");
+         getQList().doPrettyPrint(stream, formatter, " || await ", "?");
+         stream.print("))");
+         //stream.println();
+         formatter.beforeOpenBrace();
+         stream.println("{");
+         formatter.afterOpenBrace();
+         formatter.afterStmt();
+         stream.print("suspend;");
+         formatter.beforeCloseBrace();
+         stream.println();
+         formatter.afterStmt();
+         stream.print("}");
+         stream.println();
+         formatter.afterStmt();
+         formatter.afterCloseBrace();
+         //stream.println();
+         //formatter.afterStmt();
+         stream.print("[Deadline: Duration(");
+         getD().doPrettyPrint(stream, formatter);
+         stream.print(")");
+         stream.print("]");
+         formatter.afterStmt();
+         v.doPrettyPrint(stream, formatter);
+         stream.print(" = ");
+         doPrettyPrintCallPrefix(stream, formatter);
+         getCallee().doPrettyPrint(stream, formatter);
+         doPrettyPrintCallType(stream, formatter);
+         stream.print(getMethod().replaceAll("\\$", ""));
+         stream.print("(");
+         getPList().doPrettyPrint(stream, formatter, ",");
+         stream.print(")");
+         stream.print(";");
+    }
     abstract public void Call.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter);
 
     abstract public void Call.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter);
@@ -374,31 +395,8 @@ aspect doPrettyPrinter {
 
     abstract public void Call1Exp.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter);
 
-    /*
-    abstract public void AssignStmt.doPrettyPrint1(PrintWriter stream, ABSFormatter formatter, VarOrFieldUse v);
 
-    public void AssignStmt.doPrettyPrint1(PrintWriter stream, ABSFormatter formatter, VarOrFieldUse v) {
-                    stream.print("await ");
-                    getQList().doPrettyPrint(stream, formatter, " ||");
-                    stream.print(";");
-                    stream.println();
-                    formatter.afterStmt();
-                    stream.print("[Deadline: Duration(");
-                    getD().doPrettyPrint(stream, formatter);
-                    stream.print(")");
-                    stream.print("]");
-                    formatter.afterStmt();
-                    v.doPrettyPrint(stream, formatter);
-                    stream.print("=");
-                    doPrettyPrintCallPrefix(stream, formatter);
-                    getCallee().doPrettyPrint(stream, formatter);
-                    doPrettyPrintCallType(stream, formatter);
-                    stream.print(getMethod().replaceAll("\\$", ""));
-                    stream.print("(");
-                    getPList().doPrettyPrint(stream, formatter, ",");
-                    stream.print(")");
-                }
-    */
+
 
 
     public void AsyncCall.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
