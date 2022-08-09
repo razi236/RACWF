@@ -299,15 +299,23 @@ aspect doPrettyPrinter {
         {
             PureExp d = ((Call1Exp) getValue()).getD();
             List<PureExp> q= ((Call1Exp) getValue()).getQList();
-            stream.print("if (await ");
+            stream.print("while (!( await ");
             q.doPrettyPrint(stream, formatter, " || await ", "?");
-            stream.print(") ");
+            stream.print("))");
             //stream.println();
             formatter.beforeOpenBrace();
             stream.println("{");
             formatter.afterOpenBrace();
             formatter.afterStmt();
-            //stream.print(";");
+            stream.print("suspend;");
+
+            formatter.beforeCloseBrace();
+            stream.println();
+            formatter.afterStmt();
+            stream.print("}");
+            stream.println();
+            formatter.afterStmt();
+            formatter.afterCloseBrace();
             //stream.println();
             //formatter.afterStmt();
             stream.print("[Deadline: Duration(");
@@ -319,11 +327,6 @@ aspect doPrettyPrinter {
             stream.print(" = ");
             getValue().doPrettyPrint(stream, formatter);
             stream.print(";");
-            stream.println();
-            formatter.beforeCloseBrace();
-            formatter.afterStmt();
-            stream.print("}");
-            formatter.afterCloseBrace();
         }
         else
         {
