@@ -1,0 +1,43 @@
+module ABS;
+import * from ResMngr;
+
+
+interface ABC {
+  Int xyz(Int x);}
+
+class ABC implements ABC {
+  
+  Int xyz(Int x){
+    println("Hello World $x$");
+    duration(10, 10);
+    return 0;
+  }
+  }
+
+
+{
+  ResourceManager r = new ResourceManager();
+  Fut<Int> f;
+  Fut<Int> f1;
+  Fut<Int> f2;
+  List<Int> fids = list(Nil);
+  Int i = 0;
+  ABC a = new ABC();
+  while (!( await f? & f1? & f2?  || await  f1? )){
+    suspend;
+  }
+  [Deadline: Duration(10)]  f = a!xyz(10);
+  while (!( await f? & f2? )){
+    suspend;
+  }
+  [Deadline: Duration(5)]  i = a.xyz(20);
+  await f?;
+  while (!( await f2?  || await  f1? )){
+    suspend;
+  }
+  [Deadline: Duration(10)]  f2 = a!xyz(10);
+  f.get;
+  await r!add(list[set[Orthopedic, Efficiency( 2 )], set[Gynaecologist]]);
+  fids = await r!hold(list[set[Orthopedic, Efficiency( 2 )], set[Gynaecologist]]);;
+  await r!release(fids);
+}
