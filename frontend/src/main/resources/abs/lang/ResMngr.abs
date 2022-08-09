@@ -1,12 +1,13 @@
-module Test;
+module ResMngr;
 export *;
 
+
 // * [0/4] TODO
-// 
+//
 // - [ ] resource qualities
 // - [ ] resource quality sets
 // - [ ] comparisons
-// - [ ] resource manager 
+// - [ ] resource manager
 
 data Quality =
     Efficiency(Int)
@@ -22,16 +23,16 @@ data Quality =
 data Availability = Free | Busy;
 
 interface ResourceManager {
-    List<Int> add1(List<Set<Quality>> newResources);
-    List<Int> hold1(List<Set<Quality>> wantedResources);
-    Unit release1(List<Int> ids);
+    List<Int> add(List<Set<Quality>> newResources);
+    List<Int> hold(List<Set<Quality>> wantedResources);
+    Unit release(List<Int> ids);
 }
 
 class ResourceManager implements ResourceManager {
     Map<Int, Pair<Availability, Set<Quality>>> resources = map[];
     Int resource_counter = 0;
 
-    List<Int> add1(List<Set<Quality>> newResources) {
+    List<Int> add(List<Set<Quality>> newResources) {
         List<Int> result = list[];
         foreach (r in newResources) {
             resource_counter = resource_counter + 1;
@@ -42,7 +43,7 @@ class ResourceManager implements ResourceManager {
         return result;
     }
 
-    List<Int> hold1(List<Set<Quality>> wantedResources) {
+    List<Int> hold(List<Set<Quality>> wantedResources) {
         List<Int> result = list[];
         Map<Int, Pair<Availability, Set<Quality>>> lr = this.resources;
         while (result == Nil) {
@@ -76,7 +77,7 @@ We want $wantedResources$`);
         return result;
     }
 
-    Unit release1(List<Int> ids) {
+    Unit release(List<Int> ids) {
         Set<Int> all_ids = keys(resources);
         foreach (id in ids) {
             if (contains(all_ids, id)) {
@@ -91,37 +92,31 @@ class Tester(ResourceManager r) {
     Unit run() {
         println("Tester starting");
         List<Set<Quality>> w1 = list[set[Orthopedic]];
-        
+
         this!get_release(w1, 5);
         this!get_release(w1, 5);
         this!get_release(w1, 5);
     }
 
     Unit speculative_get_release(List<Set<Quality>> w, Rat time) {
-        List<Int> l1 = await r!hold1(w);
+        List<Int> l1 = await r!hold(w);
         try {
             await duration(time);
         } catch {
             e => throw(e);
         } finally {
-            r!release1(l1);
+            r!release(l1);
         }
     }
 
     Unit get_release(List<Set<Quality>> w, Rat time) {
         println(`Trying to get $w$ at $now()$`);
-        List<Int> l1 = await r!hold1(w);
+        List<Int> l1 = await r!hold(w);
         println(`Got $l1$ at $now()$`);
-        
+
         await duration(time);
 
         println(`Releasing $l1$`);
-        r!release1(l1);
+        r!release(l1);
     }
-}
-
-{
-     ResourceManager r = new ResourceManager();
-     await r!add1(list[set[Orthopedic, Efficiency(2)], set[Gynaecologist]]);
-     new Tester(r);
 }

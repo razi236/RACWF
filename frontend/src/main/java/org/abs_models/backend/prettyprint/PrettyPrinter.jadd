@@ -67,7 +67,7 @@ aspect doPrettyPrinter {
 
     public void ModuleDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
         stream.println("module " + getName() + ";");
-        stream.println("import * from ResMngr;");
+        stream.println("import * from ResourceManager;");
         formatter.afterStmt();
 
         for (Export e : getExportList()) {
@@ -323,8 +323,8 @@ aspect doPrettyPrinter {
     }
 
     public void Call1Exp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-         stream.print("while (!( await ");
-         getQList().doPrettyPrint(stream, formatter, " || await ", "?");
+         stream.print("while (!( ");
+         getQList().doPrettyPrint(stream, formatter, " || ", "?");
          stream.print("))");
          //stream.println();
          formatter.beforeOpenBrace();
@@ -353,8 +353,8 @@ aspect doPrettyPrinter {
         stream.print(")");
     }
     public void Call1Exp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter, VarOrFieldUse v) {
-         stream.print("while (!( await ");
-         getQList().doPrettyPrint(stream, formatter, " || await ", "?");
+         stream.print("while (!( ");
+         getQList().doPrettyPrint(stream, formatter, " || ", "?");
          stream.print("))");
          //stream.println();
          formatter.beforeOpenBrace();
@@ -441,19 +441,19 @@ aspect doPrettyPrinter {
     }
 
     public void AddResStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("await r!add(");
+            stream.print("await r!add1(");
             getParamList().doPrettyPrint(stream, formatter, ",");
             stream.print(");");
     }
 
     public void HoldExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-             stream.print("await r!hold(");
+             stream.print("await r!hold1(");
              getParamList().doPrettyPrint(stream, formatter, ",");
-             stream.print(");");
+             stream.print(")");
     }
 
     public void ReleaseResStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-                stream.print("await r!release(");
+                stream.print("await r!release1(");
                 getRes().doPrettyPrint(stream, formatter);
                 stream.print(");");
     }

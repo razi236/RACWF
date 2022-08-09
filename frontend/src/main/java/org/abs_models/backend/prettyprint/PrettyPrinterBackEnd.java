@@ -12,7 +12,7 @@ import org.abs_models.frontend.parser.Main;
 
 public class PrettyPrinterBackEnd extends Main {
 
-    public static int doMain(Absc args)  {
+    public static int doMain(Absc args) {
         PrettyPrinterBackEnd backend = new PrettyPrinterBackEnd();
         backend.arguments = args;
         int result = 0;
@@ -66,25 +66,53 @@ public class PrettyPrinterBackEnd extends Main {
         model.doPrettyPrint(writer, formatter);*/
 
         File file = new File("/Users/muhammadrizwanali/Desktop/GitHub/abstools/RABS.abs");
-
+        FileInputStream inputStream = new FileInputStream("/Users/muhammadrizwanali/Desktop/GitHub/abstools/ResourceManagerAPI.abs");
+        FileOutputStream outputStream = new FileOutputStream(file);
         PrintWriter writer = null;
+        try {
+            // declare variable for indexing
+            int i;
+            // use while loop with read() method of FileInputStream class to read bytes data from file1
+            while ((i = inputStream.read()) != -1) {
 
-        try
-        {
-            writer = new PrintWriter(file);
+                // use write() method of FileOutputStream class to write the byte data into file2
+                outputStream.write(i);
+            }
+        }
+        // catch block to handle exceptions
+        catch (Exception e) {
+            System.out.println("Error Found: " + e.getMessage());
+        }
+        // use finally to close instance of the FileInputStream and FileOutputStream classes
+        finally {
+            if (inputStream != null) {
+                // use close() method of FileInputStream class to close the stream
+                inputStream.close();
+            }
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        }
+        BufferedWriter br = null;
+        FileWriter fr = null;
+        try {
+            fr = new FileWriter(file, true);
+            br = new BufferedWriter(fr);
+            writer = new PrintWriter(br);
             System.setProperty("line.separator", System.lineSeparator());
             ABSFormatter formatter = new DefaultABSFormatter(writer);
             model.doPrettyPrint(writer, formatter);
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        finally
-        {
-            if ( writer != null )
-            {
+        } finally {
+            if (writer != null) {
                 writer.close();
+            }
+            if (br != null) {
+                br.close();
+            }
+            if (fr != null) {
+                fr.close();
             }
         }
         return 0;

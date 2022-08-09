@@ -1,12 +1,6 @@
-module Test;
+// Resource API of Rpl
+module ResourceManager;
 export *;
-
-// * [0/4] TODO
-// 
-// - [ ] resource qualities
-// - [ ] resource quality sets
-// - [ ] comparisons
-// - [ ] resource manager 
 
 data Quality =
     Efficiency(Int)
@@ -85,43 +79,4 @@ We want $wantedResources$`);
             }
         }
     }
-}
-
-class Tester(ResourceManager r) {
-    Unit run() {
-        println("Tester starting");
-        List<Set<Quality>> w1 = list[set[Orthopedic]];
-        
-        this!get_release(w1, 5);
-        this!get_release(w1, 5);
-        this!get_release(w1, 5);
-    }
-
-    Unit speculative_get_release(List<Set<Quality>> w, Rat time) {
-        List<Int> l1 = await r!hold1(w);
-        try {
-            await duration(time);
-        } catch {
-            e => throw(e);
-        } finally {
-            r!release1(l1);
-        }
-    }
-
-    Unit get_release(List<Set<Quality>> w, Rat time) {
-        println(`Trying to get $w$ at $now()$`);
-        List<Int> l1 = await r!hold1(w);
-        println(`Got $l1$ at $now()$`);
-        
-        await duration(time);
-
-        println(`Releasing $l1$`);
-        r!release1(l1);
-    }
-}
-
-{
-     ResourceManager r = new ResourceManager();
-     await r!add1(list[set[Orthopedic, Efficiency(2)], set[Gynaecologist]]);
-     new Tester(r);
 }
