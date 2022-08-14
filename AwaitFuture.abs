@@ -9,8 +9,18 @@ class Payment implements Payment
 {
     Unit payInCash()
     {
-        duration(5,10);
+        duration(12,15);
         println("Paid in Cash:");
+        Duration d = deadline(); // Check remaining time (deadline).
+        Rat r = durationValue(d);
+        if(r<=0)
+        {
+            println("Missed Deadline");
+        }
+        if(r>0)
+        {
+            println("Finished within Deadline");
+        }
     }
     Unit payByCard()
     {

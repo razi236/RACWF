@@ -21,7 +21,7 @@ class ABC implements ABC
 {
     Fut<Int> f;Fut<Int> f1;Fut<Int> f2; List<Int> fids = list[]; Int i=0;
     ABC a = new ABC();
-    //f = !xyz(a,10) after f&f1&f2,f1 dl 10;
+    f = !xyz(a,10) after f&f1&f2,f1 dl 10;
     //i = xyz(a,20) after f&f2 dl 5;
     //abc(a,20) after f&f2 dl 5;
     //await f?;
