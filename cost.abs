@@ -8,6 +8,8 @@ data Quality =
     | Driver
     | VanDriver
     | Van
+    | Truck
+    | Engineer
     ;
 
 module ABS;
@@ -36,9 +38,9 @@ class ABC implements ABC
     //f = !xyz(a,10) after dl 10;
     //i = xyz(a,20) after f dl 5;
     abc(a,20) after f&f2,f3 dl 5;
-    //await f?;
-    //f.get;
-    //add(list[set[Orthopedic, Efficiency(2)], set[Gynaecologist],set[Radiologist, Efficiency(3)]]);
-    //fids = hold(list[set[Orthopedic, Efficiency(2)], set[Gynaecologist]]);
-    //rel(fids);
+    await f?;
+    f.get;
+    add(list[set[Engineer, Efficiency(2)], set[Gynaecologist],set[Radiologist, Efficiency(3)]]);
+    fids = hold(list[set[Engineer, Efficiency(2)], set[Gynaecologist]]);
+    rel(fids);
 }
