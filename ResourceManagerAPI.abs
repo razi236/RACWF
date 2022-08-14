@@ -1,17 +1,8 @@
 // Resource API of Rpl
 module ResourceManager;
+import * from Resource;
 export *;
 
-data Quality =
-    Efficiency(Int)
-    | Pathologist
-    | Radiologist
-    | Gynaecologist
-    | Orthopedic
-    | Driver
-    | VanDriver
-    | Van
-    ;
 
 data Availability = Free | Busy;
 
@@ -78,5 +69,27 @@ We want $wantedResources$`);
                 resources = put(resources, id, Pair(Free, snd(entry)));
             }
         }
+    }
+}
+interface FutTest
+{
+    Unit awaitFut(List<Fut<Int>> fut);
+    Bool checkFut();
+}
+class FutTest implements FutTest
+{
+    Bool resolved = False;
+    Unit awaitFut(List<Fut<Int>> fut)
+    {
+           foreach(f in fut)
+           {
+               await f?;
+           }
+           resolved = True;
+           println("Future Resolved:)");
+    }
+    Bool checkFut()
+    {
+        return resolved;
     }
 }
