@@ -1,0 +1,69 @@
+module ABS;
+
+interface Payment
+{
+    Unit payInCash();
+    Unit payByCard();
+}
+class Payment implements Payment
+{
+    Unit payInCash()
+    {
+        duration(5,10);
+        println("Paid in Cash:");
+    }
+    Unit payByCard()
+    {
+        duration(15,20);
+        println("Paid by Card:");
+    }
+}
+interface AwaitFut
+{
+    Unit awaitFut(List<Fut<Unit>> fut);
+    Bool checkFut(); // Return True if all the futures are resolved.
+}
+class AwaitFut implements AwaitFut
+{
+    Bool resolved = False;
+    Unit awaitFut(List<Fut<Unit>> fut)
+    {
+           foreach(f in fut)
+           {
+               await f?;
+           }
+           resolved = True; // All the futures are resolved.
+           println("Future Resolved:)");
+    }
+    Bool checkFut()
+    {
+        return resolved;
+    }
+}
+
+{
+  Fut<Unit> f;
+  Fut<Unit> f1;
+  Bool c = False;
+  Bool d = False;
+  List<Unit> fids = list(Nil);
+  Payment o = new Payment();
+  Payment o1 = new Payment();
+  AwaitFut a = new AwaitFut();
+  AwaitFut b = new AwaitFut();
+  [Deadline: Duration(10)]  f = o!payInCash();
+  [Deadline: Duration(10)]  f1 = o1!payByCard();
+  a!awaitFut(list[f]);
+  b!awaitFut(list[f1]);
+  while(!(c || d))
+  {
+    d = await a!checkFut();
+    c = await b!checkFut();
+    println(`c = $c$ and d = $d$`);
+    await duration(2);
+  }
+  println("Thank You for the payment :)");
+  d = await a!checkFut();
+  c = await b!checkFut();
+  println(`c = $c$ and d = $d$`);
+}
