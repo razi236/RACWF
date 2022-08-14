@@ -4,7 +4,7 @@
 -export([get_val_internal/2,set_val_internal/3,init_internal/0,get_state_for_modelapi/1,implemented_interfaces/0,exported/0]).
 -compile(export_all).
 
-implemented_interfaces() -> [ <<"DeploymentComponentForCloudProvider">>, <<"Object">>, <<"DeploymentComponent">> ].
+implemented_interfaces() -> [ <<"DeploymentComponentForCloudProvider">>, <<"DeploymentComponent">>, <<"Object">> ].
 
 exported() -> #{  }.
 
@@ -638,12 +638,12 @@ exported() -> #{  }.
          %% abs/lang/abslang.abs:1152--1152
         case (not cmp:eq(C:get_val_internal(get(this), 'cloudprovider'),null)) of
             true ->  %% abs/lang/abslang.abs:1153--1153
-            put(vars, (get(vars))#{'tmp918145945' => cog:create_task(C:get_val_internal(get(this), 'cloudprovider'),'m_acquireInstance',[O,[]],#task_info{method= <<"acquireInstance"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+            put(vars, (get(vars))#{'tmp123721308' => cog:create_task(C:get_val_internal(get(this), 'cloudprovider'),'m_acquireInstance',[O,[]],#task_info{method= <<"acquireInstance"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
              %% abs/lang/abslang.abs:1153--1153
-            future:await(maps:get('tmp918145945', get(vars)), Cog, [O,DC| Stack]),
+            future:await(maps:get('tmp123721308', get(vars)), Cog, [O,DC| Stack]),
             ok,
              %% abs/lang/abslang.abs:1153--1153
-            put(vars, (get(vars))#{'result' := future:get_blocking(maps:get('tmp918145945', get(vars)), Cog, [O,DC| Stack])});
+            put(vars, (get(vars))#{'result' := future:get_blocking(maps:get('tmp123721308', get(vars)), Cog, [O,DC| Stack])});
             false ->         ok
         end,
          %% abs/lang/abslang.abs:1155--1155
@@ -665,12 +665,12 @@ exported() -> #{  }.
          %% abs/lang/abslang.abs:1159--1159
         case (not cmp:eq(C:get_val_internal(get(this), 'cloudprovider'),null)) of
             true ->  %% abs/lang/abslang.abs:1160--1160
-            put(vars, (get(vars))#{'tmp1093703004' => cog:create_task(C:get_val_internal(get(this), 'cloudprovider'),'m_releaseInstance',[O,[]],#task_info{method= <<"releaseInstance"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+            put(vars, (get(vars))#{'tmp222927891' => cog:create_task(C:get_val_internal(get(this), 'cloudprovider'),'m_releaseInstance',[O,[]],#task_info{method= <<"releaseInstance"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
              %% abs/lang/abslang.abs:1160--1160
-            future:await(maps:get('tmp1093703004', get(vars)), Cog, [O,DC| Stack]),
+            future:await(maps:get('tmp222927891', get(vars)), Cog, [O,DC| Stack]),
             ok,
              %% abs/lang/abslang.abs:1160--1160
-            put(vars, (get(vars))#{'result' := future:get_blocking(maps:get('tmp1093703004', get(vars)), Cog, [O,DC| Stack])});
+            put(vars, (get(vars))#{'result' := future:get_blocking(maps:get('tmp222927891', get(vars)), Cog, [O,DC| Stack])});
             false ->         ok
         end,
          %% abs/lang/abslang.abs:1162--1162
