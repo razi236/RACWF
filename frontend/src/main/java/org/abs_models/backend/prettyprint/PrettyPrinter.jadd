@@ -56,8 +56,11 @@ aspect doPrettyPrinter {
                 stream.print("b"+i+" = await a"+i+"!checkFut();");
                 stream.println();
             }
+            formatter.afterStmt();
+            stream.print("await duration(1);");
+            stream.println();
+            //formatter.afterStmt();
             formatter.beforeCloseBrace();
-            //stream.println();
             formatter.afterStmt();
             stream.print("}");
             stream.println();

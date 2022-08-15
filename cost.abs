@@ -1,3 +1,10 @@
+/*
+[Done:Wait for generic future type]   Task Dependencies
+[Done]                                Resource Qualities Declaration
+[With Timed ABS]                      Deadline Missed Notification
+[With JAVA Backend?]                  Cost Analysis
+*/
+
 module Resource; // must be module Resource to declare some resource qualities.
 data Quality =
     Efficiency(Int)
@@ -15,32 +22,40 @@ data Quality =
 module ABS;
 interface ABC
 {
-    Int xyz(Int x);
-    Unit abc(Int x);
+    Int xyz(String x);
+    Int abc(String x);
 }
 class ABC implements ABC
 {
-    Int xyz(Int x)
+    Int xyz(String x)
     {
-        println("Hello World $x$");
+        println(`Hello $x$`);
         consTime(10); // cost is a keyword in ABS compiler.
         return 0;
     }
-    Unit abc(Int x)
-        {
-            println("Hello World $x$");
-            consTime(10); // cost is a keyword in ABS compiler.
-        }
+    Int abc(String x)
+    {
+        println(`Hello World $x$`);
+        consTime(5); // cost is a keyword in ABS compiler.
+        return 0;
+    }
 }
 {
     Fut<Int> f;Fut<Int> f1;Fut<Int> f2; List<Int> fids = list[]; Int i=0;
-    ABC a = new ABC();
-    //f = !xyz(a,10) after dl 10;
-    //i = xyz(a,20) after f dl 5;
+    ABC o = new ABC();
+    ABC o1 = new ABC();
+    ABC o2 = new ABC();
+    ABC o3 = new ABC();
+    f = !xyz(o,"Muhammad") after dl 10;
+    f1 = !abc(o1,"Rizwan") after  dl 10;
+    f2 = !xyz(o2,"Ali") after f&f1 dl 10;
+    //i = xyz(o3,"Finished") after f&f1,f2 dl 5;
+    /*
     abc(a,20) after f&f2,f3 dl 5;
     await f?;
     f.get;
     add(list[set[Engineer, Efficiency(2)], set[Gynaecologist],set[Radiologist, Efficiency(3)]]);
     fids = hold(list[set[Engineer, Efficiency(2)], set[Gynaecologist]]);
     rel(fids);
+    */
 }
