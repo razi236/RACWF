@@ -1,8 +1,15 @@
 /*
 [Done:Wait for generic future type]   Task Dependencies
+                                      Try to make data FutType = Int | String | Unit;
 [Done]                                Resource Qualities Declaration
 [With Timed ABS]                      Deadline Missed Notification
 [With JAVA Backend?]                  Cost Analysis
+[?]                                   Comparison with other Cost Analysis
+[?]                                   Find some tools targeting workflow plannings
+[?]                                   Tools that targets programs (focus actor programs)
+[?]                                   SAC paper will be tool oriented
+
+
 */
 
 module Resource; // must be module Resource to declare some resource qualities.
@@ -17,6 +24,7 @@ data Quality =
     | Van
     | Truck
     | Engineer
+    | Teacher
     ;
 
 module ABS;
@@ -30,13 +38,27 @@ class ABC implements ABC
     Int xyz(String x)
     {
         println(`Hello $x$`);
-        consTime(10); // cost is a keyword in ABS compiler.
+        consTime(10000); // cost is a keyword in ABS compiler.
+        try {
+            Duration d = deadline(); // Check remaining time (deadline).
+            Rat r = durationValue(d); // Convert duration into rational value.
+            assert r > 0;
+        } catch {
+            AssertionFailException => println(`Deadline Missed by method xyz`);
+        }
         return 0;
     }
     Int abc(String x)
     {
         println(`Hello World $x$`);
         consTime(5); // cost is a keyword in ABS compiler.
+        try {
+            Duration d = deadline(); // Check remaining time (deadline).
+            Rat r = durationValue(d); // Convert duration into rational value.
+            assert r > 0;
+        } catch {
+            AssertionFailException => println(`Deadline Missed by method abc`);
+        }
         return 0;
     }
 }
@@ -48,7 +70,7 @@ class ABC implements ABC
     ABC o3 = new ABC();
     f = !xyz(o,"Muhammad") after dl 10;
     f1 = !abc(o1,"Rizwan") after  dl 10;
-    f2 = !xyz(o2,"Ali") after f&f1 dl 10;
+    f2 = !xyz(o2,"Ali") after f&f1 dl 15;
     //i = xyz(o3,"Finished") after f&f1,f2 dl 5;
     /*
     abc(a,20) after f&f2,f3 dl 5;
