@@ -91,15 +91,4 @@ class AwaitFut implements AwaitFut
         return resolved;
     }
 }
-/*
-def Unit checkDeadline()
-{
-    try {
-        Duration d = deadline(); // Check remaining time (deadline).
-        Rat r = durationValue(d); // Convert duration into rational value.
-        assert r > 0;
-    } catch {
-        AssertionFailException => println(`Deadline Missed`);
-    }
-}
-*/
+

@@ -598,6 +598,27 @@ aspect doPrettyPrinter {
     }
 
     public void ReturnStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+        stream.print("try {");
+        stream.println();
+        formatter.afterStmt();
+        stream.print("Duration d = deadline();");
+        stream.println();
+        formatter.afterStmt();
+        stream.print("Rat r = durationValue(d);");
+        stream.println();
+        formatter.afterStmt();
+        stream.print("assert r > 0;");
+        stream.println();
+        formatter.afterStmt();
+        stream.print("} catch {");
+        stream.println();
+        formatter.afterStmt();
+        stream.print("AssertionFailException => println(`Deadline Missed`);");
+        stream.println();
+        formatter.afterStmt();
+        stream.print("}");
+        stream.println();
+        formatter.afterStmt();
         getAnnotationList().doPrettyPrint(stream, formatter, "");
         stream.print("return ");
         getRetExp().doPrettyPrint(stream, formatter);

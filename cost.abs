@@ -39,26 +39,12 @@ class ABC implements ABC
     {
         println(`Hello $x$`);
         consTime(10000); // cost is a keyword in ABS compiler.
-        try {
-            Duration d = deadline(); // Check remaining time (deadline).
-            Rat r = durationValue(d); // Convert duration into rational value.
-            assert r > 0;
-        } catch {
-            AssertionFailException => println(`Deadline Missed by method xyz`);
-        }
         return 0;
     }
     Int abc(String x)
     {
         println(`Hello World $x$`);
         consTime(5); // cost is a keyword in ABS compiler.
-        try {
-            Duration d = deadline(); // Check remaining time (deadline).
-            Rat r = durationValue(d); // Convert duration into rational value.
-            assert r > 0;
-        } catch {
-            AssertionFailException => println(`Deadline Missed by method abc`);
-        }
         return 0;
     }
 }
