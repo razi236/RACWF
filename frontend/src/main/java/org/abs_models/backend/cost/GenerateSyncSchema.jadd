@@ -1,0 +1,30 @@
+import java.io.PrintWriter;
+import org.abs_models.backend.prettyprint.*;
+import java.util.stream.Collectors;
+import com.google.common.collect.Streams;
+
+aspect generate_sync_schema {
+
+    /** Controls whether to include the standard library in generate_sync_schema
+     */
+    public boolean Model.doPrettyPrintStdLib = false;
+
+    public Set<Set<String>> ASTNode.generate_sync_schema() {
+        throw new NotImplementedYetException(this);
+    }
+
+    public void Model.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+        for (ModuleDecl d : getModuleDecls()) {
+            if (doPrettyPrintStdLib || (! Constants.BUILT_IN_LIBS.contains(d.getName()))) {
+                d.doPrettyPrint(stream, formatter);
+            }
+        }
+
+        for (DeltaDecl d : getDeltaDecls()) {
+            d.doPrettyPrint(stream, formatter);
+        }
+        if (hasProductLine()) {
+            getProductLine().doPrettyPrint(stream, formatter);
+        }
+    }
+
