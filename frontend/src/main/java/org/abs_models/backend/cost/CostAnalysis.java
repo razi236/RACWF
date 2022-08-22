@@ -1,14 +1,13 @@
 package org.abs_models.backend.cost;
 import java.io.*;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.abs_models.Absc;
 import org.abs_models.backend.prettyprint.ABSFormatter;
 import org.abs_models.backend.prettyprint.DefaultABSFormatter;
 import org.abs_models.backend.prettyprint.PrettyPrinterBackEnd;
 import org.abs_models.frontend.ast.Model;
+import org.abs_models.frontend.ast.*;
 import org.abs_models.frontend.parser.Main;
 
 public class CostAnalysis extends Main{
@@ -30,12 +29,12 @@ public class CostAnalysis extends Main{
     public int compute(Absc args) throws Exception {
         this.arguments = args;
         final Model model = parse(arguments.files);
-        String object = null;
-        Set<String> sync_set = new HashSet<String>();
-        Set<Set<String>> sync_shema = new HashSet<Set<String>>();
-        sync_shema = model.generate_sync_schema();
-        String s = model.translate();
+        PureExp object = null;
+        Set<PureExp> sync_set = new HashSet<PureExp>();
+        Set<Set<PureExp>> sync_schema = new HashSet<Set<PureExp>>();
+        Map<PureExp,Set<Set<PureExp>>> sync_schema_map = new HashMap<PureExp,Set<Set<PureExp>>>(); // [method_name -> sync_schema]
+        sync_schema_map = model.generate_sync_schema(sync_schema_map);
+        //String s = model.translate();
         return 0;
     }
-    public
 }

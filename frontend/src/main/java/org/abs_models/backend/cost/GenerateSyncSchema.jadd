@@ -1,5 +1,5 @@
 import java.io.PrintWriter;
-import org.abs_models.backend.prettyprint.*;
+import org.abs_models.backend.cost.*;
 import java.util.stream.Collectors;
 import com.google.common.collect.Streams;
 
@@ -7,24 +7,1213 @@ aspect generate_sync_schema {
 
     /** Controls whether to include the standard library in generate_sync_schema
      */
-    public boolean Model.doPrettyPrintStdLib = false;
 
-    public Set<Set<String>> ASTNode.generate_sync_schema() {
-        throw new NotImplementedYetException(this);
-    }
+    public boolean Model.generate_sync_schemaStdLib = false;
 
-    public void Model.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-        for (ModuleDecl d : getModuleDecls()) {
-            if (doPrettyPrintStdLib || (! Constants.BUILT_IN_LIBS.contains(d.getName()))) {
-                d.doPrettyPrint(stream, formatter);
+    public Map<PureExp,Set<Set<PureExp>>> List.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map,Set<PureExp> syn_set,PureExp method_name) {
+        Map<PureExp,Set<Set<PureExp>>> temp_map = new HashMap<PureExp,Set<Set<PureExp>>>();
+        Set<Set<PureExp>> temp_set = new HashSet<Set<PureExp>>();
+        temp_set.add(syn_set);
+        temp_map.put(method_name,temp_set);
+
+        if (getNumChild() > 0) {
+            temp_map = getChild(0).generate_sync_schema(temp_map);
+            for (int i = 1; i < getNumChild(); i++) {
+                temp_map = getChild(1).generate_sync_schema(temp_map);
             }
         }
 
-        for (DeltaDecl d : getDeltaDecls()) {
-            d.doPrettyPrint(stream, formatter);
-        }
-        if (hasProductLine()) {
-            getProductLine().doPrettyPrint(stream, formatter);
-        }
+        return temp_map;
     }
+
+    public Map<PureExp,Set<Set<PureExp>>> List.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+        return syn_map;
+    }
+
+    public Map<PureExp,Set<Set<PureExp>>> ASTNode.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> sync_map) {
+        throw new NotImplementedYetException(this);
+    }
+
+    public Map<PureExp,Set<Set<PureExp>>> Model.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+        for (ModuleDecl d : getModuleDecls()) {
+            syn_map = d.generate_sync_schema(syn_map);
+        }
+        return syn_map;
+    }
+
+    public Map<PureExp,Set<Set<PureExp>>> ModuleDecl.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+        for (Decl decl : getDecls()) {
+            syn_map = decl.generate_sync_schema(syn_map);
+        }
+        if (hasBlock()) {
+            syn_map = getBlock().generate_sync_schema(syn_map);
+        }
+        return syn_map;
+    }
+
+    public Map<PureExp,Set<Set<PureExp>>> Block.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+        syn_map = getStmtList().generate_sync_schema(syn_map);
+        return syn_map;
+    }
+
+    /*
+    Lets see how we can pass "main" or "this" as a pure expression...
+
+    public Map<PureExp,Set<Set<PureExp>>> MainBlock.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+        Set<PureExp> main_sync = new HashSet<PureExp>();
+        PureExp e = (PureExp) "this";
+        main_sync.add(e);
+        //Set<Set<PureExp>> temp_set = new HashSet<Set<PureExp>>();
+        //temp_set.add(main_sync);
+        //syn_map.put("main",{{"main"}});
+        syn_map = getStmtList().generate_sync_schema(syn_map,main_sync,"main");
+        return syn_map;
+    }
+
+    */
+
+    public Map<PureExp,Set<Set<PureExp>>> AssertStmt.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+        return syn_map;
+    }
+
+    public Map<PureExp,Set<Set<PureExp>>> ThrowStmt.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+        return syn_map;
+    }
+
+    public Map<PureExp,Set<Set<PureExp>>> DieStmt.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+        return syn_map;
+    }
+
+    public Map<PureExp,Set<Set<PureExp>>> AssignStmt.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+        syn_map = getValue().generate_sync_schema(syn_map);
+        return syn_map;
+    }
+
+    public Map<PureExp,Set<Set<PureExp>>> Call.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+        PureExp callee = getCallee();
+        List<PureExp> param = getParamList();
+        Set<PureExp> temp_set = new HashSet<PureExp>();
+        temp_set.add(callee);
+        for (PureExp x : temp_set)
+            temp_set.add(x);
+        //syn_map = merge_schema(sync_map,temp_set);
+        return syn_map;
+    }
+
+    /*
+
+    abstract public Map<String,Set<Set<String>>> Call.merge_schema(Map<String,Set<Set<String>>> syn_map,);
+
+        abstract public void Call.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter);
+
+        abstract public void Call1Exp.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter);
+
+        abstract public void Call1Exp.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter);
+
+
+
+
+
+        public void AsyncCall.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("!");
+        }
+
+        public void AwaitAsyncCall.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("!");
+        }
+
+        public void SyncCall.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(".");
+        }
+
+        public void AsyncCall.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
+        }
+
+        public void AwaitAsyncCall.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("await ");
+        }
+
+        public void SyncCall.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
+        }
+
+        public void AsyncCall1Exp.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
+                stream.print("!");
+            }
+
+            public void SyncCall1Exp.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
+                stream.print(".");
+            }
+
+            public void AsyncCall1Exp.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
+            }
+
+            public void SyncCall1Exp.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
+            }
+
+        public void GetExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getPureExp().doPrettyPrint(stream, formatter);
+            stream.print(".get");
+        }
+
+        public void AddResStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+                stream.print("await r!add1(");
+                getParamList().doPrettyPrint(stream, formatter, ",");
+                stream.print(");");
+        }
+
+        public void HoldExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+                 stream.print("await r!hold1(");
+                 getParamList().doPrettyPrint(stream, formatter, ",");
+                 stream.print(")");
+        }
+
+        public void ReleaseResStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+                    stream.print("await r!release1(");
+                    getRes().doPrettyPrint(stream, formatter);
+                    stream.print(");");
+        }
+
+
+        public void NewExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("new ");
+            if (hasLocal()) {
+                stream.print("local ");
+            }
+            stream.print(getClassName());
+            stream.print("(");
+            getParamList().doPrettyPrint(stream, formatter, ",");
+            stream.print(")");
+        }
+
+        public void OriginalCall.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("original ");
+            stream.print("(");
+            getParamList().doPrettyPrint(stream, formatter, ",");
+            stream.print(")");
+        }
+
+        public void AwaitStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            if (getNumAnnotation() > 0) {
+                stream.println();
+                formatter.afterStmt();
+            }
+            stream.print("await ");
+            getGuard().doPrettyPrint(stream, formatter);
+            stream.print(";");
+        }
+
+        public void AndGuard.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getLeft().doPrettyPrint(stream, formatter);
+            stream.print(" & ");
+            getRight().doPrettyPrint(stream, formatter);
+        }
+
+        public void ClaimGuard.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getVar().doPrettyPrint(stream, formatter);
+            stream.print("?");
+        }
+
+        public void DurationGuard.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("duration(");
+            getMin().doPrettyPrint(stream, formatter);
+            stream.print(", ");
+            getMax().doPrettyPrint(stream, formatter);
+            stream.print(")");
+        }
+
+        public void ExpGuard.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getPureExp().doPrettyPrint(stream, formatter);
+        }
+
+        public void CostStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            if (getNumAnnotation() > 0) {
+                stream.println();
+                formatter.afterStmt();
+            }
+            stream.print("duration(");
+            getMin().doPrettyPrint(stream, formatter);
+            stream.print(", ");
+            getMin().doPrettyPrint(stream, formatter);
+            stream.print(")");
+            stream.print(";");
+        }
+
+        public void ExpressionStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            if (getNumAnnotation() > 0) {
+                stream.println();
+                formatter.afterStmt();
+            }
+            getExp().doPrettyPrint(stream, formatter);
+            stream.print(";");
+        }
+
+        public void IfStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            stream.print("if ( ");
+            getCondition().doPrettyPrint(stream, formatter);
+            stream.print(" )");
+            getThen().doPrettyPrint(stream, formatter);
+            if (hasElse()) {
+                stream.print(" else ");
+                getElse().doPrettyPrint(stream, formatter);
+            }
+        }
+
+        public void ReturnStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("try {");
+            stream.println();
+            formatter.afterStmt();
+            stream.print("Duration d = deadline();");
+            stream.println();
+            formatter.afterStmt();
+            stream.print("Rat r = durationValue(d);");
+            stream.println();
+            formatter.afterStmt();
+            stream.print("assert r > 0;");
+            stream.println();
+            formatter.afterStmt();
+            stream.print("} catch {");
+            stream.println();
+            formatter.afterStmt();
+            stream.print("AssertionFailException => println(`Deadline Missed`);");
+            stream.println();
+            formatter.afterStmt();
+            stream.print("}");
+            stream.println();
+            formatter.afterStmt();
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            stream.print("return ");
+            getRetExp().doPrettyPrint(stream, formatter);
+            stream.print(";");
+        }
+
+        public void SkipStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            stream.print("skip;");
+        }
+
+        public void SuspendStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            stream.print("suspend;");
+        }
+
+        public void VarDeclStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            if (getNumAnnotation() > 0) {
+                stream.println();
+                formatter.afterStmt();
+            }
+            getVarDecl().doPrettyPrint(stream, formatter);
+            stream.print(";");
+        }
+
+        public void VarDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getTypeUse().doPrettyPrint(stream, formatter);
+            stream.print(" ");
+            stream.print(getName());
+            if (hasInitExp()) {
+                stream.print(" = ");
+                getInitExp().doPrettyPrint(stream, formatter);
+            }
+        }
+
+        public void WhileStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            stream.print("while (");
+            getCondition().doPrettyPrint(stream, formatter);
+            stream.print(") ");
+            getBody().doPrettyPrint(stream, formatter);
+        }
+
+        public void ForeachStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            stream.print("foreach (");
+            stream.print(getValueVar().getName());
+            if (hasIndexVar()) {
+                stream.print(", ");
+                stream.print(getIndexVar().getName());
+            }
+            stream.print(" in ");
+            getListExp().doPrettyPrint(stream, formatter);
+            stream.print(") ");
+            getBody().doPrettyPrint(stream, formatter);
+        }
+
+        public void CaseStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            stream.print("switch (");
+            getExpr().doPrettyPrint(stream, formatter);
+            formatter.beforeOpenBrace();
+            stream.println(") {");
+            formatter.afterOpenBrace();
+            for (CaseBranchStmt b : getBranchList()) {
+                formatter.afterStmt();
+                b.getLeft().doPrettyPrint(stream, formatter);
+                stream.print(" => ");
+                b.getRight().doPrettyPrint(stream, formatter);
+                stream.println();
+            }
+            formatter.beforeCloseBrace();
+            formatter.afterStmt();
+            stream.print("}");
+            formatter.afterCloseBrace();
+        }
+
+        public void TryCatchFinallyStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            stream.print("try ");
+            getBody().doPrettyPrint(stream, formatter);
+            stream.print(" catch");
+            formatter.beforeOpenBrace();
+            stream.println(" {");
+            formatter.afterOpenBrace();
+            for (CaseBranchStmt b : getCatchs()) {
+                formatter.afterStmt();
+                b.getLeft().doPrettyPrint(stream, formatter);
+                stream.print(" => ");
+                b.getRight().doPrettyPrint(stream, formatter);
+                stream.println();
+            }
+            formatter.beforeCloseBrace();
+            formatter.afterStmt();
+            stream.print("}");
+            if (hasFinally()) {
+                stream.print(" finally ");
+                getFinally().doPrettyPrint(stream, formatter);
+            } else {
+                formatter.afterCloseBrace();
+            }
+        }
+
+        abstract public void Export.doPrettyPrint(PrintWriter stream, ABSFormatter formatter);
+
+        public void NamedExport.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("export ");
+            getNames().doPrettyPrint(stream, formatter, ",");
+            stream.print(";");
+        }
+
+        public void Name.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getName());
+        }
+
+        public void StarExport.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("export *");
+            if (hasModuleName()) {
+                stream.print(" from ");
+                stream.print(getModuleName());
+            }
+            stream.print(";");
+        }
+
+        public void FromExport.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("export ");
+            getNames().doPrettyPrint(stream, formatter, ",");
+            stream.print(" from ");
+            stream.print(getModuleName());
+            stream.print(";");
+        }
+
+        public void NamedImport.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("import ");
+            getNames().doPrettyPrint(stream, formatter, ",");
+            stream.print(";");
+
+        }
+
+        public void StarImport.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("import * from ");
+            stream.print(getModuleName());
+            stream.print(";");
+        }
+
+        public void FromImport.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("import ");
+            getNames().doPrettyPrint(stream, formatter, ",");
+            stream.print(" from ");
+            stream.print(getModuleName());
+            stream.print(";");
+        }
+
+        protected boolean FunctionDecl.isSelector() {
+        	for (Annotation a : getAnnotationList()) {
+                if (! (a.getValue() instanceof StringLiteral)) {
+                    continue;
+                }
+
+                StringLiteral sl = (StringLiteral) a.getValue();
+                if (ASTPreProcessor.FUNCTIONSELECTOR.equals(sl.getContent())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void FunctionDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            if (isSelector()) {
+            	//skip selector
+            	return;
+            }
+
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            if (getNumAnnotation() > 0) {
+                stream.println();
+                formatter.afterStmt();
+            }
+            stream.print("def ");
+            getTypeUse().doPrettyPrint(stream, formatter);
+            stream.print(" ");
+            stream.print(getName());
+            doPrettyPrintTypeParam(stream, formatter);
+            stream.print("(");
+            getParamList().doPrettyPrint(stream, formatter, ",");
+            stream.print(") = ");
+            getFunctionDef().doPrettyPrint(stream, formatter);
+            formatter.afterStmt();
+        }
+
+        public void PartialFunctionDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+          getAnnotationList().doPrettyPrint(stream, formatter, "");
+          if (getNumAnnotation() > 0) {
+              stream.println();
+              formatter.afterStmt();
+          }
+          stream.print("def ");
+          getTypeUse().doPrettyPrint(stream, formatter);
+          stream.print(" ");
+          stream.print(getName());
+          doPrettyPrintTypeParam(stream, formatter);
+          stream.print("(");
+          getParamList().doPrettyPrint(stream, formatter, ",");
+          stream.print(") (");
+          getFuncParamList().doPrettyPrint(stream, formatter, ",");
+          stream.print(") = ");
+          getPartialFunctionDef().doPrettyPrint(stream, formatter);
+          formatter.afterStmt();
+        }
+
+        public void FunctionParamDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+          stream.print(getName());
+        }
+
+        public void PartialFunctionDef.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.println();
+            formatter.afterOpenBrace();
+            formatter.afterStmt();
+            getPureExp().doPrettyPrint(stream, formatter);
+            stream.print(";");
+            formatter.beforeCloseBrace();
+        }
+
+        public void NamedParFnAppParam.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getName());
+        }
+
+        public void AnonymousFunctionDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("(");
+            getParams().doPrettyPrint(stream, formatter, ",");
+            stream.print(") => ");
+            getPureExp().doPrettyPrint(stream, formatter);
+        }
+
+        public void FunctionDecl.doPrettyPrintTypeParam(PrintWriter stream, ABSFormatter formatter) { }
+
+        public void ParametricFunctionDecl.doPrettyPrintTypeParam(PrintWriter stream, ABSFormatter formatter) {
+            if (getNumTypeParameter() > 0) {
+                stream.print("<");
+                getTypeParameterList().doPrettyPrint(stream, formatter, ",");
+                stream.print(">");
+            }
+        }
+
+        public void PartialFunctionDecl.doPrettyPrintTypeParam(PrintWriter stream, ABSFormatter formatter) {}
+
+        public void ParametricPartialFunctionDecl.doPrettyPrintTypeParam(PrintWriter stream, ABSFormatter formatter) {
+           if (getNumTypeParameter() > 0) {
+               stream.print("<");
+               getTypeParameterList().doPrettyPrint(stream, formatter, ",");
+               stream.print(">");
+           }
+        }
+
+        public void BuiltinFunctionDef.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("builtin;");
+        }
+
+        public void ExpFunctionDef.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.println();
+            formatter.afterOpenBrace();
+            formatter.afterStmt();
+            getRhs().doPrettyPrint(stream, formatter);
+            stream.print(";");
+            formatter.beforeCloseBrace();
+        }
+
+        public void DeltaDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("delta ");
+            stream.print(getName());
+
+            List<DeltaParamDecl> dpl = getParamList();
+            if (dpl.getNumChild() > 0) {
+                stream.print("(");
+                dpl.doPrettyPrint(stream, formatter, ",");
+                stream.print(")");
+            }
+            stream.println(";");
+            formatter.afterStmt();
+            if (hasImportedModule()) {
+                getImportedModule().doPrettyPrint(stream, formatter);
+            }
+            stream.println();
+            getModuleModifierList().doPrettyPrint(stream, formatter);
+
+            //        List<FunctionalModifier> fms = getFunctionalModifierList();
+            //        int mcount = fms.getNumChild();
+            //        if (mcount > 0) {
+            //            formatter.afterStmt();
+            //        }
+            //        fms.doPrettyPrint(stream, formatter);
+            //
+            //        List<ClassOrIfaceModifier> cms = getClassOrIfaceModifierList();
+            //        if (cms.getNumChild() > 0 && mcount == 0) {
+            //            formatter.afterStmt();
+            //        }
+            //        cms.doPrettyPrint(stream, formatter);
+
+            stream.println();
+        }
+
+        public void DeltaAccess.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("uses ");
+            stream.print(getModuleName());
+            stream.print(";");
+        }
+
+        public void AddImportModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("adds ");
+            getImport().doPrettyPrint(stream, formatter);
+            stream.println();
+        }
+
+        public void AddExportModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("adds ");
+            getExport().doPrettyPrint(stream, formatter);
+            stream.println();
+        }
+
+        public void RemoveClassModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("removes class ");
+            stream.print(getName());
+            stream.print(";");
+        }
+
+        public void ModifyClassModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("modifies class ");
+            stream.print(getName());
+
+            if (getNumAddedInterface() > 0) {
+                stream.print(" adds ");
+                getAddedInterfaceList().doPrettyPrint(stream, formatter, ",");
+            }
+            // TODO deal with removedInterfaceList
+
+            formatter.beforeOpenBrace();
+            stream.println("{");
+            formatter.afterOpenBrace();
+
+            List<Modifier> mms = getModifierList();
+            if (mms.getNumChild() > 0) {
+                mms.doPrettyPrint(stream, formatter);
+                stream.println();
+                formatter.afterStmt();
+            }
+
+            formatter.beforeCloseBrace();
+            stream.print("}");
+            formatter.afterCloseBrace();
+        }
+
+        public void AddFieldModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("adds ");
+            getFieldDecl().doPrettyPrint(stream, formatter);
+        }
+
+        public void RemoveFieldModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("removes ");
+            getFieldDecl().doPrettyPrint(stream, formatter);
+        }
+
+        public void AddInterfaceModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("adds ");
+            getInterfaceDecl().doPrettyPrint(stream, formatter);
+        }
+
+        public void AddClassModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("adds ");
+            getClassDecl().doPrettyPrint(stream, formatter);
+        }
+
+        public void DeltaFieldParam.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getParamDecl().doPrettyPrint(stream, formatter);
+        }
+
+        public void DeltaClassParam.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getName());
+            stream.print(" ");
+            getHasCondition().doPrettyPrint(stream, formatter);
+        }
+
+        public void HasField.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("hasField");
+            getFieldDecl().doPrettyPrint(stream, formatter);
+        }
+
+        public void HasInterface.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("hasInterface");
+            getInterfaceTypeUse().doPrettyPrint(stream, formatter);
+        }
+
+        public void HasMethod.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("hasMethod");
+            getMethodSig().doPrettyPrint(stream, formatter);
+        }
+
+        public void TypeSynDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            if (getNumAnnotation() > 0) {
+                stream.println();
+                formatter.afterStmt();
+            }
+            stream.print("type ");
+            stream.print(getName());
+            stream.print(" = ");
+            getValue().doPrettyPrint(stream, formatter);
+            stream.print(";");
+        }
+
+        public void InterfaceDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            if (getNumAnnotation() > 0) {
+                stream.println();
+                formatter.afterStmt();
+            }
+            stream.print("interface ");
+            stream.print(getName());
+    	Filter `extends ABS.StdLib.Object, ...` by way of streams.
+    	String s = Streams.stream(getExtendedInterfaceUses()).filter(i -> !i.getName().equals(Constants.STDLIB_NAME+".Object")).map(tu -> tu.getName()).collect(Collectors.joining(", "));
+            if (s.length() > 0) {
+                stream.print(" extends ");
+                stream.print(s);
+            }
+            formatter.beforeOpenBrace();
+            stream.println(" {");
+            formatter.afterOpenBrace();
+            formatter.afterStmt();
+
+            List<MethodSig> ms = getBodys();
+            if (ms.getNumChild() > 0) {
+                ms.getChild(0).doPrettyPrint(stream, formatter);
+                stream.print(";");
+                for (int i = 1; i < ms.getNumChild(); i++) {
+                    stream.println();
+                    formatter.afterStmt();
+                    ms.getChild(i).doPrettyPrint(stream, formatter);
+                    stream.print(";");
+                }
+            }
+
+            formatter.beforeCloseBrace();
+            stream.print("}");
+            formatter.afterCloseBrace();
+        }
+
+        public void MethodSig.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getReturnType().doPrettyPrint(stream, formatter);
+            stream.print(" ");
+            stream.print(getName().replaceAll("\\$", ""));
+            stream.print("(");
+            getParams().doPrettyPrint(stream, formatter, ",");
+            stream.print(")");
+        }
+
+        public void ClassDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            if (getNumAnnotation() > 0) {
+                stream.println();
+                formatter.afterStmt();
+            }
+            stream.print("class ");
+            stream.print(getName());
+
+            if (getNumParam() > 0) {
+                stream.print("(");
+                getParams().doPrettyPrint(stream, formatter, ",");
+                stream.print(")");
+            }
+
+            if (getNumImplementedInterfaceUse() > 0) {
+                stream.print(" implements ");
+                getImplementedInterfaceUseList().doPrettyPrint(stream, formatter, ",");
+            }
+            formatter.beforeOpenBrace();
+            stream.println(" {");
+            formatter.afterOpenBrace();
+            formatter.afterStmt();
+
+            getFieldList().doPrettyPrint(stream, formatter);
+
+            stream.println();
+            formatter.afterStmt();
+
+            if (hasInitBlock()) {
+                getInitBlock().doPrettyPrint(stream, formatter);
+                stream.println();
+                formatter.afterStmt();
+            }
+
+            stream.println();
+            formatter.afterStmt();
+
+            if (hasRecoverBranch()) {
+                stream.print("recover ");
+                formatter.beforeOpenBrace();
+                stream.print("{");
+                formatter.afterOpenBrace();
+                stream.println();
+                for (CaseBranchStmt b : getRecoverBranchs()) {
+                    formatter.afterStmt();
+                    b.getLeft().doPrettyPrint(stream, formatter);
+                    stream.print(" => ");
+                    b.getRight().doPrettyPrint(stream, formatter);
+                    stream.println();
+                }
+                formatter.beforeCloseBrace();
+                formatter.afterStmt();
+                stream.print("}");
+                formatter.afterCloseBrace();
+                stream.println();
+                formatter.afterStmt();
+            }
+
+            List<MethodImpl> methods = getMethodList();
+            if (methods.getNumChild() > 0) {
+                methods.doPrettyPrint(stream, formatter);
+                stream.println();
+                formatter.afterStmt();
+            }
+
+            formatter.beforeCloseBrace();
+            stream.print("}");
+            formatter.afterCloseBrace();
+        }
+
+        public void FieldDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getTypeUse().doPrettyPrint(stream, formatter);
+            stream.print(" ");
+            stream.print(getName());
+            if (hasInitExp()) {
+                stream.print(" = ");
+                getInitExp().doPrettyPrint(stream, formatter);
+            }
+            stream.print(";");
+        }
+
+        public void MethodImpl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getMethodSig().doPrettyPrint(stream, formatter);
+            getBlock().doPrettyPrint(stream, formatter);
+        }
+
+        public void TypeParameterDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getName());
+        }
+
+        public void DataTypeDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("data ");
+            stream.print(getName());
+            doPrettyPrintTypeParam(stream, formatter);
+            if (getNumDataConstructor() > 0) {
+                stream.print(" = ");
+                getDataConstructorList().doPrettyPrint(stream, formatter, "|");
+            }
+            stream.print(";");
+        }
+
+        public void AddDataTypeModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter)
+        {
+            stream.print("adds ");
+            getDataTypeDecl().doPrettyPrint(stream, formatter);
+            stream.println();
+        }
+
+        public void ModifyInterfaceModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("modifies interface ");
+            stream.print(getName());
+
+            formatter.beforeOpenBrace();
+            stream.println("{");
+            formatter.afterOpenBrace();
+
+            getMethodSigModifierList().doPrettyPrint(stream, formatter);
+
+            formatter.beforeCloseBrace();
+            stream.print("}");
+            formatter.afterCloseBrace();
+        }
+
+        public void AddMethodSigModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("adds ");
+            getMethodSig().doPrettyPrint(stream, formatter);
+            stream.print(";");
+        }
+
+        public void RemoveMethodSigModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("removes ");
+            getMethodSig().doPrettyPrint(stream, formatter);
+            stream.print(";");
+        }
+
+        public void DataTypeDecl.doPrettyPrintTypeParam(PrintWriter stream, ABSFormatter formatter) { }
+
+        public void ParametricDataTypeDecl.doPrettyPrintTypeParam(PrintWriter stream, ABSFormatter formatter) {
+            if (getNumTypeParameter() > 0) {
+                stream.print("<");
+                getTypeParameterList().doPrettyPrint(stream, formatter, ",");
+                stream.print(">");
+            }
+        }
+
+        public void DataConstructor.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getName());
+            if (getNumConstructorArg() > 0) {
+                stream.print("(");
+                getConstructorArgList().doPrettyPrint(stream, formatter, ",");
+                stream.print(")");
+            }
+        }
+
+        public void ConstructorArg.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getTypeUse().doPrettyPrint(stream, formatter);
+            if (hasSelectorName()) {
+                stream.print(" ");
+                stream.print(getSelectorName());
+            }
+        }
+
+        public void UnresolvedTypeUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            // TODO: getAnnotationList().doPrettyPrint(stream, formatter, "");
+            stream.print(getName());
+        }
+
+        public void DataTypeUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            stream.print(getName());
+            doPrettyPrintTypeParam(stream, formatter);
+        }
+
+        public void DataTypeUse.doPrettyPrintTypeParam(PrintWriter stream, ABSFormatter formatter) { }
+
+        public void ParametricDataTypeUse.doPrettyPrintTypeParam(PrintWriter stream, ABSFormatter formatter) {
+            if (getNumParam() > 0) {
+                stream.print("<");
+                getParamList().doPrettyPrint(stream, formatter, ",");
+                stream.print(">");
+            }
+        }
+
+        public void TypedAnnotation.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("[");
+            getTypeIdUse().doPrettyPrint(stream, formatter);
+            stream.print(" : ");
+            getValue().doPrettyPrint(stream, formatter);
+            stream.print("]");
+        }
+
+        public void Annotation.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("[");
+            getValue().doPrettyPrint(stream, formatter);
+            stream.print("]");
+        }
+
+        public void TypeParameterUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getName());
+        }
+
+        public void InterfaceTypeUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getName());
+        }
+
+        public void FieldUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("this." + getName());
+        }
+
+        public void VarUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getName());
+        }
+
+        public void Binary.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            formatter.beforeOpenBrace();
+            stream.print("( ");
+            formatter.afterOpenBrace();
+            getLeft().doPrettyPrint(stream, formatter);
+            stream.print(" ");
+            doPrettyPrintOperator(stream, formatter);
+            stream.print(" ");
+            getRight().doPrettyPrint(stream, formatter);
+            formatter.beforeCloseBrace();
+            stream.print(" )");
+            formatter.afterCloseBrace();
+        }
+
+        public void ConBinary.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+                formatter.beforeOpenBrace();
+                //stream.print("( ");
+                //formatter.afterOpenBrace();
+                getLeft().doPrettyPrint(stream, formatter);
+                //stream.print("?");
+                //stream.print(" ");
+                doPrettyPrintOperator(stream, formatter);
+                //stream.print(" ");
+                getRight().doPrettyPrint(stream, formatter);
+                //caformatter.beforeCloseBrace();
+                //stream.print(" )");
+                formatter.afterCloseBrace();
+            }
+
+        abstract public void Binary.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter);
+
+        abstract public void ConBinary.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter);
+
+        public void AddAddExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("+");
+        }
+
+        public void SubAddExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("-");
+        }
+
+        public void DivMultExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("/");
+        }
+
+        public void ModMultExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("%");
+        }
+
+        public void MultMultExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("*");
+        }
+
+        public void AndBoolExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("&&");
+        }
+
+        public void ConjunctionExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+                stream.print(",");
+            }
+
+        public void OrBoolExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("||");
+        }
+
+        public void EqExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("==");
+        }
+
+        public void NotEqExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("!=");
+        }
+
+        public void GTEQExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(">=");
+        }
+
+        public void GTExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(">");
+        }
+
+        public void LTEQExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("<=");
+        }
+
+        public void LTExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("<");
+        }
+
+        public void CaseExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("case ");
+            getExpr().doPrettyPrint(stream, formatter);
+            formatter.beforeOpenBrace();
+            stream.println(" {");
+            formatter.afterOpenBrace();
+            for (CaseBranch b : getBranchList()) {
+                formatter.afterStmt();
+                b.getLeft().doPrettyPrint(stream, formatter);
+                stream.print(" => ");
+                b.getRight().doPrettyPrint(stream, formatter);
+                stream.println(";");
+            }
+            formatter.beforeCloseBrace();
+            formatter.afterStmt();
+            stream.print("}");
+            formatter.afterCloseBrace();
+        }
+
+        public void ConstructorPattern.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getConstructor());
+            if (getNumParam() > 0) {
+                stream.print("( ");
+                getParamList().doPrettyPrint(stream, formatter, ",");
+                stream.print(" )");
+            }
+        }
+
+        public void LiteralPattern.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getLiteral().doPrettyPrint(stream, formatter);
+        }
+
+        public void PatternVar.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getVar().doPrettyPrint(stream, formatter);
+        }
+
+        public void PatternVarDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getName());
+        }
+
+        public void PatternVarUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getName());
+        }
+
+        public void UnderscorePattern.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("_");
+        }
+
+        public void DataConstructorExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getConstructor());
+            if (getNumParam() > 0) {
+                stream.print("( ");
+                getParamList().doPrettyPrint(stream, formatter, ",");
+                stream.print(" )");
+            }
+        }
+
+        public void FnApp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            // This is a gross special case in pretty printing that follows a
+            // gross special case in syntax.  Consider adding a "first-class" list
+            // literal that can be used outside of the special constructor call
+            // syntax?
+            boolean noParens = getNumParam() == 1 && getParam(0) instanceof ListLiteral;
+            stream.print(getName());
+            if (!noParens) stream.print("(");
+            getParamList().doPrettyPrint(stream, formatter, ",");
+            if (!noParens) stream.print(")");
+        }
+
+        public void ParFnApp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getName());
+            stream.print("(");
+            getParamList().doPrettyPrint(stream, formatter, ",");
+            stream.print(") (");
+            getFuncParamList().doPrettyPrint(stream, formatter, ",");
+            stream.print(")");
+        }
+
+        public void IfExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("(when ");
+            getCondExp().doPrettyPrint(stream, formatter);
+            stream.print(" then ");
+            getThenExp().doPrettyPrint(stream, formatter);
+            stream.print(" else ");
+            getElseExp().doPrettyPrint(stream, formatter);
+            stream.print(")");
+        }
+
+        public void LetExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("let ( ");
+            getVar().doPrettyPrint(stream, formatter);
+            stream.print(" ) = ");
+            getVal().doPrettyPrint(stream, formatter);
+            stream.print(" in ");
+            getExp().doPrettyPrint(stream, formatter);
+        }
+
+        public void ParamDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            getAnnotationList().doPrettyPrint(stream, formatter, "");
+            getTypeUse().doPrettyPrint(stream, formatter);
+            stream.print(" ");
+            stream.print(getName());
+        }
+
+        public void IntLiteral.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getContent());
+        }
+
+        public void StringLiteral.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("\"");
+            for (char c : getContent().toCharArray()) {
+                switch (c) {
+                case '\\': stream.print("\\\\");
+                    break;
+                case '"': stream.print("\\\"");
+                    break;
+                case '\t': stream.print("\\t");
+                    break;
+                case '\n': stream.print("\\n");
+                    break;
+                case '\r': stream.print("\\r");
+                    break;
+                default: stream.print(c);
+                }
+            }
+            stream.print("\"");
+        }
+
+        public void FloatLiteral.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print(getContent());
+        }
+
+        public void ListLiteral.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("[");
+            String interp = "";
+            for (PureExp e : getPureExps()) {
+                stream.print(interp);
+                interp = ", ";
+                e.doPrettyPrint(stream, formatter);
+            }
+            stream.print("]");
+        }
+
+        public void NullExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("null");
+        }
+
+        public void ThisExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("this");
+        }
+
+        public void DestinyExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("destiny");
+        }
+
+        public void MinusExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("- ");
+            getOperand().doPrettyPrint(stream, formatter);
+        }
+
+        public void NegExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+            stream.print("! ");
+            getOperand().doPrettyPrint(stream, formatter);
+        }
+
+        public void TraitDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+
+        }
+        public void TraitUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+
+        }
+        */
+    }
+
 
