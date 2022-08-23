@@ -10,145 +10,130 @@ aspect generate_sync_schema {
 
     public boolean Model.generate_sync_schemaStdLib = false;
 
-    public Map<PureExp,Set<Set<PureExp>>> List.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map,Set<PureExp> syn_set,PureExp method_name) {
-        Map<PureExp,Set<Set<PureExp>>> temp_map = new HashMap<PureExp,Set<Set<PureExp>>>();
+    public Map<String,Set<Set<PureExp>>> List.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,Set<PureExp> syn_set,String m,PureExp o) {
+        Map<String,Set<Set<PureExp>>> temp_map = new HashMap<String,Set<Set<PureExp>>>();
         Set<Set<PureExp>> temp_set = new HashSet<Set<PureExp>>();
         temp_set.add(syn_set);
-        temp_map.put(method_name,temp_set);
+        temp_map.put(m,temp_set);
 
         if (getNumChild() > 0) {
-            temp_map = getChild(0).generate_sync_schema(temp_map);
+            temp_map = getChild(0).generate_sync_schema(temp_map,m,o);
             for (int i = 1; i < getNumChild(); i++) {
-                temp_map = getChild(1).generate_sync_schema(temp_map);
+                temp_map = getChild(1).generate_sync_schema(temp_map,m,o);
             }
         }
 
         return temp_map;
     }
 
-    public Map<PureExp,Set<Set<PureExp>>> List.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+    public Map<String,Set<Set<PureExp>>> List.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+        if (getNumChild() > 0) {
+            syn_map = getChild(0).generate_sync_schema(syn_map,m,o);
+            for (int i = 1; i < getNumChild(); i++) {
+                syn_map = getChild(1).generate_sync_schema(syn_map,m,o);
+            }
+        }
         return syn_map;
     }
 
-    public Map<PureExp,Set<Set<PureExp>>> ASTNode.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> sync_map) {
+    public Map<String,Set<Set<PureExp>>> ASTNode.generate_sync_schema(Map<String,Set<Set<PureExp>>> sync_map,String m,PureExp o) {
         throw new NotImplementedYetException(this);
     }
 
-    public Map<PureExp,Set<Set<PureExp>>> Model.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+    public Map<String,Set<Set<PureExp>>> Model.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
         for (ModuleDecl d : getModuleDecls()) {
-            syn_map = d.generate_sync_schema(syn_map);
+            syn_map = d.generate_sync_schema(syn_map,m,o);
         }
         return syn_map;
     }
 
-    public Map<PureExp,Set<Set<PureExp>>> ModuleDecl.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+    public Map<String,Set<Set<PureExp>>> ModuleDecl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
         for (Decl decl : getDecls()) {
-            syn_map = decl.generate_sync_schema(syn_map);
+            syn_map = decl.generate_sync_schema(syn_map,m,o);
         }
         if (hasBlock()) {
-            syn_map = getBlock().generate_sync_schema(syn_map);
+            syn_map = getBlock().generate_sync_schema(syn_map,m,o);
         }
         return syn_map;
     }
 
-    public Map<PureExp,Set<Set<PureExp>>> Block.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
-        syn_map = getStmtList().generate_sync_schema(syn_map);
+    public Map<String,Set<Set<PureExp>>> Block.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+        syn_map = getStmtList().generate_sync_schema(syn_map,m,o);
         return syn_map;
     }
 
-    /*
-    Lets see how we can pass "main" or "this" as a pure expression...
 
-    public Map<PureExp,Set<Set<PureExp>>> MainBlock.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
-        Set<PureExp> main_sync = new HashSet<PureExp>();
-        PureExp e = (PureExp) "this";
-        main_sync.add(e);
+
+    public Map<String,Set<Set<PureExp>>> MainBlock.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+        //Set<PureExp> main_sync = new HashSet<PureExp>();
+        //PureExp e = (PureExp) "this";
+        //main_sync.add(e);
         //Set<Set<PureExp>> temp_set = new HashSet<Set<PureExp>>();
         //temp_set.add(main_sync);
         //syn_map.put("main",{{"main"}});
-        syn_map = getStmtList().generate_sync_schema(syn_map,main_sync,"main");
+        syn_map = getStmtList().generate_sync_schema(syn_map,"main",o);
         return syn_map;
     }
 
-    */
-
-    public Map<PureExp,Set<Set<PureExp>>> AssertStmt.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+    public Map<String,Set<Set<PureExp>>> AssertStmt.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
         return syn_map;
     }
 
-    public Map<PureExp,Set<Set<PureExp>>> ThrowStmt.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+    public Map<String,Set<Set<PureExp>>> ThrowStmt.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
         return syn_map;
     }
 
-    public Map<PureExp,Set<Set<PureExp>>> DieStmt.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+    public Map<String,Set<Set<PureExp>>> DieStmt.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
         return syn_map;
     }
 
-    public Map<PureExp,Set<Set<PureExp>>> AssignStmt.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
-        syn_map = getValue().generate_sync_schema(syn_map);
+    public Map<String,Set<Set<PureExp>>> AssignStmt.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+        syn_map = getValue().generate_sync_schema(syn_map,m,o);
         return syn_map;
     }
 
-    public Map<PureExp,Set<Set<PureExp>>> Call.generate_sync_schema(Map<PureExp,Set<Set<PureExp>>> syn_map) {
+    public Map<String,Set<Set<PureExp>>> Call.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m, PureExp o) {
+        String method = getMethod();
         PureExp callee = getCallee();
         List<PureExp> param = getParamList();
-        Set<PureExp> temp_set = new HashSet<PureExp>();
-        temp_set.add(callee);
-        for (PureExp x : temp_set)
-            temp_set.add(x);
-        //syn_map = merge_schema(sync_map,temp_set);
+        Set<PureExp> objs = new HashSet<PureExp>();
+        objs.add(callee);
+        for (PureExp x : objs)
+            objs.add(x);
+        Set<Set<PureExp>> sync_set = syn_map.get(m);
+        sync_set = merge_schema(sync_set,objs);
+        syn_map.put(m,sync_set);
         return syn_map;
     }
 
-    /*
-
-    abstract public Map<String,Set<Set<String>>> Call.merge_schema(Map<String,Set<Set<String>>> syn_map,);
-
-        abstract public void Call.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter);
-
-        abstract public void Call1Exp.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter);
-
-        abstract public void Call1Exp.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter);
-
-
-
-
-
-        public void AsyncCall.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("!");
+    public Set<Set<PureExp>> Call.merge_schema(Set<Set<PureExp>> sync_set, Set<PureExp> objs){
+        if(sync_set.isEmpty())
+        {
+            Set<Set<PureExp>> temp = new HashSet<Set<PureExp>>();
+            temp.add(objs);
+            return temp;
         }
-
-        public void AwaitAsyncCall.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("!");
-        }
-
-        public void SyncCall.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(".");
-        }
-
-        public void AsyncCall.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
-        }
-
-        public void AwaitAsyncCall.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("await ");
-        }
-
-        public void SyncCall.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
-        }
-
-        public void AsyncCall1Exp.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
-                stream.print("!");
+        else
+        {
+            Iterator<Set<PureExp>> i = sync_set.iterator();
+            while(i.hasNext())
+            {
+               Set<PureExp> intersection = new HashSet<PureExp>(i.next());
+               intersection.retainAll(objs);
+               if(!intersection.isEmpty())
+               {
+                    Set<PureExp> temp = new HashSet<PureExp>(i.next());
+                    sync_set.remove(i.next());
+                    temp.addAll(objs);
+                    sync_set.add(temp);
+                    break;
+               }
             }
+            return sync_set;
+        }
+    }
+/*
 
-            public void SyncCall1Exp.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
-                stream.print(".");
-            }
-
-            public void AsyncCall1Exp.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
-            }
-
-            public void SyncCall1Exp.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
-            }
 
         public void GetExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
             getPureExp().doPrettyPrint(stream, formatter);

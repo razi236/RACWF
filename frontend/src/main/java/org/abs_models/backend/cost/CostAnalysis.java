@@ -32,8 +32,8 @@ public class CostAnalysis extends Main{
         PureExp object = null;
         Set<PureExp> sync_set = new HashSet<PureExp>();
         Set<Set<PureExp>> sync_schema = new HashSet<Set<PureExp>>();
-        Map<PureExp,Set<Set<PureExp>>> sync_schema_map = new HashMap<PureExp,Set<Set<PureExp>>>(); // [method_name -> sync_schema]
-        sync_schema_map = model.generate_sync_schema(sync_schema_map);
+        Map<String,Set<Set<PureExp>>> sync_schema_map = new HashMap<String,Set<Set<PureExp>>>(); // [method_name -> sync_schema]
+        sync_schema_map = model.generate_sync_schema(sync_schema_map,"main", null);
         //String s = model.translate();
         return 0;
     }
