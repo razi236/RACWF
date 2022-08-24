@@ -27,6 +27,7 @@ public class CostAnalysis extends Main{
         return result;
     }
     public int compute(Absc args) throws Exception {
+        System.out.println("Computation of Cost is started:");
         this.arguments = args;
         final Model model = parse(arguments.files);
         PureExp object = null;

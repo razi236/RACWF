@@ -22,6 +22,7 @@ import org.abs_models.Absc;
 import org.abs_models.backend.autodeploy.Tester;
 import org.abs_models.backend.common.InternalBackendException;
 import org.abs_models.backend.coreabs.CoreAbsBackend;
+import org.abs_models.backend.cost.CostAnalysis;
 import org.abs_models.backend.erlang.ErlangBackend;
 import org.abs_models.backend.java.JavaBackend;
 import org.abs_models.backend.maude.MaudeCompiler;
@@ -115,6 +116,10 @@ public class Main {
                 }
                 if (arguments.backend.outline) {
                     result = Math.max(result, OutlinePrinterBackEnd.doMain(arguments));
+                    done = true;
+                }
+                if (arguments.backend.cost) {
+                    result = Math.max(result, CostAnalysis.doMain(arguments));
                     done = true;
                 }
                 if (arguments.backend.dumpProducts) {

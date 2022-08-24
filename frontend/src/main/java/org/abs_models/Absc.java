@@ -73,6 +73,11 @@ public class Absc implements Callable<Integer> {
         @Option(names = { "--prettyprint" }, required = true,
                 description = "@|bold Pretty-printer:|@ pretty print model and exit")
         public boolean prettyprint = false;
+
+        @Option(names = { "--cost" }, required = true,
+            description = "@|bold Cost Analysis:|@ compute cost and exit")
+        public boolean cost = false;
+
         @Option(names = { "--coreabs" }, required = true,
                 hidden = true,
                 description = {"generate Coreabs data file",
