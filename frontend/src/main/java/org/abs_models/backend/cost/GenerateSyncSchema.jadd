@@ -28,9 +28,25 @@ aspect generate_sync_schema {
 
     public Map<String,Set<Set<PureExp>>> List.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
         if (getNumChild() > 0) {
-            syn_map = getChild(0).generate_sync_schema(syn_map,m,o);
+            if(getChild(0) instanceof MethodImpl)
+            {
+                String name = ((MethodImpl) getChild(0)).getMethodSig().getName();
+                syn_map = getChild(0).generate_sync_schema(syn_map,name,o);
+            }
+            else
+            {
+                syn_map = getChild(0).generate_sync_schema(syn_map,m,o);
+            }
             for (int i = 1; i < getNumChild(); i++) {
-                syn_map = getChild(1).generate_sync_schema(syn_map,m,o);
+                if(getChild(i) instanceof MethodImpl)
+                {
+                    String name = ((MethodImpl) getChild(i)).getMethodSig().getName();
+                    syn_map = getChild(i).generate_sync_schema(syn_map,name,o);
+                }
+                else
+                {
+                    syn_map = getChild(i).generate_sync_schema(syn_map,m,o);
+                }
             }
         }
         return syn_map;
@@ -98,7 +114,7 @@ aspect generate_sync_schema {
         List<PureExp> param = getParamList();
         Set<PureExp> objs = new HashSet<PureExp>();
         objs.add(callee);
-        for (PureExp x : objs)
+        for (PureExp x : param)
             objs.add(x);
         Set<Set<PureExp>> sync_set = syn_map.get(m);
         sync_set = merge_schema(sync_set,objs);
@@ -256,10 +272,6 @@ aspect generate_sync_schema {
       return syn_map;
     }
 
-    public Map<String,Set<Set<PureExp>>> FromImport.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
-      return syn_map;
-    }
-
     public Map<String,Set<Set<PureExp>>> TypeSynDecl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
       return syn_map;
     }
@@ -268,434 +280,127 @@ aspect generate_sync_schema {
       return syn_map;
     }
 
-    public Map<String,Set<Set<PureExp>>> ClassDecl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
-      return syn_map;
-    }
-
     public Map<String,Set<Set<PureExp>>> MethodSig.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+     // String name = getName();
+      List<PureExp> param = getParamList();
+      Set<PureExp> objs = new HashSet<PureExp>();
+      for (PureExp x : param)
+          objs.add(x);
+      Set<Set<PureExp>> syn_set = new HashSet<Set<PureExp>>();
+      syn_set.add(objs);
+      syn_map = syn_map.put(m,syn_set);
       return syn_map;
     }
 
-    public void MethodSig.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-        getReturnType().doPrettyPrint(stream, formatter);
-        stream.print(" ");
-        stream.print(getName().replaceAll("\\$", ""));
-        stream.print("(");
-        getParams().doPrettyPrint(stream, formatter, ",");
-        stream.print(")");
-    }
-
-    public void ClassDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+    public Map<String,Set<Set<PureExp>>> ClassDecl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
         List<MethodImpl> methods = getMethodList();
         if (methods.getNumChild() > 0) {
-            methods.generate_sync_schema(syn_map,m,o);
+            syn_map = methods.generate_sync_schema(syn_map,m,o);
         }
+        return syn_map;
     }
 
-        public void FieldDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            getTypeUse().doPrettyPrint(stream, formatter);
-            stream.print(" ");
-            stream.print(getName());
-            if (hasInitExp()) {
-                stream.print(" = ");
-                getInitExp().doPrettyPrint(stream, formatter);
-            }
-            stream.print(";");
-        }
-
-        public void MethodImpl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            getMethodSig().doPrettyPrint(stream, formatter);
-            getBlock().doPrettyPrint(stream, formatter);
-        }
-
-        public void TypeParameterDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(getName());
-        }
-
-        public void DataTypeDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("data ");
-            stream.print(getName());
-            doPrettyPrintTypeParam(stream, formatter);
-            if (getNumDataConstructor() > 0) {
-                stream.print(" = ");
-                getDataConstructorList().doPrettyPrint(stream, formatter, "|");
-            }
-            stream.print(";");
-        }
-
-        public void AddDataTypeModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter)
-        {
-            stream.print("adds ");
-            getDataTypeDecl().doPrettyPrint(stream, formatter);
-            stream.println();
-        }
-
-        public void ModifyInterfaceModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("modifies interface ");
-            stream.print(getName());
-
-            formatter.beforeOpenBrace();
-            stream.println("{");
-            formatter.afterOpenBrace();
-
-            getMethodSigModifierList().doPrettyPrint(stream, formatter);
-
-            formatter.beforeCloseBrace();
-            stream.print("}");
-            formatter.afterCloseBrace();
-        }
-
-        public void AddMethodSigModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("adds ");
-            getMethodSig().doPrettyPrint(stream, formatter);
-            stream.print(";");
-        }
-
-        public void RemoveMethodSigModifier.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("removes ");
-            getMethodSig().doPrettyPrint(stream, formatter);
-            stream.print(";");
-        }
-
-        public void DataTypeDecl.doPrettyPrintTypeParam(PrintWriter stream, ABSFormatter formatter) { }
-
-        public void ParametricDataTypeDecl.doPrettyPrintTypeParam(PrintWriter stream, ABSFormatter formatter) {
-            if (getNumTypeParameter() > 0) {
-                stream.print("<");
-                getTypeParameterList().doPrettyPrint(stream, formatter, ",");
-                stream.print(">");
-            }
-        }
-
-        public void DataConstructor.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(getName());
-            if (getNumConstructorArg() > 0) {
-                stream.print("(");
-                getConstructorArgList().doPrettyPrint(stream, formatter, ",");
-                stream.print(")");
-            }
-        }
-
-        public void ConstructorArg.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            getTypeUse().doPrettyPrint(stream, formatter);
-            if (hasSelectorName()) {
-                stream.print(" ");
-                stream.print(getSelectorName());
-            }
-        }
-
-        public void UnresolvedTypeUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            // TODO: getAnnotationList().doPrettyPrint(stream, formatter, "");
-            stream.print(getName());
-        }
-
-        public void DataTypeUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            getAnnotationList().doPrettyPrint(stream, formatter, "");
-            stream.print(getName());
-            doPrettyPrintTypeParam(stream, formatter);
-        }
-
-        public void DataTypeUse.doPrettyPrintTypeParam(PrintWriter stream, ABSFormatter formatter) { }
-
-        public void ParametricDataTypeUse.doPrettyPrintTypeParam(PrintWriter stream, ABSFormatter formatter) {
-            if (getNumParam() > 0) {
-                stream.print("<");
-                getParamList().doPrettyPrint(stream, formatter, ",");
-                stream.print(">");
-            }
-        }
-
-        public void TypedAnnotation.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("[");
-            getTypeIdUse().doPrettyPrint(stream, formatter);
-            stream.print(" : ");
-            getValue().doPrettyPrint(stream, formatter);
-            stream.print("]");
-        }
-
-        public void Annotation.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("[");
-            getValue().doPrettyPrint(stream, formatter);
-            stream.print("]");
-        }
-
-        public void TypeParameterUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(getName());
-        }
-
-        public void InterfaceTypeUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(getName());
-        }
-
-        public void FieldUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("this." + getName());
-        }
-
-        public void VarUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(getName());
-        }
-
-        public void Binary.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            formatter.beforeOpenBrace();
-            stream.print("( ");
-            formatter.afterOpenBrace();
-            getLeft().doPrettyPrint(stream, formatter);
-            stream.print(" ");
-            doPrettyPrintOperator(stream, formatter);
-            stream.print(" ");
-            getRight().doPrettyPrint(stream, formatter);
-            formatter.beforeCloseBrace();
-            stream.print(" )");
-            formatter.afterCloseBrace();
-        }
-
-        public void ConBinary.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-                formatter.beforeOpenBrace();
-                //stream.print("( ");
-                //formatter.afterOpenBrace();
-                getLeft().doPrettyPrint(stream, formatter);
-                //stream.print("?");
-                //stream.print(" ");
-                doPrettyPrintOperator(stream, formatter);
-                //stream.print(" ");
-                getRight().doPrettyPrint(stream, formatter);
-                //caformatter.beforeCloseBrace();
-                //stream.print(" )");
-                formatter.afterCloseBrace();
-            }
-
-        abstract public void Binary.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter);
-
-        abstract public void ConBinary.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter);
-
-        public void AddAddExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("+");
-        }
-
-        public void SubAddExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("-");
-        }
-
-        public void DivMultExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("/");
-        }
-
-        public void ModMultExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("%");
-        }
-
-        public void MultMultExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("*");
-        }
-
-        public void AndBoolExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("&&");
-        }
-
-        public void ConjunctionExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-                stream.print(",");
-            }
-
-        public void OrBoolExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("||");
-        }
-
-        public void EqExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("==");
-        }
-
-        public void NotEqExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("!=");
-        }
-
-        public void GTEQExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(">=");
-        }
-
-        public void GTExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(">");
-        }
-
-        public void LTEQExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("<=");
-        }
-
-        public void LTExp.doPrettyPrintOperator(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("<");
-        }
-
-        public void CaseExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("case ");
-            getExpr().doPrettyPrint(stream, formatter);
-            formatter.beforeOpenBrace();
-            stream.println(" {");
-            formatter.afterOpenBrace();
-            for (CaseBranch b : getBranchList()) {
-                formatter.afterStmt();
-                b.getLeft().doPrettyPrint(stream, formatter);
-                stream.print(" => ");
-                b.getRight().doPrettyPrint(stream, formatter);
-                stream.println(";");
-            }
-            formatter.beforeCloseBrace();
-            formatter.afterStmt();
-            stream.print("}");
-            formatter.afterCloseBrace();
-        }
-
-        public void ConstructorPattern.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(getConstructor());
-            if (getNumParam() > 0) {
-                stream.print("( ");
-                getParamList().doPrettyPrint(stream, formatter, ",");
-                stream.print(" )");
-            }
-        }
-
-        public void LiteralPattern.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            getLiteral().doPrettyPrint(stream, formatter);
-        }
-
-        public void PatternVar.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            getVar().doPrettyPrint(stream, formatter);
-        }
-
-        public void PatternVarDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(getName());
-        }
-
-        public void PatternVarUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(getName());
-        }
-
-        public void UnderscorePattern.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("_");
-        }
-
-        public void DataConstructorExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(getConstructor());
-            if (getNumParam() > 0) {
-                stream.print("( ");
-                getParamList().doPrettyPrint(stream, formatter, ",");
-                stream.print(" )");
-            }
-        }
-
-        public void FnApp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            // This is a gross special case in pretty printing that follows a
-            // gross special case in syntax.  Consider adding a "first-class" list
-            // literal that can be used outside of the special constructor call
-            // syntax?
-            boolean noParens = getNumParam() == 1 && getParam(0) instanceof ListLiteral;
-            stream.print(getName());
-            if (!noParens) stream.print("(");
-            getParamList().doPrettyPrint(stream, formatter, ",");
-            if (!noParens) stream.print(")");
-        }
-
-        public void ParFnApp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(getName());
-            stream.print("(");
-            getParamList().doPrettyPrint(stream, formatter, ",");
-            stream.print(") (");
-            getFuncParamList().doPrettyPrint(stream, formatter, ",");
-            stream.print(")");
-        }
-
-        public void IfExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("(when ");
-            getCondExp().doPrettyPrint(stream, formatter);
-            stream.print(" then ");
-            getThenExp().doPrettyPrint(stream, formatter);
-            stream.print(" else ");
-            getElseExp().doPrettyPrint(stream, formatter);
-            stream.print(")");
-        }
-
-        public void LetExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("let ( ");
-            getVar().doPrettyPrint(stream, formatter);
-            stream.print(" ) = ");
-            getVal().doPrettyPrint(stream, formatter);
-            stream.print(" in ");
-            getExp().doPrettyPrint(stream, formatter);
-        }
-
-        public void ParamDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            getAnnotationList().doPrettyPrint(stream, formatter, "");
-            getTypeUse().doPrettyPrint(stream, formatter);
-            stream.print(" ");
-            stream.print(getName());
-        }
-
-        public void IntLiteral.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(getContent());
-        }
-
-        public void StringLiteral.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("\"");
-            for (char c : getContent().toCharArray()) {
-                switch (c) {
-                case '\\': stream.print("\\\\");
-                    break;
-                case '"': stream.print("\\\"");
-                    break;
-                case '\t': stream.print("\\t");
-                    break;
-                case '\n': stream.print("\\n");
-                    break;
-                case '\r': stream.print("\\r");
-                    break;
-                default: stream.print(c);
-                }
-            }
-            stream.print("\"");
-        }
-
-        public void FloatLiteral.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(getContent());
-        }
-
-        public void ListLiteral.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("[");
-            String interp = "";
-            for (PureExp e : getPureExps()) {
-                stream.print(interp);
-                interp = ", ";
-                e.doPrettyPrint(stream, formatter);
-            }
-            stream.print("]");
-        }
-
-        public void NullExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("null");
-        }
-
-        public void ThisExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("this");
-        }
-
-        public void DestinyExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("destiny");
-        }
-
-        public void MinusExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("- ");
-            getOperand().doPrettyPrint(stream, formatter);
-        }
-
-        public void NegExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("! ");
-            getOperand().doPrettyPrint(stream, formatter);
-        }
-
-        public void TraitDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-
-        }
-        public void TraitUse.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-
-        }
-        */
+    public Map<String,Set<Set<PureExp>>> FieldDecl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
     }
+
+    public Map<String,Set<Set<PureExp>>> MethodImpl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      syn_map = getMethodSig().generate_sync_schema(syn_map,m,o);
+      syn_map = getBlock().generate_sync_schema(syn_map,m,o);
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> TypeParameterDecl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> DataTypeDecl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> DataTypeUse.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> ParametricDataTypeUse.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> TypedAnnotation.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> Annotation.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> TypeParameterUse.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> InterfaceTypeUse.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> FieldUse.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> VarUse.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> Binary.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> ConBinary.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> CaseExp.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> ParamDecl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> IntLiteral.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> StringLiteral.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> FloatLiteral.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> ListLiteral.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> NullExp.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> ThisExp.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> DestinyExp.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> MinusExp.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> NegExp.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+}
 
 
