@@ -1,12 +1,13 @@
 module ABS;
 interface ABC
 {
-    Int xyz(ABC o1, String x);
+    Int xyz(ABC o, ABC b, ABC c, String x);
     Int abc(String x);
+    Int ijk(String x, ABC a, ABC b, ABC c);
 }
 class ABC implements ABC
 {
-    Int xyz(ABC o, String x)
+    Int xyz(ABC o, ABC b, ABC c, String x)
     {
         println(`Hello $x$`);
         consTime(10000); // cost is a keyword in ABS compiler.
@@ -18,14 +19,20 @@ class ABC implements ABC
         consTime(5); // cost is a keyword in ABS compiler.
         return 0;
     }
+    Int ijk(String x, ABC a, ABC b, ABC c)
+        {
+            println(`Hello World $x$`);
+            consTime(5); // cost is a keyword in ABS compiler.
+            return 0;
+        }
 }
 {
     ABC o = new ABC();
     ABC o1 = new ABC();
-    Fut<Int> f = !xyz(o,o1,"Muhammad") after dl 10;
+    Fut<Int> f = !xyz(o,o1,o1,o1,"Muhammad") after dl 10;
     /*
-    f1 = !abc(o1,"Rizwan") after  dl 10;
-    f2 = !xyz(o2,"Ali") after f&f1 dl 15;
+    f1 = !abc(o1,o1,o2,"Rizwan") after  dl 10;
+    f2 = !xyz(o2,o1,o2,"Ali") after f&f1 dl 15;
     i = xyz(o3,"Finished") after f&f1,f2 dl 5;
     abc(a,20) after f&f2,f3 dl 5;
     await f?;

@@ -5,6 +5,7 @@
 
 grammar ABS;
 
+
 TraditionalComment : '/*' .*? '*/' -> skip ;
 EndOfLineComment : '//' .*? ('\n' | EOF) -> skip ;
 WhiteSpace : [ \t\f\r\n]+ -> skip ;

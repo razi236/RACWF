@@ -281,14 +281,18 @@ aspect generate_sync_schema {
     }
 
     public Map<String,Set<Set<PureExp>>> MethodSig.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
-     // String name = getName();
-      List<PureExp> param = getParamList();
+      String name = null;
+      List<ParamDecl> param = getParamList();
       Set<PureExp> objs = new HashSet<PureExp>();
-      for (PureExp x : param)
-          objs.add(x);
-      Set<Set<PureExp>> syn_set = new HashSet<Set<PureExp>>();
-      syn_set.add(objs);
-      syn_map = syn_map.put(m,syn_set);
+      for (ParamDecl x : param)
+      {
+        name = x.getName();
+        System.out.print(name+" ");
+      }
+      System.out.println();
+      //Set<Set<PureExp>> syn_set = new HashSet<Set<PureExp>>();
+      //syn_set.add(objs);
+      //syn_map = syn_map.put(m,syn_set);
       return syn_map;
     }
 
@@ -401,6 +405,44 @@ aspect generate_sync_schema {
     public Map<String,Set<Set<PureExp>>> NegExp.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
       return syn_map;
     }
+
+    public Map<String,Set<Set<PureExp>>> FunctionDecl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> PartialFunctionDecl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> FunctionParamDecl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> PartialFunctionDef.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> NamedParFnAppParam.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> FnApp.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+              return syn_map;
+            }
+
+    public Map<String,Set<Set<PureExp>>> AnonymousFunctionDecl.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+
+    public Map<String,Set<Set<PureExp>>> BuiltinFunctionDef.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
+    public Map<String,Set<Set<PureExp>>> ExpFunctionDef.generate_sync_schema(Map<String,Set<Set<PureExp>>> syn_map,String m,PureExp o) {
+      return syn_map;
+    }
+
 }
 
 
