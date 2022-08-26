@@ -4,7 +4,7 @@
 -export([get_val_internal/2,set_val_internal/3,init_internal/0,get_state_for_modelapi/1,implemented_interfaces/0,exported/0]).
 -compile(export_all).
 
-implemented_interfaces() -> [ <<"CloudProviderForDeploymentComponent">>, <<"CloudProvider">>, <<"Object">> ].
+implemented_interfaces() -> [ <<"CloudProviderForDeploymentComponent">>, <<"Object">>, <<"CloudProvider">> ].
 
 exported() -> #{  }.
 
@@ -193,12 +193,12 @@ exported() -> #{  }.
                 future:get_blocking(TempFuture, Cog, [O,DC| Stack])
         end end)()}),
          %% abs/lang/abslang.abs:898--898
-        put(vars, (get(vars))#{'tmp1610803524' => cog:create_task(maps:get('result', get(vars)),'m_getStartupDuration',[[]],#task_info{method= <<"getStartupDuration"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+        put(vars, (get(vars))#{'tmp1947378744' => cog:create_task(maps:get('result', get(vars)),'m_getStartupDuration',[[]],#task_info{method= <<"getStartupDuration"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
          %% abs/lang/abslang.abs:898--898
-        future:await(maps:get('tmp1610803524', get(vars)), Cog, [O,DC| Stack]),
+        future:await(maps:get('tmp1947378744', get(vars)), Cog, [O,DC| Stack]),
         ok,
          %% abs/lang/abslang.abs:898--898
-        put(vars, (get(vars))#{'startup_duration' => future:get_blocking(maps:get('tmp1610803524', get(vars)), Cog, [O,DC| Stack])}),
+        put(vars, (get(vars))#{'startup_duration' => future:get_blocking(maps:get('tmp1947378744', get(vars)), Cog, [O,DC| Stack])}),
          %% abs/lang/abslang.abs:899--899
         cog:suspend_current_task_for_duration(Cog,maps:get('startup_duration', get(vars)),maps:get('startup_duration', get(vars)),[O,DC| Stack]),
         ok,
@@ -258,12 +258,12 @@ exported() -> #{  }.
             false ->         ok
         end,
          %% abs/lang/abslang.abs:910--910
-        put(vars, (get(vars))#{'tmp1485129132' => cog:create_task(maps:get('dc', get(vars)),'m_getStartupDuration',[[]],#task_info{method= <<"getStartupDuration"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+        put(vars, (get(vars))#{'tmp290509937' => cog:create_task(maps:get('dc', get(vars)),'m_getStartupDuration',[[]],#task_info{method= <<"getStartupDuration"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
          %% abs/lang/abslang.abs:910--910
-        future:await(maps:get('tmp1485129132', get(vars)), Cog, [O,DC| Stack]),
+        future:await(maps:get('tmp290509937', get(vars)), Cog, [O,DC| Stack]),
         ok,
          %% abs/lang/abslang.abs:910--910
-        put(vars, (get(vars))#{'startup_duration' => future:get_blocking(maps:get('tmp1485129132', get(vars)), Cog, [O,DC| Stack])}),
+        put(vars, (get(vars))#{'startup_duration' => future:get_blocking(maps:get('tmp290509937', get(vars)), Cog, [O,DC| Stack])}),
          %% abs/lang/abslang.abs:911--911
         cog:suspend_current_task_for_duration(Cog,maps:get('startup_duration', get(vars)),maps:get('startup_duration', get(vars)),[O,DC| Stack]),
         ok,
@@ -383,12 +383,12 @@ exported() -> #{  }.
          %% abs/lang/abslang.abs:931--931
         put(vars, (get(vars))#{'result' => true}),
          %% abs/lang/abslang.abs:932--932
-        put(vars, (get(vars))#{'tmp721975085' => cog:create_task(maps:get('instance', get(vars)),'m_getProvider',[[]],#task_info{method= <<"getProvider"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+        put(vars, (get(vars))#{'tmp1889468930' => cog:create_task(maps:get('instance', get(vars)),'m_getProvider',[[]],#task_info{method= <<"getProvider"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
          %% abs/lang/abslang.abs:932--932
-        future:await(maps:get('tmp721975085', get(vars)), Cog, [O,DC| Stack]),
+        future:await(maps:get('tmp1889468930', get(vars)), Cog, [O,DC| Stack]),
         ok,
          %% abs/lang/abslang.abs:932--932
-        put(vars, (get(vars))#{'cp' => future:get_blocking(maps:get('tmp721975085', get(vars)), Cog, [O,DC| Stack])}),
+        put(vars, (get(vars))#{'cp' => future:get_blocking(maps:get('tmp1889468930', get(vars)), Cog, [O,DC| Stack])}),
          %% abs/lang/abslang.abs:933--933
         put(vars, (get(vars))#{'nullableWorkAround' => maps:get('instance', get(vars))}),
          %% abs/lang/abslang.abs:934--934
@@ -464,24 +464,24 @@ exported() -> #{  }.
          %% abs/lang/abslang.abs:968--968
         put(this, C:set_val_internal(get(this), 'killedInstances',m_ABS_StdLib_funs:f_insertElement(Cog,C:get_val_internal(get(this), 'killedInstances'),maps:get('nullWorkAround', get(vars)),[O,DC| Stack]))),
          %% abs/lang/abslang.abs:969--969
-        put(vars, (get(vars))#{'tmp2024314762' => cog:create_task(maps:get('instance', get(vars)),'m_getShutdownDuration',[[]],#task_info{method= <<"getShutdownDuration"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+        put(vars, (get(vars))#{'tmp1699637904' => cog:create_task(maps:get('instance', get(vars)),'m_getShutdownDuration',[[]],#task_info{method= <<"getShutdownDuration"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
          %% abs/lang/abslang.abs:969--969
-        future:await(maps:get('tmp2024314762', get(vars)), Cog, [O,DC| Stack]),
+        future:await(maps:get('tmp1699637904', get(vars)), Cog, [O,DC| Stack]),
         ok,
          %% abs/lang/abslang.abs:969--969
-        put(vars, (get(vars))#{'shutdown_duration' => future:get_blocking(maps:get('tmp2024314762', get(vars)), Cog, [O,DC| Stack])}),
+        put(vars, (get(vars))#{'shutdown_duration' => future:get_blocking(maps:get('tmp1699637904', get(vars)), Cog, [O,DC| Stack])}),
          %% abs/lang/abslang.abs:970--970
         cog:suspend_current_task_for_duration(Cog,maps:get('shutdown_duration', get(vars)),maps:get('shutdown_duration', get(vars)),[O,DC| Stack]),
         ok,
          %% abs/lang/abslang.abs:974--974
         put(this, C:set_val_internal(get(this), 'launchedInstances',m_ABS_StdLib_funs:f_remove(Cog,C:get_val_internal(get(this), 'launchedInstances'),maps:get('nullWorkAround', get(vars)),[O,DC| Stack]))),
          %% abs/lang/abslang.abs:976--976
-        put(vars, (get(vars))#{'tmp253171986' => cog:create_task(maps:get('instance', get(vars)),'m_getAccumulatedCost',[[]],#task_info{method= <<"getAccumulatedCost"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+        put(vars, (get(vars))#{'tmp21063905' => cog:create_task(maps:get('instance', get(vars)),'m_getAccumulatedCost',[[]],#task_info{method= <<"getAccumulatedCost"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
          %% abs/lang/abslang.abs:976--976
-        future:await(maps:get('tmp253171986', get(vars)), Cog, [O,DC| Stack]),
+        future:await(maps:get('tmp21063905', get(vars)), Cog, [O,DC| Stack]),
         ok,
          %% abs/lang/abslang.abs:976--976
-        put(vars, (get(vars))#{'cost' => future:get_blocking(maps:get('tmp253171986', get(vars)), Cog, [O,DC| Stack])}),
+        put(vars, (get(vars))#{'cost' => future:get_blocking(maps:get('tmp21063905', get(vars)), Cog, [O,DC| Stack])}),
          %% abs/lang/abslang.abs:977--977
         put(this, C:set_val_internal(get(this), 'accumulatedCostOfKilledDCs',( rationals:add(C:get_val_internal(get(this), 'accumulatedCostOfKilledDCs'),maps:get('cost', get(vars)))) )),
         dataUnit
@@ -503,10 +503,10 @@ exported() -> #{  }.
          %% abs/lang/abslang.abs:982--982
         put(vars, (get(vars))#{'t' => m_ABS_StdLib_funs:f_now(Cog,[O,DC| Stack])}),
          %% abs/lang/abslang.abs:983--986
-        put(vars, (get(vars))#{'tmp39959931' => m_ABS_StdLib_funs:f_elements(Cog,C:get_val_internal(get(this), 'launchedInstances'),[O,DC| Stack])}),
+        put(vars, (get(vars))#{'tmp1791280119' => m_ABS_StdLib_funs:f_elements(Cog,C:get_val_internal(get(this), 'launchedInstances'),[O,DC| Stack])}),
          %% abs/lang/abslang.abs:983--986
         []=(fun Loop ([])->
-            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp39959931', get(vars)),[O,DC| Stack])) of
+            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp1791280119', get(vars)),[O,DC| Stack])) of
             false -> [];
             true -> receive
                     {stop_world, CogRef} ->
@@ -516,16 +516,16 @@ exported() -> #{  }.
                     after 0 -> ok
                 end,
                  %% abs/lang/abslang.abs:983--986
-                put(vars, (get(vars))#{'dc' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp39959931', get(vars)),[O,DC| Stack])}),
+                put(vars, (get(vars))#{'dc' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp1791280119', get(vars)),[O,DC| Stack])}),
                  %% abs/lang/abslang.abs:983--986
-                put(vars, (get(vars))#{'tmp39959931' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp39959931', get(vars)),[O,DC| Stack])}),
+                put(vars, (get(vars))#{'tmp1791280119' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp1791280119', get(vars)),[O,DC| Stack])}),
                  %% abs/lang/abslang.abs:984--984
-                put(vars, (get(vars))#{'tmp2102232441' => cog:create_task(maps:get('dc', get(vars)),'m_getAccumulatedCost',[[]],#task_info{method= <<"getAccumulatedCost"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+                put(vars, (get(vars))#{'tmp379963364' => cog:create_task(maps:get('dc', get(vars)),'m_getAccumulatedCost',[[]],#task_info{method= <<"getAccumulatedCost"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
                  %% abs/lang/abslang.abs:984--984
-                future:await(maps:get('tmp2102232441', get(vars)), Cog, [O,DC| Stack]),
+                future:await(maps:get('tmp379963364', get(vars)), Cog, [O,DC| Stack]),
                 ok,
                  %% abs/lang/abslang.abs:984--984
-                put(vars, (get(vars))#{'cost' => future:get_blocking(maps:get('tmp2102232441', get(vars)), Cog, [O,DC| Stack])}),
+                put(vars, (get(vars))#{'cost' => future:get_blocking(maps:get('tmp379963364', get(vars)), Cog, [O,DC| Stack])}),
                  %% abs/lang/abslang.abs:985--985
                 put(vars, (get(vars))#{'result' := ( rationals:add(maps:get('result', get(vars)),maps:get('cost', get(vars)))) }),
             Loop([])  end end)
