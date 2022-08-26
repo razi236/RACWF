@@ -64,7 +64,8 @@ aspect generate_sync_schema {
     }
 
     public void AttrAssignment.generate_sync_schema(String m,PrintWriter o){
-
+            getValue().generate_sync_schema(m,o);
+             o.println("ATTR Assignment Statement");
     }
 
     public void ProductLine.generate_sync_schema(String m,PrintWriter o){
@@ -111,7 +112,7 @@ aspect generate_sync_schema {
 
     public void MainBlock.generate_sync_schema(String m,PrintWriter o) {
             o.print("main:> {main}");
-            getStmtList().generate_sync_schema(m,o);
+            getStmtList().generate_sync_schema("main",o);
         }
 
     public void AssertStmt.generate_sync_schema(String m,PrintWriter o) {
@@ -128,6 +129,7 @@ aspect generate_sync_schema {
 
     public void AssignStmt.generate_sync_schema(String m,PrintWriter o) {
             getValue().generate_sync_schema(m,o);
+           // o.println("Assignment Statement");
     }
 
     public void Call.generate_sync_schema(String m,PrintWriter o) {
@@ -138,14 +140,14 @@ aspect generate_sync_schema {
         o.println();
         o.print(m+"  :");
         o.println();
-        o.print("parameters ,");
-        o.println();
-        o.print(" {this,");
+        o.print(" {");
+        getCallee().generate_sync_schema(m,o);
+        o.print(",");
         for (PureExp x : getPList())
         {
-
-             o.print(x);
-             o.print(",");
+            //x.generate_sync_schema(m,o);
+            o.print(x);
+            o.print(",");
         }
         o.print("}");
 
@@ -226,10 +228,15 @@ aspect generate_sync_schema {
     }
 
     public void VarDeclStmt.generate_sync_schema(String m,PrintWriter o) {
+        getVarDecl().generate_sync_schema(m,o);
 
     }
 
     public void VarDecl.generate_sync_schema(String m,PrintWriter o) {
+        if (hasInitExp()) {
+            //o.println(" Initialization ");
+            getInitExp().generate_sync_schema(m,o);
+        }
 
     }
 
@@ -256,7 +263,7 @@ aspect generate_sync_schema {
     }
 
     public void Name.generate_sync_schema(String m,PrintWriter o) {
-        o.print(getName());
+        //o.print(getName());
     }
 
     public void StarExport.generate_sync_schema(String m,PrintWriter o) {
@@ -396,11 +403,11 @@ aspect generate_sync_schema {
 
     public void MethodSig.generate_sync_schema(String m,PrintWriter o) {
       o.print(m+"::->");
-      o.print(" {");
+      o.print(" {this");
       for (ParamDecl x : getParamList())
       {
-        o.print(x.getName());
         o.print(",");
+        o.print(x.getName());
       }
       o.print("}");
       o.println();
@@ -609,7 +616,7 @@ aspect generate_sync_schema {
     }
 
     public void IntLiteral.generate_sync_schema(String m,PrintWriter o) {
-        o.print(getContent());
+        //o.print(getContent());
     }
 
     public void StringLiteral.generate_sync_schema(String m,PrintWriter o) {

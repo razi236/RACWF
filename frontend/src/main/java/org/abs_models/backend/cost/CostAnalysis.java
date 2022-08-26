@@ -40,7 +40,7 @@ public class CostAnalysis extends Main{
             Set<PureExp> sync_set = new HashSet<PureExp>();
             Set<Set<PureExp>> sync_schema = new HashSet<Set<PureExp>>();
             Map<String,Set<Set<PureExp>>> sync_schema_map = new HashMap<String,Set<Set<PureExp>>>(); // [method_name -> sync_schema]
-            model.generate_sync_schema("", writer);
+            model.generate_sync_schema(null, writer);
             //String s = model.translate();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

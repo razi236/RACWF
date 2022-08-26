@@ -1,34 +1,32 @@
 module A1;
 interface ABC
 {
-    Int xyz(String x,ABC a);
+    Int xyz(String x,ABC a,Int y);
     //Int abc(String x);
     //Int ijk(String x, ABC a, ABC b, ABC c);
 }
 class ABC implements ABC
 {
     Int x = 0;
-    Int xyz(String x,ABC a)
+    Int xyz(String x,ABC a1,Int y1)
     {
+        Fut<Int> i = !xyz(a,"Razi",x,5) after dl 3;
+
         return 0;
     }
     /*Int abc(String x,ABC a)
     {
         return 0;
     }
-    Int ijk(String x, ABC a, ABC b, ABC c)
+    Int ijk(String x, ABC a1, ABC b2, ABC c)
     {
         return 0;
     }*/
 }
-class XYZ implements ABC
 {
-    Int xyz(String x,ABC a)
-    {
-        return 0;
-    }
-}
-{
+    Int c = 9;
+    //c = 8;
     ABC o = new ABC();
-    Fut<Int> i = !xyz(o,"Razi") after dl 3;
+
+    Fut<Int> i = !xyz(o,"Razi",o,10) after dl 3;
 }
