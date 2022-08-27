@@ -15,10 +15,8 @@ aspect generate_sync_schema {
         if (getNumChild() > 0) {
             getChild(0).generate_sync_schema(m,o);
             for (int i = 1; i < getNumChild(); i++) {
-                o.println();
                 getChild(i).generate_sync_schema(m,o);
             }
-            o.println();
         }
     }
 
@@ -111,7 +109,7 @@ aspect generate_sync_schema {
     }
 
     public void MainBlock.generate_sync_schema(String m,PrintWriter o) {
-            o.print("main:> {main}");
+            o.print("main: {this}");
             getStmtList().generate_sync_schema("main",o);
         }
 
@@ -137,17 +135,14 @@ aspect generate_sync_schema {
     }
 
     public void Call1Exp.generate_sync_schema(String m,PrintWriter o) {
-        o.println();
-        o.print(m+"  :");
-        o.println();
-        o.print(" {");
+
+        o.print("{");
         getCallee().generate_sync_schema(m,o);
-        o.print(",");
         for (PureExp x : getPList())
         {
             //x.generate_sync_schema(m,o);
-            o.print(x);
             o.print(",");
+            o.print(x);
         }
         o.print("}");
 
@@ -402,16 +397,14 @@ aspect generate_sync_schema {
     }
 
     public void MethodSig.generate_sync_schema(String m,PrintWriter o) {
-      o.print(m+"::->");
-      o.print(" {this");
+      o.print(m+" ");
+      o.print("{this");
       for (ParamDecl x : getParamList())
       {
         o.print(",");
         o.print(x.getName());
       }
       o.print("}");
-      o.println();
-
     }
 
     public void ClassDecl.generate_sync_schema(String m,PrintWriter o) {
@@ -427,10 +420,9 @@ aspect generate_sync_schema {
 
     public void MethodImpl.generate_sync_schema(String m,PrintWriter o) {
           String name = getMethodSig().getName();
-          o.print("I am in method "+name);
-          o.println();
           getMethodSig().generate_sync_schema(name,o);
           getBlock().generate_sync_schema(name,o);
+          o.println();
     }
 
     public void TypeParameterDecl.generate_sync_schema(String m,PrintWriter o) {
