@@ -109,6 +109,9 @@ aspect GenerateJava {
 
     abstract void Decl.generateJava(PrintStream stream);
 
+    public void ClassDecl1.generateJava(PrintStream stream) {}
+    public void InterfaceDecl1.generateJava(PrintStream stream) {}
+
     public void DataConstructor.generateJava(PrintStream stream) {
         String constructorClassName = JavaBackend.getConstructorName(this);
         DataTypeDecl dataTypeDecl = ((DataTypeType)getType()).getDecl();

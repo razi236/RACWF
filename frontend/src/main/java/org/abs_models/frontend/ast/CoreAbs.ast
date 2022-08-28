@@ -51,11 +51,14 @@ ParametricPartialFunctionDecl : PartialFunctionDecl ::= Annotation* TypeParamete
 UnknownDecl: Decl; // Unknown declarations
 AmbiguousDecl: UnknownDecl ::= <Alternative:java.util.List<Decl>>;
 ClassDecl: BehaviorDecl ::= Annotation* Param:ParamDecl* ImplementedInterfaceUse:InterfaceTypeUse* TraitUse* [InitBlock] RecoverBranch:CaseBranchStmt* Field:FieldDecl* Method:MethodImpl*;
+ClassDecl1: BehaviorDecl ::= Annotation* Param:ParamDecl* ImplementedInterfaceUse:InterfaceTypeUse* TraitUse* [InitBlock] RecoverBranch:CaseBranchStmt* Field:FieldDecl* Method:MethodImpl1*;
+
 FunctionDecl: BehaviorDecl ::= Annotation* TypeUse Param:ParamDecl* FunctionDef ;
 DataConstructor : Decl ::= <Name> ConstructorArg:ConstructorArg* ;
 ExceptionConstructor : DataConstructor ;
 ParametricFunctionDecl : FunctionDecl ::= Annotation* TypeParameter:TypeParameterDecl* ;
 InterfaceDecl: TypeDecl ::= Annotation* ExtendedInterfaceUse:InterfaceTypeUse* Body:MethodSig*;
+InterfaceDecl1: TypeDecl ::= Annotation* ExtendedInterfaceUse:InterfaceTypeUse* Body:MethodSig1*;
 DataTypeDecl: TypeDecl ::= Annotation* DataConstructor* ;
 
 ExceptionDecl : DataTypeDecl ;
@@ -97,7 +100,9 @@ ExpFunctionDef: FunctionDef ::= Rhs:PureExp;
 // `m` is `HTTPCallable` and `O` is `Far`, since these annotations apply to a
 // method and a type, respectively.
 MethodSig ::= <Name> ReturnType:TypeUse Param:ParamDecl*;
+MethodSig1 ::= <Name> ReturnType:TypeUse Objs:ParamDecl* Param:ParamDecl*;
 MethodImpl ::= MethodSig Block ;
+MethodImpl1 ::= MethodSig1 Block ;
 
 
 // Type expressions

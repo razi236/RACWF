@@ -1,22 +1,16 @@
-/**
- * Copyright (c) 2009-2011, The HATS Consortium. All rights reserved.
- * This file is licensed under the terms of the Modified BSD License.
- */
 package org.abs_models.frontend.typechecker;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.abs_models.frontend.ast.*;
+import org.abs_models.frontend.ast.MethodSig1;
 import org.abs_models.frontend.typechecker.nullable.NullCheckerExtension;
-import org.abs_models.frontend.typechecker.nullable.NullableType;
-
-public class InterfaceType extends ReferenceType {
+public class Interface1Type extends ReferenceType {
     private final java.util.List<Type> supertypes;
-    private final InterfaceDecl decl;
+    private final InterfaceDecl1 decl;
 
-    public InterfaceType(InterfaceDecl decl) {
+    public Interface1Type(InterfaceDecl1 decl) {
         this.decl = decl;
         this.supertypes = new java.util.ArrayList<>();
         for (InterfaceTypeUse i : decl.getExtendedInterfaceUses()) {
@@ -24,12 +18,11 @@ public class InterfaceType extends ReferenceType {
         }
     }
 
-    public InterfaceDecl getDecl() {
+    public InterfaceDecl1 getDecl() {
         return decl;
     }
-
     @Override
-    public boolean isInterfaceType() {
+    public boolean isInterface1Type() {
         return true;
     }
 
@@ -45,9 +38,9 @@ public class InterfaceType extends ReferenceType {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof InterfaceType))
+        if (!(o instanceof Interface1Type))
             return false;
-        InterfaceType t = (InterfaceType) o;
+        Interface1Type t = (Interface1Type) o;
         return t.decl.equals(this.decl);
     }
 
@@ -78,7 +71,7 @@ public class InterfaceType extends ReferenceType {
 
         for (Type it : supertypes) {
             if (it.isInterfaceType()) { // maybe UnkownType
-                if (((InterfaceType)it).isAssignable(t, visitedTypes))
+                if (((Interface1Type)it).isAssignable(t, visitedTypes))
                     return true;
             }
         }
@@ -111,11 +104,13 @@ public class InterfaceType extends ReferenceType {
     }
 
     @Override
-    public MethodSig lookupMethod1(String name) { return null;}
+    public MethodSig lookupMethod1(String name) {
+        return decl.lookupMethod(name);
+    }
 
     @Override
     public Type copy() {
-        return new InterfaceType(decl);
+        return new Interface1Type(decl);
     }
 
     @Override
@@ -125,11 +120,12 @@ public class InterfaceType extends ReferenceType {
 
     @Override
     public Collection<MethodSig> getAllMethodSigs1() {
-        return null;
+        return decl.getAllMethodSigs();
     }
 
     @Override
     public InterfaceTypeUse toUse() {
         return new InterfaceTypeUse(getQualifiedName(), NullCheckerExtension.getAnnotations(this));
     }
+
 }

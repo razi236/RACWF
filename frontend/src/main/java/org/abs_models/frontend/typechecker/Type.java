@@ -15,6 +15,7 @@ import org.abs_models.frontend.ast.Annotation;
 import org.abs_models.frontend.ast.Decl;
 import org.abs_models.frontend.ast.FieldDecl;
 import org.abs_models.frontend.ast.MethodSig;
+import org.abs_models.frontend.ast.MethodSig1;
 import org.abs_models.frontend.ast.TypeUse;
 
 public abstract class Type {
@@ -143,6 +144,10 @@ public abstract class Type {
         return false;
     }
 
+    public boolean isInterface1Type() {
+        return false;
+    }
+
     public boolean isDataType() {
         return false;
     }
@@ -215,6 +220,10 @@ public abstract class Type {
         return null;
     }
 
+    public MethodSig lookupMethod1(String name) {
+        return null;
+    }
+
     public boolean equals(Object o) {
         if (o == null)
             return false;
@@ -272,6 +281,10 @@ public abstract class Type {
     }
 
     public Collection<MethodSig> getAllMethodSigs() {
+        return Collections.emptyList();
+    }
+
+    public Collection<MethodSig> getAllMethodSigs1() {
         return Collections.emptyList();
     }
 

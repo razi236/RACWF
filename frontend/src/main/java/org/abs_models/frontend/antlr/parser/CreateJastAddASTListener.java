@@ -320,8 +320,17 @@ public class CreateJastAddASTListener extends ABSBaseListener {
         setV(ctx, i);
     }
 
+    @Override public void exitInterface_decl1(ABSParser.Interface_decl1Context ctx) {
+        InterfaceDecl1 i = new InterfaceDecl1(ctx.qualified_type_identifier().getText(), v(ctx.annotations()), l(ctx.e), l(ctx.methodsig1()));
+        setV(ctx, i);
+    }
+
     @Override public void exitMethodsig(ABSParser.MethodsigContext ctx) {
         setV(ctx, new MethodSig(ctx.IDENTIFIER().getText(), v(ctx.type_use()), v(ctx.paramlist())));
+    }
+
+    @Override public void exitMethodsig1(ABSParser.Methodsig1Context ctx) {
+        setV(ctx, new MethodSig1(ctx.IDENTIFIER().getText(), v(ctx.type_use()), v(ctx.p), v(ctx.q)));
     }
 
     // Classes
@@ -329,6 +338,22 @@ public class CreateJastAddASTListener extends ABSBaseListener {
         ClassDecl c = setV(ctx, new ClassDecl(ctx.qualified_type_identifier().getText(), v(ctx.annotations()),
             new List<>(), l(ctx.interface_name()),
                                                          l(ctx.trait_usage()), new Opt<>(), l(ctx.casestmtbranch()), l(ctx.field_decl()), l(ctx.method())));
+        if (ctx.paramlist() != null) {
+            c.setParamList(v(ctx.paramlist()));
+        }
+        if (ctx.stmt() != null && !ctx.stmt().isEmpty()) {
+            InitBlock b = new InitBlock(new List<>(), new List<>());
+            for (ABSParser.StmtContext s : ctx.stmt()) {
+                b.addStmt(v(s));
+            }
+            c.setInitBlock(b);
+        }
+    }
+
+    @Override public void exitClass_decl1(ABSParser.Class_decl1Context ctx) {
+        ClassDecl1 c = setV(ctx, new ClassDecl1(ctx.qualified_type_identifier().getText(), v(ctx.annotations()),
+            new List<>(), l(ctx.interface_name()),
+            l(ctx.trait_usage()), new Opt<>(), l(ctx.casestmtbranch()), l(ctx.field_decl()), l(ctx.method1())));
         if (ctx.paramlist() != null) {
             c.setParamList(v(ctx.paramlist()));
         }
@@ -355,6 +380,17 @@ public class CreateJastAddASTListener extends ABSBaseListener {
             b.addStmt(v(s));
         }
         setV(ctx, new MethodImpl(ms, b));
+    }
+
+    @Override public void exitMethod1(ABSParser.Method1Context ctx) {
+        MethodSig1 ms = new MethodSig1(ctx.IDENTIFIER().getText(), v(ctx.type_use()), v(ctx.p), v(ctx.q));
+        ms.setPosition(ctx.IDENTIFIER().getSymbol().getLine(), ctx.IDENTIFIER().getSymbol().getCharPositionInLine(),
+            ctx.p.getStop().getLine(), ctx.q.getStop().getCharPositionInLine() + ctx.q.getStop().getText().length());
+        Block b = new Block(new List<>(), new List<>());
+        for (ABSParser.StmtContext s : ctx.stmt()) {
+            b.addStmt(v(s));
+        }
+        setV(ctx, new MethodImpl1(ms, b));
     }
 
     // Statements

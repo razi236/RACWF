@@ -487,6 +487,9 @@ aspect TypeResolution {
 
         return null;
     }
+    syn lazy MethodSig InterfaceDecl1.lookupMethod(String name) {
+            return null;
+        }
 
 
     syn String CompilationUnit.getFileName() = getName();

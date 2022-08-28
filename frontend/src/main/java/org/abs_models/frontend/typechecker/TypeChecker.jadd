@@ -178,11 +178,16 @@ aspect TypeChecker {
         return sigs.values();
     }
 
+
     public Collection<MethodSig> InterfaceDecl.getAllMethodSigs() {
         HashMap<String, MethodSig> sigs = new HashMap<String, MethodSig>();
         addAllMethodSigs(sigs, new HashSet<InterfaceDecl>());
         return sigs.values();
     }
+
+    public Collection<MethodSig> InterfaceDecl1.getAllMethodSigs() {
+            return null;
+        }
 
     // DECLS
     public void InterfaceDecl.addAllMethodSigs(HashMap<String, MethodSig> sigs, HashSet<InterfaceDecl> visitedDecls) {
@@ -202,6 +207,10 @@ aspect TypeChecker {
             sigs.put(s.getName(),s);
         }
     }
+
+    public void InterfaceDecl1.addAllMethodSigs(HashMap<String, MethodSig1> sigs, HashSet<InterfaceDecl1> visitedDecls) {
+
+        }
 
     public void ClassDecl.addAllMethodSigs(HashMap<String, MethodSig> sigs, SemanticConditionList e) {
         for (InterfaceTypeUse u : getImplementedInterfaceUses()) {
@@ -687,6 +696,9 @@ aspect TypeChecker {
 
         TypeCheckerHelper.checkAssignment(e,this,variable.getType(),value);
     }
+
+    public void InterfaceDecl1.typeCheck(SemanticConditionList e) {}
+    public void ClassDecl1.typeCheck(SemanticConditionList e) {}
 
     public void MoveCogToStmt.typeCheck(SemanticConditionList e) {
         super.typeCheck(e);

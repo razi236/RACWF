@@ -215,6 +215,9 @@ aspect GenerateJavaDynamic_Core {
         stream.println("}");
     }
 
+    public void InterfaceDecl1.generateJavaDynamic(PrintStream stream) {}
+    public void ClassDecl1.generateJavaDynamic(PrintStream stream) {}
+
     public void InterfaceDecl.generateJavaDynamic(PrintStream stream) {
         DynamicJavaGeneratorHelper.generateHelpLine(this,stream);
         stream.print("public interface " + JavaBackend.getJavaName(this) + " extends " + ABSInterface.class.getName());

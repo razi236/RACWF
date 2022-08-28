@@ -396,6 +396,11 @@ aspect generate_sync_schema {
 
     }
 
+    public void InterfaceDecl1.generate_sync_schema(String m,PrintWriter o) {
+
+
+        }
+
     public void MethodSig.generate_sync_schema(String m,PrintWriter o) {
       o.print(m+" ");
       o.print("{this");
@@ -414,6 +419,13 @@ aspect generate_sync_schema {
                 }
     }
 
+    public void ClassDecl1.generate_sync_schema(String m,PrintWriter o) {
+            List<MethodImpl1> methods = getMethodList();
+                    if (methods.getNumChild() > 0) {
+                        methods.generate_sync_schema(m,o);
+                    }
+        }
+
     public void FieldDecl.generate_sync_schema(String m,PrintWriter o) {
 
     }
@@ -424,6 +436,14 @@ aspect generate_sync_schema {
           getBlock().generate_sync_schema(name,o);
           o.println();
     }
+
+    public void MethodImpl1.generate_sync_schema(String m,PrintWriter o) {
+              o.print("In new style method");
+              String name = getMethodSig1().getName();
+              getMethodSig1().generate_sync_schema(name,o);
+              getBlock().generate_sync_schema(name,o);
+              o.println();
+        }
 
     public void TypeParameterDecl.generate_sync_schema(String m,PrintWriter o) {
         o.print(getName());

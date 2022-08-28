@@ -78,6 +78,7 @@ type_use : annotations n=qualified_type_identifier
 type_exp : n=qualified_type_identifier
         ('<' p+=type_use (',' p+=type_use)*  '>')? ;
 paramlist : '(' (param_decl (',' param_decl)*)? ')' ;
+
 param_decl : annotations type_exp IDENTIFIER ;
 
 interface_name : qualified_type_identifier ;
@@ -284,7 +285,15 @@ interface_decl : annotations
         '{' methodsig* '}'
     ;
 
+interface_decl1 : annotations
+        'org' qualified_type_identifier
+        ('extends' e+=interface_name (',' e+=interface_name)*)?
+        '{' methodsig1* '}'
+    ;
+
 methodsig : type_use IDENTIFIER paramlist ';' ;
+
+methodsig1 : type_use IDENTIFIER '(' p = paramlist ',' q = paramlist ')' ';' ;
 
 // Classes
 
@@ -300,9 +309,23 @@ class_decl : annotations
         '}'
     ;
 
+class_decl1 : annotations
+        'workflow' qualified_type_identifier paramlist?
+        ('implements' interface_name (',' interface_name)*)?
+        '{'
+        field_decl*
+        ('{' stmt* '}')?
+        ( 'recover' '{' casestmtbranch* '}' )?
+        trait_usage*
+        method1*
+        '}'
+    ;
+
 field_decl : type_use IDENTIFIER ('=' pure_exp)? ';' ;
 
 method : type_use IDENTIFIER paramlist '{' stmt* '}' ;
+
+method1 : type_use IDENTIFIER '(' p = paramlist ',' q = paramlist ')' '{' stmt* '}' ;
 
 // Module declaration
 module_decl : 'module' qualified_type_identifier ';'
@@ -334,7 +357,9 @@ decl : datatype_decl
     | typesyn_decl
     | exception_decl
     | interface_decl
+    | interface_decl1
     | class_decl
+    | class_decl1
     | trait_decl
     ;
 
