@@ -385,7 +385,7 @@ public class CreateJastAddASTListener extends ABSBaseListener {
     @Override public void exitMethod1(ABSParser.Method1Context ctx) {
         MethodSig1 ms = new MethodSig1(ctx.IDENTIFIER().getText(), v(ctx.type_use()), v(ctx.p), v(ctx.q));
         ms.setPosition(ctx.IDENTIFIER().getSymbol().getLine(), ctx.IDENTIFIER().getSymbol().getCharPositionInLine(),
-            ctx.p.getStop().getLine(), ctx.q.getStop().getCharPositionInLine() + ctx.q.getStop().getText().length());
+            ctx.q.getStop().getLine(), ctx.q.getStop().getCharPositionInLine() + ctx.q.getStop().getText().length());
         Block b = new Block(new List<>(), new List<>());
         for (ABSParser.StmtContext s : ctx.stmt()) {
             b.addStmt(v(s));
@@ -572,7 +572,7 @@ public class CreateJastAddASTListener extends ABSBaseListener {
 
     @Override public void exitAsyncCall1Exp(ABSParser.AsyncCall1ExpContext ctx) {
 
-            setV(ctx, new AsyncCall1Exp(v(ctx.o), ctx.m.getText(), v(ctx.p), v(ctx.q), v(ctx.d)));
+            setV(ctx, new AsyncCall1Exp(v(ctx.o), ctx.m.getText(), v(ctx.o1), v(ctx.p), v(ctx.q), v(ctx.d)));
 
     }
 
@@ -582,7 +582,7 @@ public class CreateJastAddASTListener extends ABSBaseListener {
     }
 
     @Override public void exitSyncCall1Exp(ABSParser.SyncCall1ExpContext ctx) {
-        setV(ctx, new SyncCall1Exp(v(ctx.o), ctx.m.getText(), v(ctx.p), v(ctx.q), v(ctx.d)));
+        setV(ctx, new SyncCall1Exp(v(ctx.o), ctx.m.getText(), v(ctx.o1), v(ctx.p), v(ctx.q), v(ctx.d)));
     }
 
 

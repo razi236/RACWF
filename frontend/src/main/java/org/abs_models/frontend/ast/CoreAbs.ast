@@ -247,7 +247,7 @@ GetExp: EffExp ::= PureExp;
 OriginalCall: EffExp ::= Param:PureExp*; // original() is supported in traits, hence part of Core ABS.
 HoldExp: EffExp ::= Param:PureExp*;
 
-abstract Call1Exp: EffExp ::= Callee:PureExp <Method> P:PureExp* Q:PureExp* D:PureExp ;
+abstract Call1Exp: EffExp ::= Callee:PureExp <Method> P:PureExp* P1:PureExp* Q:PureExp* D:PureExp ;
 SyncCall1Exp: Call1Exp;
 AsyncCall1Exp: Call1Exp;
 

@@ -28,16 +28,35 @@ data Quality =
     ;
 
 module ABS;
+interface IJK
+{
+    Unit jkl((ABC a, IJK k, IJK l),());
+}
+class IJK implements IJK
+{
+    Unit jkl((ABC a, IJK k, IJK l),())
+    {
+
+    }
+}
 interface ABC
 {
-    Int xyz(ABC a, ABC b, ABC c,String x);
+    Int xyz((ABC a,ABC b,ABC c),(String x));
 }
 class ABC implements ABC
 {
-    Int xyz(ABC a, ABC b, ABC c,String x)
+    Int xyz((ABC a,ABC b,ABC c),(String x))
     {
+        Fut<Int> f1;
+        Fut<Unit> f2;
+        IJK l = new IJK();
+        IJK i = new IJK();
+        IJK k = new IJK();
+        ABC j = new ABC();
         println(`Hello $x$`);
         consTime(10000); // cost is a keyword in ABS compiler.
+        f1 = !xyz(this,(a,b),("Muhammad")) after dl 10;
+        f2= !jkl(i,(j,k,l),()) after dl 5;
         return 0;
     }
 }
@@ -47,5 +66,5 @@ class ABC implements ABC
     ABC o1 = new ABC();
     ABC o2 = new ABC();
     ABC o3 = new ABC();
-    //f = !xyz(o,o1,o2,"Muhammad") after dl 10;
+    f = !xyz(o,(o1,o2,o3),("Muhammad")) after dl 10;
 }

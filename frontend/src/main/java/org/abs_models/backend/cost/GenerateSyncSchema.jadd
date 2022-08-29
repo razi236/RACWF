@@ -109,7 +109,7 @@ aspect generate_sync_schema {
     }
 
     public void MainBlock.generate_sync_schema(String m,PrintWriter o) {
-            o.print("main: {this}");
+            o.print("main/this");
             getStmtList().generate_sync_schema("main",o);
         }
 
@@ -136,15 +136,16 @@ aspect generate_sync_schema {
 
     public void Call1Exp.generate_sync_schema(String m,PrintWriter o) {
 
-        o.print("{");
+        o.print("/");
         getCallee().generate_sync_schema(m,o);
         for (PureExp x : getPList())
         {
             //x.generate_sync_schema(m,o);
             o.print(",");
             o.print(x);
+
         }
-        o.print("}");
+       // o.print("}");
 
     }
 
@@ -413,14 +414,14 @@ aspect generate_sync_schema {
     }
 
     public void MethodSig1.generate_sync_schema(String m,PrintWriter o) {
-          o.print(m+" ");
-          o.print("{this");
+          o.print(m);
+          o.print("/this");
           for (ParamDecl x : getObjList())
           {
             o.print(",");
             o.print(x.getName());
           }
-          o.print("}");
+          //o.print("}");
         }
 
     public void ClassDecl.generate_sync_schema(String m,PrintWriter o) {

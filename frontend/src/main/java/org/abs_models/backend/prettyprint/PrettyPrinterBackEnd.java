@@ -31,6 +31,7 @@ public class PrettyPrinterBackEnd extends Main {
     public int compile(Absc args) throws Exception {
         this.arguments = args;
         final Model model = parse(arguments.files);
+        /*
         if (arguments.prettyprint_keepsugar) {
             model.doAACrewrite = false;
             model.doForEachRewrite = false;
@@ -42,6 +43,7 @@ public class PrettyPrinterBackEnd extends Main {
             printErrorMessage();
             return 1;
         }
+        */
 
         // Set the line separator to LF so the file output prints UNIX line endings on println() calls.
         System.setProperty("line.separator", "\n");
