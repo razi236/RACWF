@@ -100,7 +100,7 @@ ExpFunctionDef: FunctionDef ::= Rhs:PureExp;
 // `m` is `HTTPCallable` and `O` is `Far`, since these annotations apply to a
 // method and a type, respectively.
 MethodSig ::= <Name> ReturnType:TypeUse Param:ParamDecl*;
-MethodSig1 ::= <Name> ReturnType:TypeUse Objs:ParamDecl* Param:ParamDecl*;
+MethodSig1 ::= <Name> ReturnType:TypeUse Obj:ParamDecl* Param:ParamDecl*;
 MethodImpl ::= MethodSig Block ;
 MethodImpl1 ::= MethodSig1 Block ;
 

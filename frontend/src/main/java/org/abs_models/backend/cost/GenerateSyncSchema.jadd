@@ -412,6 +412,17 @@ aspect generate_sync_schema {
       o.print("}");
     }
 
+    public void MethodSig1.generate_sync_schema(String m,PrintWriter o) {
+          o.print(m+" ");
+          o.print("{this");
+          for (ParamDecl x : getObjList())
+          {
+            o.print(",");
+            o.print(x.getName());
+          }
+          o.print("}");
+        }
+
     public void ClassDecl.generate_sync_schema(String m,PrintWriter o) {
         List<MethodImpl> methods = getMethodList();
                 if (methods.getNumChild() > 0) {
@@ -438,7 +449,7 @@ aspect generate_sync_schema {
     }
 
     public void MethodImpl1.generate_sync_schema(String m,PrintWriter o) {
-              o.print("In new style method");
+              //o.println("In new style method");
               String name = getMethodSig1().getName();
               getMethodSig1().generate_sync_schema(name,o);
               getBlock().generate_sync_schema(name,o);

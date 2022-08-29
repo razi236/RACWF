@@ -286,7 +286,7 @@ interface_decl : annotations
     ;
 
 interface_decl1 : annotations
-        'org' qualified_type_identifier
+        'interface' qualified_type_identifier
         ('extends' e+=interface_name (',' e+=interface_name)*)?
         '{' methodsig1* '}'
     ;
@@ -310,7 +310,7 @@ class_decl : annotations
     ;
 
 class_decl1 : annotations
-        'workflow' qualified_type_identifier paramlist?
+        'class' qualified_type_identifier paramlist?
         ('implements' interface_name (',' interface_name)*)?
         '{'
         field_decl*

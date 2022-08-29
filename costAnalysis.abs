@@ -1,15 +1,38 @@
+module Resource; // must be module Resource to declare some resource qualities.
+data Quality =
+    Efficiency(Int)
+    | Pathologist
+    | Radiologist
+    | Gynaecologist
+    | Orthopedic
+    | Driver
+    | VanDriver
+    | Van
+    | Truck
+    | Engineer
+    | Teacher
+    ;
 module A1;
-org ABC
+interface JKL
 {
-    Int xyz((ABC x,ABC y),(String x,Int y));
+
 }
-workflow ABC implements ABC
+class LMN implements JKL
 {
-    Int xyz((ABC x,ABC y),(String x,Int y))
-    {
-        return 0;
-    }
+
 }
+interface ABC
+{
+    Int xyz((JKL i,ABC a),(String s));
+}
+class XYZ implements ABC,JKL
+{
+     Int xyz((JKL i,ABC a),(String s))
+     {
+         return 0;
+     }
+}
+
 {
 
 }
