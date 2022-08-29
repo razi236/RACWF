@@ -17,7 +17,7 @@ public class CostAnalysis extends Main{
         backend.arguments = args;
         int result = 0;
         try {
-            result = backend.genSyncSchema(args);
+            result = backend.compute(args);
         } catch (Exception e) {
             System.err.println("An error occurred during cost computation:\n" + e.getMessage());
             if (backend.arguments.debug) {
@@ -27,7 +27,7 @@ public class CostAnalysis extends Main{
         }
         return result;
     }
-    public int genSyncSchema(Absc args) throws Exception {
+    public int compute(Absc args) throws Exception {
         PrintWriter writer = null;
         try {
             File file = new File("/Users/muhammadrizwanali/Desktop/GitHub/abstools/Synch_Schema.txt");
@@ -37,10 +37,6 @@ public class CostAnalysis extends Main{
             System.out.println("Computation of Cost is started:");
             this.arguments = args;
             final Model model = parse(arguments.files);
-            PureExp object = null;
-            Set<PureExp> sync_set = new HashSet<PureExp>();
-            Set<Set<PureExp>> sync_schema = new HashSet<Set<PureExp>>();
-            Map<String,Set<Set<PureExp>>> sync_schema_map = new HashMap<String,Set<Set<PureExp>>>(); // [method_name -> sync_schema]
             model.generate_sync_schema(null, writer);
             //String s = model.translate();
         } catch (FileNotFoundException e) {
@@ -87,15 +83,13 @@ public class CostAnalysis extends Main{
             scanner1.close();
         }
         scanner.close();
-        /*
+
 
         Iterator<String> method_name_itr = sync_schema_map.keySet().iterator();
         while (method_name_itr.hasNext()) {
             System.out.println(method_name_itr.next());
         }
-
-         */
-        //System.out.println();
+        System.out.println();
         Iterator<Set<Set<String>>> itr = sync_schema_map.values().iterator();
         while (itr.hasNext()) {
             Iterator<Set<String>> sync_set_itr = itr.next().iterator();
