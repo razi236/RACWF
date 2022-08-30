@@ -87,9 +87,25 @@ public class CostAnalysis extends Main{
 
         Iterator<String> method_name_itr = sync_schema_map.keySet().iterator();
         while (method_name_itr.hasNext()) {
-            System.out.println(method_name_itr.next());
+            String name = method_name_itr.next();
+            System.out.print(name+": ");
+            Set<Set<String>> val = sync_schema_map.get(name);
+            Iterator<Set<String>> sync_set_itr = val.iterator();
+            while (sync_set_itr.hasNext()) {
+                Iterator<String> objs_itr = sync_set_itr.next().iterator();
+                System.out.print("{");
+                if(objs_itr.hasNext())
+                    System.out.print(objs_itr.next());
+                while (objs_itr.hasNext()) {
+                    System.out.print(",");
+                    System.out.print(objs_itr.next());
+                }
+                System.out.print("}");
+            }
+            System.out.println();
         }
         System.out.println();
+        /*
         Iterator<Set<Set<String>>> itr = sync_schema_map.values().iterator();
         while (itr.hasNext()) {
             Iterator<Set<String>> sync_set_itr = itr.next().iterator();
@@ -106,6 +122,8 @@ public class CostAnalysis extends Main{
             }
             System.out.println();
         }
+
+         */
 
 
 
