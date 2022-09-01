@@ -1,6 +1,7 @@
 package org.abs_models.backend.cost;
 import java.io.*;
 import java.util.*;
+import org.javatuples.Quartet;
 
 import org.abs_models.Absc;
 import org.abs_models.backend.prettyprint.ABSFormatter;
@@ -38,6 +39,15 @@ public class CostAnalysis extends Main{
             final Model model = parse(arguments.files);
             model.generate_sync_schema(null, writer);
             Map<String, Set<Set<String>>> sync_schema_map = new HashMap<String, Set<Set<String>>>();
+            Map<String,Set<String>> I = new HashMap<String,Set<String>>();
+            Map<Set<String>,String> Psi = new HashMap<Set<String>,String>();
+            String o = null;
+            String ta = null;
+            String t = null;
+            Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet =
+                new Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>
+                (I, Psi, ta, t);
+
             sync_schema_map = scan_merge_schema();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

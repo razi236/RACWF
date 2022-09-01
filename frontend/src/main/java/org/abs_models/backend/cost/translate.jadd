@@ -1,0 +1,711 @@
+
+// -*- mode: java; tab-width: 4; -*-
+import java.io.PrintWriter;
+import org.abs_models.backend.cost.*;
+import java.util.stream.Collectors;
+import com.google.common.collect.Streams;
+
+aspect translate {
+
+    /** Controls whether to include the standard library in pretty-printing
+     */
+    public boolean Model.translate = false;
+
+    public  List.translate(String m,PrintWriter o) {
+        if (getNumChild() > 0) {
+            getChild(0).generate_sync_schema(m,o);
+            for (int i = 1; i < getNumChild(); i++) {
+                getChild(i).generate_sync_schema(m,o);
+            }
+        }
+    }
+
+    public void ASTNode.translate(String m,PrintWriter o){
+        throw new NotImplementedYetException(this);
+    }
+
+    public void Model.translate(String m,PrintWriter o){
+        for (ModuleDecl d : getModuleDecls()) {
+            if (generate_sync_schemaStdLib || (! Constants.BUILT_IN_LIBS.contains(d.getName()))) {
+                d.generate_sync_schema(m,o);
+            }
+        }
+
+        for (DeltaDecl d : getDeltaDecls()) {
+            d.generate_sync_schema(m,o);
+        }
+        if (hasProductLine()) {
+            getProductLine().generate_sync_schema(m,o);
+        }
+    }
+
+    public void ModuleDecl.translate(String m,PrintWriter o){
+
+
+        for (Decl decl : getDecls()) {
+            decl.generate_sync_schema(m,o);;
+        }
+
+        if (hasBlock()) {
+            getBlock().generate_sync_schema(m,o);
+        }
+
+        o.flush();
+    }
+
+    public void ProductDecl.translate(String m,PrintWriter o){
+
+    }
+
+    public void Feature.translate(String m,PrintWriter o){
+
+    }
+
+    public void AttrAssignment.translate(String m,PrintWriter o){
+            getValue().generate_sync_schema(m,o);
+             o.println("ATTR Assignment Statement");
+    }
+
+    public void ProductLine.translate(String m,PrintWriter o){
+
+    }
+
+    public void DeltaClause.translate(String m,PrintWriter o) {
+
+    }
+
+    public abstract void AppCond.translate(String m,PrintWriter o);
+
+    public void AppCondAnd.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AppCondOr.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AppCondNot.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AppCondFeature.translate(String m,PrintWriter o) {
+
+    }
+
+    public void Deltaspec.translate(String m,PrintWriter o) {
+
+    }
+
+    public void Deltaparam.translate(String m,PrintWriter o) {
+
+    }
+
+    public void DeltaID.translate(String m,PrintWriter o) {
+
+    }
+
+    public void Block.translate(String m,PrintWriter o) {
+        getStmtList().generate_sync_schema(m,o);
+    }
+
+    public void MainBlock.translate(String m,PrintWriter o) {
+            o.print("main/this");
+            getStmtList().generate_sync_schema("main",o);
+        }
+
+    public void AssertStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ThrowStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    public void DieStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AssignStmt.translate(String m,PrintWriter o) {
+            getValue().generate_sync_schema(m,o);
+           // o.println("Assignment Statement");
+    }
+
+    public void Call.translate(String m,PrintWriter o) {
+
+    }
+
+    public void Call1Exp.translate(String m,PrintWriter o) {
+
+        o.print("/");
+        getCallee().generate_sync_schema(m,o);
+        for (PureExp x : getPList())
+        {
+            //x.generate_sync_schema(m,o);
+            o.print(",");
+            o.print(x);
+
+        }
+       // o.print("}");
+
+    }
+
+    public void GetExp.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AddResStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    public void HoldExp.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ReleaseResStmt.translate(String m,PrintWriter o) {
+
+    }
+
+
+    public void NewExp.translate(String m,PrintWriter o) {
+
+    }
+
+    public void OriginalCall.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AwaitStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AndGuard.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ClaimGuard.translate(String m,PrintWriter o) {
+
+    }
+
+    public void DurationGuard.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ExpGuard.translate(String m,PrintWriter o) {
+
+    }
+
+    public void CostStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ExpressionStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    public void IfStmt.translate(String m,PrintWriter o) {
+
+        getThen().generate_sync_schema(m,o);
+        if (hasElse()) {
+            getElse().generate_sync_schema(m,o);
+        }
+    }
+
+    public void ReturnStmt.translate(String m,PrintWriter o) {
+
+
+    }
+
+    public void SkipStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    public void SuspendStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    public void VarDeclStmt.translate(String m,PrintWriter o) {
+        getVarDecl().generate_sync_schema(m,o);
+
+    }
+
+    public void VarDecl.translate(String m,PrintWriter o) {
+        if (hasInitExp()) {
+            //o.println(" Initialization ");
+            getInitExp().generate_sync_schema(m,o);
+        }
+
+    }
+
+    public void WhileStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ForeachStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    public void CaseStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    public void TryCatchFinallyStmt.translate(String m,PrintWriter o) {
+
+    }
+
+    abstract public void Export.translate(String m,PrintWriter o);
+
+    public void NamedExport.translate(String m,PrintWriter o) {
+
+    }
+
+    public void Name.translate(String m,PrintWriter o) {
+        //o.print(getName());
+    }
+
+    public void StarExport.translate(String m,PrintWriter o) {
+
+    }
+
+    public void FromExport.translate(String m,PrintWriter o) {
+
+    }
+
+    public void NamedImport.translate(String m,PrintWriter o) {
+
+
+    }
+
+    public void StarImport.translate(String m,PrintWriter o) {
+
+    }
+
+    public void FromImport.translate(String m,PrintWriter o) {
+
+    }
+
+    public void FunctionDecl.translate(String m,PrintWriter o) {
+
+    }
+
+    public void PartialFunctionDecl.translate(String m,PrintWriter o) {
+
+    }
+
+    public void FunctionParamDecl.translate(String m,PrintWriter o) {
+      o.print(getName());
+    }
+
+    public void PartialFunctionDef.translate(String m,PrintWriter o) {
+
+    }
+
+    public void NamedParFnAppParam.translate(String m,PrintWriter o) {
+        o.print(getName());
+    }
+
+    public void AnonymousFunctionDecl.translate(String m,PrintWriter o) {
+
+    }
+
+
+
+    public void ParametricFunctionDecl.translate(String m,PrintWriter o) {
+
+    }
+
+
+
+    public void ParametricPartialFunctionDecl.translate(String m,PrintWriter o) {
+
+    }
+
+    public void BuiltinFunctionDef.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ExpFunctionDef.translate(String m,PrintWriter o) {
+
+    }
+
+    public void DeltaDecl.translate(String m,PrintWriter o) {
+
+    }
+
+    public void DeltaAccess.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AddImportModifier.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AddExportModifier.translate(String m,PrintWriter o) {
+
+    }
+
+    public void RemoveClassModifier.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ModifyClassModifier.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AddFieldModifier.translate(String m,PrintWriter o) {
+
+    }
+
+    public void RemoveFieldModifier.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AddInterfaceModifier.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AddClassModifier.translate(String m,PrintWriter o) {
+
+    }
+
+    public void DeltaFieldParam.translate(String m,PrintWriter o) {
+
+    }
+
+    public void DeltaClassParam.translate(String m,PrintWriter o) {
+
+    }
+
+    public void HasField.translate(String m,PrintWriter o) {
+        getFieldDecl().generate_sync_schema(m,o);
+    }
+
+    public void HasInterface.translate(String m,PrintWriter o) {
+        getInterfaceTypeUse().generate_sync_schema(m,o);
+    }
+
+    public void HasMethod.translate(String m,PrintWriter o) {
+
+        getMethodSig().generate_sync_schema(m,o);
+    }
+
+    public void TypeSynDecl.translate(String m,PrintWriter o) {
+
+    }
+
+    public void InterfaceDecl.translate(String m,PrintWriter o) {
+
+
+    }
+
+    public void InterfaceDecl1.translate(String m,PrintWriter o) {
+
+
+        }
+
+    public void MethodSig.translate(String m,PrintWriter o) {
+      o.print(m+" ");
+      o.print("{this");
+      for (ParamDecl x : getParamList())
+      {
+        o.print(",");
+        o.print(x.getName());
+      }
+      o.print("}");
+    }
+
+    public void MethodSig1.translate(String m,PrintWriter o) {
+          o.print(m);
+          o.print("/this");
+          for (ParamDecl x : getObjList())
+          {
+            o.print(",");
+            o.print(x.getName());
+          }
+          //o.print("}");
+        }
+
+    public void ClassDecl.translate(String m,PrintWriter o) {
+        List<MethodImpl> methods = getMethodList();
+                if (methods.getNumChild() > 0) {
+                    methods.generate_sync_schema(m,o);
+                }
+    }
+
+    public void ClassDecl1.translate(String m,PrintWriter o) {
+            List<MethodImpl1> methods = getMethodList();
+                    if (methods.getNumChild() > 0) {
+                        methods.generate_sync_schema(m,o);
+                    }
+        }
+
+    public void FieldDecl.translate(String m,PrintWriter o) {
+
+    }
+
+    public void MethodImpl.translate(String m,PrintWriter o) {
+          String name = getMethodSig().getName();
+          getMethodSig().generate_sync_schema(name,o);
+          getBlock().generate_sync_schema(name,o);
+          o.println();
+    }
+
+    public void MethodImpl1.translate(String m,PrintWriter o) {
+              //o.println("In new style method");
+              String name = getMethodSig1().getName();
+              getMethodSig1().generate_sync_schema(name,o);
+              getBlock().generate_sync_schema(name,o);
+              o.println();
+        }
+
+    public void TypeParameterDecl.translate(String m,PrintWriter o) {
+        o.print(getName());
+    }
+
+    public void DataTypeDecl.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AddDataTypeModifier.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ModifyInterfaceModifier.translate(String m,PrintWriter o) {
+
+    }
+
+    public void AddMethodSigModifier.translate(String m,PrintWriter o) {
+
+    }
+
+    public void RemoveMethodSigModifier.translate(String m,PrintWriter o) {
+
+    }
+
+
+
+    public void ParametricDataTypeDecl.translate(String m,PrintWriter o) {
+
+    }
+
+    public void DataConstructor.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ConstructorArg.translate(String m,PrintWriter o) {
+
+    }
+
+    public void UnresolvedTypeUse.translate(String m,PrintWriter o) {
+        // TODO: getAnnotationList().doPrettyPrint(stream, formatter, "");
+        o.print(getName());
+    }
+
+    public void DataTypeUse.translate(String m,PrintWriter o) {
+
+    }
+
+
+
+    public void ParametricDataTypeUse.translate(String m,PrintWriter o) {
+
+    }
+
+    public void TypedAnnotation.translate(String m,PrintWriter o) {
+
+    }
+
+    public void Annotation.translate(String m,PrintWriter o) {
+
+    }
+
+    public void TypeParameterUse.translate(String m,PrintWriter o) {
+        o.print(getName());
+    }
+
+    public void InterfaceTypeUse.translate(String m,PrintWriter o) {
+        o.print(getName());
+    }
+
+    public void FieldUse.translate(String m,PrintWriter o) {
+
+    }
+
+    public void VarUse.translate(String m,PrintWriter o) {
+        o.print(getName());
+    }
+
+    public void Binary.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ConBinary.translate(String m,PrintWriter o) {
+
+        }
+
+    public void AddAddExp.translate(String m,PrintWriter o) {
+
+    }
+
+    public void SubAddExp.translate(String m,PrintWriter o) {
+
+    }
+
+    public void DivMultExp.translate(String m,PrintWriter o) {
+    }
+
+    public void ModMultExp.translate(String m,PrintWriter o) {
+    }
+
+    public void MultMultExp.translate(String m,PrintWriter o) {
+    }
+
+    public void AndBoolExp.translate(String m,PrintWriter o) {
+    }
+
+    public void ConjunctionExp.translate(String m,PrintWriter o) {
+        }
+
+    public void OrBoolExp.translate(String m,PrintWriter o) {
+    }
+
+    public void EqExp.translate(String m,PrintWriter o) {
+    }
+
+    public void NotEqExp.translate(String m,PrintWriter o) {
+    }
+
+    public void GTEQExp.translate(String m,PrintWriter o) {
+    }
+
+    public void GTExp.translate(String m,PrintWriter o) {
+    }
+
+    public void LTEQExp.translate(String m,PrintWriter o) {
+    }
+
+    public void LTExp.translate(String m,PrintWriter o) {
+    }
+
+    public void CaseExp.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ConstructorPattern.translate(String m,PrintWriter o) {
+
+    }
+
+    public void LiteralPattern.translate(String m,PrintWriter o) {
+        getLiteral().generate_sync_schema(m,o);
+    }
+
+    public void PatternVar.translate(String m,PrintWriter o) {
+        getVar().generate_sync_schema(m,o);
+    }
+
+    public void PatternVarDecl.translate(String m,PrintWriter o) {
+        o.print(getName());
+    }
+
+    public void PatternVarUse.translate(String m,PrintWriter o) {
+        o.print(getName());
+    }
+
+    public void UnderscorePattern.translate(String m,PrintWriter o) {
+
+    }
+
+    public void DataConstructorExp.translate(String m,PrintWriter o) {
+
+    }
+
+    public void FnApp.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ParFnApp.translate(String m,PrintWriter o) {
+
+    }
+
+    public void IfExp.translate(String m,PrintWriter o) {
+        getThenExp().generate_sync_schema(m,o);
+        getElseExp().generate_sync_schema(m,o);
+    }
+
+    public void LetExp.translate(String m,PrintWriter o) {
+
+    }
+
+    public void ParamDecl.translate(String m,PrintWriter o) {
+
+    }
+
+    public void IntLiteral.translate(String m,PrintWriter o) {
+        //o.print(getContent());
+    }
+
+    public void StringLiteral.translate(String m,PrintWriter o) {
+        o.print("\"");
+        for (char c : getContent().toCharArray()) {
+            switch (c) {
+            case '\\': o.print("\\\\");
+                break;
+            case '"': o.print("\\\"");
+                break;
+            case '\t': o.print("\\t");
+                break;
+            case '\n': o.print("\\n");
+                break;
+            case '\r': o.print("\\r");
+                break;
+            default: o.print(c);
+            }
+        }
+        o.print("\"");
+    }
+
+    public void FloatLiteral.translate(String m,PrintWriter o) {
+        o.print(getContent());
+    }
+
+    public void ListLiteral.translate(String m,PrintWriter o) {
+        o.print("[");
+        String interp = "";
+        for (PureExp e : getPureExps()) {
+            o.print(interp);
+            interp = ", ";
+            e.generate_sync_schema(m,o);
+        }
+        o.print("]");
+    }
+
+    public void NullExp.translate(String m,PrintWriter o) {
+        o.print("null");
+    }
+
+    public void ThisExp.translate(String m,PrintWriter o) {
+        o.print("this");
+    }
+
+    public void DestinyExp.translate(String m,PrintWriter o) {
+        o.print("destiny");
+    }
+
+    public void MinusExp.translate(String m,PrintWriter o) {
+
+
+    }
+
+    public void NegExp.translate(String m,PrintWriter o) {
+
+    }
+
+    public void TraitDecl.translate(String m,PrintWriter o) {
+
+    }
+    public void TraitUse.translate(String m,PrintWriter o) {
+
+    }
+}
+
+
+

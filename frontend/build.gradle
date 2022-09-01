@@ -22,6 +22,7 @@ application {
 java {
     withJavadocJar()
     withSourcesJar()
+
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -43,6 +44,7 @@ dependencies {
     implementation 'org.sat4j:org.sat4j.pb:2.3.0'
     implementation 'org.sat4j:org.sat4j.maxsat:2.3.0'
     implementation files('lib/semisolver.jar')
+    implementation 'org.javatuples:javatuples:1.2'
 
     implementation 'info.picocli:picocli:4.6.3'
 
@@ -57,8 +59,10 @@ dependencies {
     testImplementation 'com.eclipsesource.minimal-json:minimal-json:0.9.5'
     testImplementation 'org.hamcrest:hamcrest-core:2.2'
 
+
     jastadd2 'org.jastadd:jastadd:2.3.5'
     antlr 'org.antlr:antlr4:4.10.1'
+
 }
 
 // JastAdd
@@ -183,6 +187,7 @@ jar {
             // getVersion and getSpecificationVersion)
             'Specification-Version': project.version
     }
+
 }
 
 shadowJar {
