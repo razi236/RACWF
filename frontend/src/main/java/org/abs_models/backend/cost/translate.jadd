@@ -2,8 +2,10 @@
 // -*- mode: java; tab-width: 4; -*-
 import java.io.PrintWriter;
 import org.abs_models.backend.cost.*;
+import java.util.*;
 import java.util.stream.Collectors;
 import com.google.common.collect.Streams;
+import org.javatuples.Quartet;
 
 aspect translate {
 
@@ -11,20 +13,24 @@ aspect translate {
      */
     public boolean Model.translate = false;
 
-    public  List.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> List.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        /*
         if (getNumChild() > 0) {
             getChild(0).generate_sync_schema(m,o);
             for (int i = 1; i < getNumChild(); i++) {
                 getChild(i).generate_sync_schema(m,o);
             }
         }
+        */
+        return map;
     }
 
-    public void ASTNode.translate(String m,PrintWriter o){
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ASTNode.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema){
         throw new NotImplementedYetException(this);
     }
 
-    public void Model.translate(String m,PrintWriter o){
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Model.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema){
+        /*
         for (ModuleDecl d : getModuleDecls()) {
             if (generate_sync_schemaStdLib || (! Constants.BUILT_IN_LIBS.contains(d.getName()))) {
                 d.generate_sync_schema(m,o);
@@ -37,11 +43,13 @@ aspect translate {
         if (hasProductLine()) {
             getProductLine().generate_sync_schema(m,o);
         }
+        */
+        return map;
     }
 
-    public void ModuleDecl.translate(String m,PrintWriter o){
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ModuleDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema){
 
-
+        /*
         for (Decl decl : getDecls()) {
             decl.generate_sync_schema(m,o);;
         }
@@ -51,91 +59,97 @@ aspect translate {
         }
 
         o.flush();
+        */
+        return map;
     }
 
-    public void ProductDecl.translate(String m,PrintWriter o){
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ProductDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema){
+        return map;
     }
 
-    public void Feature.translate(String m,PrintWriter o){
-
-    }
-
-    public void AttrAssignment.translate(String m,PrintWriter o){
-            getValue().generate_sync_schema(m,o);
-             o.println("ATTR Assignment Statement");
-    }
-
-    public void ProductLine.translate(String m,PrintWriter o){
-
-    }
-
-    public void DeltaClause.translate(String m,PrintWriter o) {
-
-    }
-
-    public abstract void AppCond.translate(String m,PrintWriter o);
-
-    public void AppCondAnd.translate(String m,PrintWriter o) {
-
-    }
-
-    public void AppCondOr.translate(String m,PrintWriter o) {
-
-    }
-
-    public void AppCondNot.translate(String m,PrintWriter o) {
-
-    }
-
-    public void AppCondFeature.translate(String m,PrintWriter o) {
-
-    }
-
-    public void Deltaspec.translate(String m,PrintWriter o) {
-
-    }
-
-    public void Deltaparam.translate(String m,PrintWriter o) {
-
-    }
-
-    public void DeltaID.translate(String m,PrintWriter o) {
-
-    }
-
-    public void Block.translate(String m,PrintWriter o) {
-        getStmtList().generate_sync_schema(m,o);
-    }
-
-    public void MainBlock.translate(String m,PrintWriter o) {
-            o.print("main/this");
-            getStmtList().generate_sync_schema("main",o);
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Feature.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema){
+            return map;
         }
 
-    public void AssertStmt.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AttrAssignment.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema){
+            //getValue().generate_sync_schema(m,o);
+             //o.println("ATTR Assignment Statement");
+        return map;
     }
 
-    public void ThrowStmt.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ProductLine.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema){
+        return map;
     }
 
-    public void DieStmt.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DeltaClause.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void AssignStmt.translate(String m,PrintWriter o) {
-            getValue().generate_sync_schema(m,o);
+    public abstract Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AppCond.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema);
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AppCondAnd.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AppCondOr.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AppCondNot.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AppCondFeature.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Deltaspec.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Deltaparam.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DeltaID.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Block.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //getStmtList().generate_sync_schema(m,o);
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> MainBlock.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+            //o.print("main/this");
+            //getStmtList().generate_sync_schema("main",o);
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AssertStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ThrowStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DieStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AssignStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+            //getValue().generate_sync_schema(m,o);
            // o.println("Assignment Statement");
+           return map;
     }
 
-    public void Call.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Call.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void Call1Exp.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Call1Exp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        /*
         o.print("/");
         getCallee().generate_sync_schema(m,o);
         for (PureExp x : getPList())
@@ -146,263 +160,265 @@ aspect translate {
 
         }
        // o.print("}");
+       */
+       return map;
 
     }
 
-    public void GetExp.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> GetExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void AddResStmt.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AddResStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void HoldExp.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> HoldExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ReleaseResStmt.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ReleaseResStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> NewExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-
-    public void NewExp.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> OriginalCall.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void OriginalCall.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AwaitStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void AwaitStmt.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AndGuard.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void AndGuard.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ClaimGuard.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ClaimGuard.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DurationGuard.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void DurationGuard.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ExpGuard.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ExpGuard.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> CostStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void CostStmt.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ExpressionStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ExpressionStmt.translate(String m,PrintWriter o) {
-
-    }
-
-    public void IfStmt.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> IfStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+      /*
         getThen().generate_sync_schema(m,o);
         if (hasElse()) {
             getElse().generate_sync_schema(m,o);
         }
+      */
+      return map;
     }
 
-    public void ReturnStmt.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ReturnStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
 
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> SkipStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> SuspendStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> VarDeclStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //getVarDecl().generate_sync_schema(m,o);
+        return map;
 
     }
 
-    public void SkipStmt.translate(String m,PrintWriter o) {
-
-    }
-
-    public void SuspendStmt.translate(String m,PrintWriter o) {
-
-    }
-
-    public void VarDeclStmt.translate(String m,PrintWriter o) {
-        getVarDecl().generate_sync_schema(m,o);
-
-    }
-
-    public void VarDecl.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> VarDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        /*
         if (hasInitExp()) {
             //o.println(" Initialization ");
             getInitExp().generate_sync_schema(m,o);
         }
+        */
+        return map;
 
     }
 
-    public void WhileStmt.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> WhileStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ForeachStmt.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ForeachStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void CaseStmt.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> CaseStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void TryCatchFinallyStmt.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> TryCatchFinallyStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    abstract public void Export.translate(String m,PrintWriter o);
+    abstract public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Export.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema);
 
-    public void NamedExport.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> NamedExport.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void Name.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Name.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
         //o.print(getName());
+        return map;
     }
 
-    public void StarExport.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> StarExport.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void FromExport.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> FromExport.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void NamedImport.translate(String m,PrintWriter o) {
-
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> NamedImport.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+       return map;
     }
 
-    public void StarImport.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> StarImport.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+       return map;
     }
 
-    public void FromImport.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> FromImport.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void FunctionDecl.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> FunctionDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void PartialFunctionDecl.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> PartialFunctionDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void FunctionParamDecl.translate(String m,PrintWriter o) {
-      o.print(getName());
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> FunctionParamDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+      //o.print(getName());
+      return map;
     }
 
-    public void PartialFunctionDef.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> PartialFunctionDef.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void NamedParFnAppParam.translate(String m,PrintWriter o) {
-        o.print(getName());
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> NamedParFnAppParam.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //o.print(getName());
+        return map;
     }
 
-    public void AnonymousFunctionDecl.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AnonymousFunctionDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ParametricFunctionDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schemao) {
+        return map;
+    }
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ParametricPartialFunctionDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-
-
-    public void ParametricFunctionDecl.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> BuiltinFunctionDef.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-
-
-    public void ParametricPartialFunctionDecl.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ExpFunctionDef.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void BuiltinFunctionDef.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DeltaDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ExpFunctionDef.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DeltaAccess.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void DeltaDecl.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AddImportModifier.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void DeltaAccess.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AddExportModifier.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void AddImportModifier.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> RemoveClassModifier.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void AddExportModifier.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ModifyClassModifier.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void RemoveClassModifier.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AddFieldModifier.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ModifyClassModifier.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> RemoveFieldModifier.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void AddFieldModifier.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AddInterfaceModifier.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void RemoveFieldModifier.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AddClassModifier.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void AddInterfaceModifier.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DeltaFieldParam.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void AddClassModifier.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DeltaClassParam.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void DeltaFieldParam.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> HasField.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //getFieldDecl().generate_sync_schema(m,o);
+        return map;
     }
 
-    public void DeltaClassParam.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> HasInterface.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //getInterfaceTypeUse().generate_sync_schema(m,o);
+        return map;
     }
 
-    public void HasField.translate(String m,PrintWriter o) {
-        getFieldDecl().generate_sync_schema(m,o);
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> HasMethod.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //getMethodSig().generate_sync_schema(m,o);
+        return map;
     }
 
-    public void HasInterface.translate(String m,PrintWriter o) {
-        getInterfaceTypeUse().generate_sync_schema(m,o);
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> TypeSynDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void HasMethod.translate(String m,PrintWriter o) {
-
-        getMethodSig().generate_sync_schema(m,o);
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> InterfaceDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void TypeSynDecl.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> InterfaceDecl1.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void InterfaceDecl.translate(String m,PrintWriter o) {
-
-
-    }
-
-    public void InterfaceDecl1.translate(String m,PrintWriter o) {
-
-
-        }
-
-    public void MethodSig.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> MethodSig.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+      /*
       o.print(m+" ");
       o.print("{this");
       for (ParamDecl x : getParamList())
@@ -411,9 +427,12 @@ aspect translate {
         o.print(x.getName());
       }
       o.print("}");
+      */
+      return map;
     }
 
-    public void MethodSig1.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> MethodSig1.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+          /*
           o.print(m);
           o.print("/this");
           for (ParamDecl x : getObjList())
@@ -421,253 +440,263 @@ aspect translate {
             o.print(",");
             o.print(x.getName());
           }
-          //o.print("}");
-        }
+          o.print("}");
+          */
+          return map;
+    }
 
-    public void ClassDecl.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ClassDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        /*
         List<MethodImpl> methods = getMethodList();
                 if (methods.getNumChild() > 0) {
                     methods.generate_sync_schema(m,o);
                 }
+        */
+        return map;
     }
 
-    public void ClassDecl1.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ClassDecl1.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+            /*
             List<MethodImpl1> methods = getMethodList();
                     if (methods.getNumChild() > 0) {
                         methods.generate_sync_schema(m,o);
                     }
-        }
-
-    public void FieldDecl.translate(String m,PrintWriter o) {
-
+            */
+        return map;
     }
 
-    public void MethodImpl.translate(String m,PrintWriter o) {
-          String name = getMethodSig().getName();
-          getMethodSig().generate_sync_schema(name,o);
-          getBlock().generate_sync_schema(name,o);
-          o.println();
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> FieldDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void MethodImpl1.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> MethodImpl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+          //String name = getMethodSig().getName();
+          //getMethodSig().generate_sync_schema(name,o);
+          //getBlock().generate_sync_schema(name,o);
+          //o.println();
+          return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> MethodImpl1.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
               //o.println("In new style method");
-              String name = getMethodSig1().getName();
-              getMethodSig1().generate_sync_schema(name,o);
-              getBlock().generate_sync_schema(name,o);
-              o.println();
+              //String name = getMethodSig1().getName();
+              //getMethodSig1().generate_sync_schema(name,o);
+              //getBlock().generate_sync_schema(name,o);
+              //o.println();
+              return map;
         }
 
-    public void TypeParameterDecl.translate(String m,PrintWriter o) {
-        o.print(getName());
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> TypeParameterDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //o.print(getName());
+        return map;
     }
 
-    public void DataTypeDecl.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DataTypeDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void AddDataTypeModifier.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AddDataTypeModifier.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ModifyInterfaceModifier.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ModifyInterfaceModifier.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void AddMethodSigModifier.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AddMethodSigModifier.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> RemoveMethodSigModifier.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ParametricDataTypeDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void RemoveMethodSigModifier.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DataConstructor.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-
-
-    public void ParametricDataTypeDecl.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ConstructorArg.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void DataConstructor.translate(String m,PrintWriter o) {
-
-    }
-
-    public void ConstructorArg.translate(String m,PrintWriter o) {
-
-    }
-
-    public void UnresolvedTypeUse.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> UnresolvedTypeUse.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
         // TODO: getAnnotationList().doPrettyPrint(stream, formatter, "");
-        o.print(getName());
+        //o.print(getName());
+        return map;
     }
 
-    public void DataTypeUse.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DataTypeUse.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ParametricDataTypeUse.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-
-
-    public void ParametricDataTypeUse.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> TypedAnnotation.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void TypedAnnotation.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Annotation.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void Annotation.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> TypeParameterUse.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //o.print(getName());
+        return map;
     }
 
-    public void TypeParameterUse.translate(String m,PrintWriter o) {
-        o.print(getName());
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> InterfaceTypeUse.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //o.print(getName());
+        return map;
     }
 
-    public void InterfaceTypeUse.translate(String m,PrintWriter o) {
-        o.print(getName());
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> FieldUse.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void FieldUse.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> VarUse.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //o.print(getName());
+        return map;
     }
 
-    public void VarUse.translate(String m,PrintWriter o) {
-        o.print(getName());
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Binary.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void Binary.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ConBinary.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ConBinary.translate(String m,PrintWriter o) {
-
-        }
-
-    public void AddAddExp.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AddAddExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void SubAddExp.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> SubAddExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void DivMultExp.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DivMultExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ModMultExp.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ModMultExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void MultMultExp.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> MultMultExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void AndBoolExp.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AndBoolExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ConjunctionExp.translate(String m,PrintWriter o) {
-        }
-
-    public void OrBoolExp.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ConjunctionExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void EqExp.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> OrBoolExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void NotEqExp.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> EqExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void GTEQExp.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> NotEqExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void GTExp.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> GTEQExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void LTEQExp.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> GTExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void LTExp.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> LTEQExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void CaseExp.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> LTExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ConstructorPattern.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> CaseExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void LiteralPattern.translate(String m,PrintWriter o) {
-        getLiteral().generate_sync_schema(m,o);
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ConstructorPattern.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void PatternVar.translate(String m,PrintWriter o) {
-        getVar().generate_sync_schema(m,o);
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> LiteralPattern.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //getLiteral().generate_sync_schema(m,o);
+        return map;
     }
 
-    public void PatternVarDecl.translate(String m,PrintWriter o) {
-        o.print(getName());
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> PatternVar.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //getVar().generate_sync_schema(m,o);
+        return map;
     }
 
-    public void PatternVarUse.translate(String m,PrintWriter o) {
-        o.print(getName());
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> PatternVarDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //o.print(getName());
+        return map;
     }
 
-    public void UnderscorePattern.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> PatternVarUse.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //o.print(getName());
+        return map;
     }
 
-    public void DataConstructorExp.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> UnderscorePattern.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void FnApp.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DataConstructorExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schemao) {
+        return map;
     }
 
-    public void ParFnApp.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> FnApp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void IfExp.translate(String m,PrintWriter o) {
-        getThenExp().generate_sync_schema(m,o);
-        getElseExp().generate_sync_schema(m,o);
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ParFnApp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void LetExp.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> IfExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        //getThenExp().generate_sync_schema(m,o);
+        //getElseExp().generate_sync_schema(m,o);
+        return map;
     }
 
-    public void ParamDecl.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> LetExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void IntLiteral.translate(String m,PrintWriter o) {
-        //o.print(getContent());
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ParamDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void StringLiteral.translate(String m,PrintWriter o) {
-        o.print("\"");
-        for (char c : getContent().toCharArray()) {
-            switch (c) {
-            case '\\': o.print("\\\\");
-                break;
-            case '"': o.print("\\\"");
-                break;
-            case '\t': o.print("\\t");
-                break;
-            case '\n': o.print("\\n");
-                break;
-            case '\r': o.print("\\r");
-                break;
-            default: o.print(c);
-            }
-        }
-        o.print("\"");
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> IntLiteral.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void FloatLiteral.translate(String m,PrintWriter o) {
-        o.print(getContent());
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> StringLiteral.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ListLiteral.translate(String m,PrintWriter o) {
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> FloatLiteral.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ListLiteral.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        /*
         o.print("[");
         String interp = "";
         for (PureExp e : getPureExps()) {
@@ -676,34 +705,33 @@ aspect translate {
             e.generate_sync_schema(m,o);
         }
         o.print("]");
+        */
+        return map;
     }
 
-    public void NullExp.translate(String m,PrintWriter o) {
-        o.print("null");
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> NullExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void ThisExp.translate(String m,PrintWriter o) {
-        o.print("this");
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ThisExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void DestinyExp.translate(String m,PrintWriter o) {
-        o.print("destiny");
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> DestinyExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 
-    public void MinusExp.translate(String m,PrintWriter o) {
-
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> MinusExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
-
-    public void NegExp.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> NegExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
-
-    public void TraitDecl.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> TraitDecl.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
-    public void TraitUse.translate(String m,PrintWriter o) {
-
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> TraitUse.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema) {
+        return map;
     }
 }
 

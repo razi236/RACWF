@@ -38,17 +38,23 @@ public class CostAnalysis extends Main{
             this.arguments = args;
             final Model model = parse(arguments.files);
             model.generate_sync_schema(null, writer);
+
+            Set<Set<String>> sync_schema = new HashSet<Set<String>>();
+
             Map<String, Set<Set<String>>> sync_schema_map = new HashMap<String, Set<Set<String>>>();
+            sync_schema_map = scan_merge_schema();
+
             Map<String,Set<String>> I = new HashMap<String,Set<String>>();
             Map<Set<String>,String> Psi = new HashMap<Set<String>,String>();
             String o = null;
             String ta = null;
             String t = null;
             Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet =
-                new Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>
-                (I, Psi, ta, t);
+                new Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>(I, Psi, ta, t);
+            Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> trans_result =
+                new HashMap<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>();
+            trans_result = model.translate(trans_result,sync_schema_map,sync_schema);
 
-            sync_schema_map = scan_merge_schema();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
