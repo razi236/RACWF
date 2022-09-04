@@ -53,7 +53,7 @@ public class CostAnalysis extends Main{
                 new Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>(I, Psi, ta, t);
             Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> trans_result =
                 new HashMap<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>();
-            trans_result = model.translate(trans_result,sync_schema_map,sync_schema);
+            trans_result = model.translate(trans_result,sync_schema_map,sync_schema,null);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
