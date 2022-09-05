@@ -148,10 +148,14 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Call1Exp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
+        Set<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> quart_set =  new HashSet<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>();
         for (PureExp x : getQList())
         {
-            Set<String> s =  new HashSet<String>();
-            s = getF(x,s);
+            Set<String> fut_set =  new HashSet<String>();
+            fut_set = getF(x,fut_set);
+            Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet = map.get(method);
+            quartet = trans(quartet,fut_set,sync_schema);
+            quart_set.add(quartet);
         }
 
 
@@ -182,6 +186,103 @@ aspect translate {
             s = getF(((ConjunctionExp) x).getRight(),s);
         }
         return s;
+    }
+    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> Call1Exp.trans(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,Set<String> fut_set,Set<Set<String>> sync_schema)
+    {
+        if (fut_set.isEmpty()) // case: a
+        {
+            return quartet;
+        }
+        else
+        {
+            Iterator<String> fut_itr = fut_set.iterator();
+            while (fut_itr.hasNext()) {
+                String f = fut_itr.next();
+                Map<String,Set<String>> map_I = quartet.getValue0();
+                Map<Set<String>,String> map_Psi = quartet.getValue1();
+                String ta = quartet.getValue2();
+                String t = quartet.getValue3();
+                if(map_I.containsKey(f))                    // case: b,c
+                {
+                    Set<String> val_f = map_I.get(f);
+                    if(val_f.contains("this"))              // case: b
+                    {
+                        Iterator<String> f_itr = map_I.keySet().iterator();
+                        while (f_itr.hasNext()) {
+                            String fut = f_itr.next();
+                            Set<String> val = map_I.get(fut);
+                            if(val.contains("this"))
+                            {
+                                map_I.remove(fut);
+                            }
+                        }
+                        if(ta != null)
+                        {
+                            Iterator<Set<String>> psi_itr = map_Psi.keySet().iterator();
+                            while (psi_itr.hasNext()) {
+                                Set<String> psi = psi_itr.next();
+                                String psi_val = map_Psi.get(psi);
+                                String result = psi_val+"+"+ta;
+                                map_Psi.put(psi,result);
+                            }
+                            t = t+ta;
+                            ta = null;
+                        }
+                    }
+                    else                                    // case : c
+                    {
+                        map_I.remove(f);
+                        Iterator<String> f_itr = map_I.keySet().iterator();
+                        while (f_itr.hasNext()) {
+                            String fut = f_itr.next();
+                            Set<String> val = map_I.get(fut);
+                            if(val.contains("this"))
+                            {
+                                map_I.remove(fut);
+                            }
+                        }
+                        String val_psi = map_Psi.get(val_f);
+                        String t1 = "max("+t+ta+","+val_psi+")";
+                        map_Psi.remove(val_f);
+                        Iterator<Set<String>> psi_itr1 = map_Psi.keySet().iterator();
+                        while (psi_itr1.hasNext()) {
+                            Set<String> psi1 = psi_itr1.next();
+                            String psi_val1 = map_Psi.get(psi1);
+                            String result1 = psi_val1+"||"+t1;
+                            map_Psi.put(psi1,result1);
+                        }
+                        t = t1;
+                        ta = null;
+                    }
+
+                }
+                else // case: d
+                {
+                    Iterator<String> f_itr_1 = map_I.keySet().iterator();
+                    while (f_itr_1.hasNext()) {
+                        String fut_1 = f_itr_1.next();
+                        Set<String> val_1 = map_I.get(fut_1);
+                        if(val_1.contains("this"))
+                        {
+                            map_I.remove(fut_1);
+                        }
+                    }
+                    if(ta != null)
+                    {
+                        Iterator<Set<String>> psi_itr_1 = map_Psi.keySet().iterator();
+                        while (psi_itr_1.hasNext()) {
+                            Set<String> psi_1 = psi_itr_1.next();
+                            String psi_val_1 = map_Psi.get(psi_1);
+                            String result_1 = psi_val_1+"+"+ta;
+                            map_Psi.put(psi_1,result_1);
+                        }
+                        t = t+ta;
+                        ta = null;
+                    }
+                }
+            }
+        }
+        return quartet;
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> GetExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {

@@ -59,7 +59,7 @@ class ABC implements ABC
         //consTime(10); // cost is a keyword in ABS compiler.
         f1= !jkl(i,(j,k,l),()) after dl 5;
         f2= !jkl(i,(j,k,l),()) after dl 5;
-        f3= !jkl(i,(j,k,l),()) after f1,f2 dl 5;
+        f3= !jkl(i,(j,k,l),()) after f1&f2,f2,f1,f1,f2 dl 5;
         //consTime(5);
         return 0;
     }
