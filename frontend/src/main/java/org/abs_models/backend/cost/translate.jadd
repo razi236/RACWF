@@ -138,7 +138,7 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AssignStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
-            //getValue().generate_sync_schema(m,o);
+            map = getValue().translate(map,sync_map,sync_schema,method);
            // o.println("Assignment Statement");
            return map;
     }
@@ -148,6 +148,13 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Call1Exp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
+        for (PureExp x : getQList())
+        {
+            Set<String> s =  new HashSet<String>();
+            s = getF(x,s);
+        }
+
+
         /*
         o.print("/");
         getCallee().generate_sync_schema(m,o);
@@ -162,6 +169,19 @@ aspect translate {
        */
        return map;
 
+    }
+    public Set<String> Call1Exp.getF(PureExp x,Set<String> s)
+    {
+        if (!(x instanceof ConjunctionExp))
+        {
+            s.add(x.toString());
+        }
+        else
+        {
+            s = getF(((ConjunctionExp) x).getLeft(),s);
+            s = getF(((ConjunctionExp) x).getRight(),s);
+        }
+        return s;
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> GetExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
