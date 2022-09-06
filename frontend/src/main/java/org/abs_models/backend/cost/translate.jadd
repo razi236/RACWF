@@ -164,6 +164,7 @@ aspect translate {
         {
             Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> first = quart_set_itr.next();
             String first_ta = first.getValue2();
+            System.out.println(first_ta);
             String first_t = first.getValue3();
             max_ta = max_ta+first_ta;
             max_t = max_t+first_t;
@@ -177,21 +178,30 @@ aspect translate {
         }
         max_ta = max_ta+")";
         max_t = max_t+")";
-        transCallType()
-
+        Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart = map.get(method);
+        String called_method = getMethod();
+        quart = transCallType(quart,max_ta,max_t,called_method);
+        //System.out.println("in sync call");
+        map.put(method,quart);
         return map;
 
     }
 
-    abstract public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>,String max_ta,String max_t);
+    abstract public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> Call1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,String max_ta,String max_t,String method);
 
-    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> AsyncCall1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>,String max_ta,String max_t)
+    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> AsyncCall1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,String max_ta,String max_t,String method)
     {
-
+        System.out.println("in async call");
+        return quartet;
     }
-    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> SyncCall1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>,String max_ta,String max_t)
+    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> SyncCall1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,String max_ta,String max_t,String method)
     {
-
+        System.out.println("in sync call");
+        quartet.setAt2(max_ta);
+        quartet.setAt2(max_t+"+c_"+method);
+        System.out.println(" t is "+max_t);
+        System.out.println(" ta is "+max_t+"+c_"+method);
+        return quartet;
     }
     public Set<String> Call1Exp.getF(PureExp x,Set<String> s)
     {
