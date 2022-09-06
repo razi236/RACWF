@@ -476,18 +476,18 @@ aspect doPrettyPrinter {
     }
 
     public void AsyncCall1Exp.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("!");
-        }
+        stream.print("!");
+    }
 
-        public void SyncCall1Exp.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
-            stream.print(".");
-        }
+    public void SyncCall1Exp.doPrettyPrintCallType(PrintWriter stream, ABSFormatter formatter) {
+        stream.print(".");
+    }
 
-        public void AsyncCall1Exp.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
-        }
+    public void AsyncCall1Exp.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
+    }
 
-        public void SyncCall1Exp.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
-        }
+    public void SyncCall1Exp.doPrettyPrintCallPrefix(PrintWriter stream, ABSFormatter formatter) {
+    }
 
     public void GetExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
         getPureExp().doPrettyPrint(stream, formatter);

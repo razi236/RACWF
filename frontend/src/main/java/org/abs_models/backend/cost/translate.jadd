@@ -157,21 +157,40 @@ aspect translate {
             quartet = trans(quartet,fut_set,sync_schema);
             quart_set.add(quartet);
         }
-
-
-        /*
-        o.print("/");
-        getCallee().generate_sync_schema(m,o);
-        for (PureExp x : getPList())
+        String max_ta = "max(";
+        String max_t = "max(";
+        Iterator<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> quart_set_itr = quart_set.iterator();
+        if(quart_set_itr.hasNext())
         {
-            //x.generate_sync_schema(m,o);
-            o.print(",");
-            o.print(x);
-
+            Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> first = quart_set_itr.next();
+            String first_ta = first.getValue2();
+            String first_t = first.getValue3();
+            max_ta = max_ta+first_ta;
+            max_t = max_t+first_t;
         }
-       // o.print("}");
-       */
-       return map;
+        while (quart_set_itr.hasNext()) {
+            Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> next = quart_set_itr.next();
+            String next_ta = next.getValue2();
+            String next_t = next.getValue3();
+            max_ta = max_ta+","+next_ta;
+            max_t = max_t+","+next_t;
+        }
+        max_ta = max_ta+")";
+        max_t = max_t+")";
+        transCallType()
+
+        return map;
+
+    }
+
+    abstract public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>,String max_ta,String max_t);
+
+    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> AsyncCall1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>,String max_ta,String max_t)
+    {
+
+    }
+    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> SyncCall1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>,String max_ta,String max_t)
+    {
 
     }
     public Set<String> Call1Exp.getF(PureExp x,Set<String> s)
@@ -196,12 +215,12 @@ aspect translate {
         else
         {
             Iterator<String> fut_itr = fut_set.iterator();
+            Map<String,Set<String>> map_I = quartet.getValue0();
+            Map<Set<String>,String> map_Psi = quartet.getValue1();
+            String ta = quartet.getValue2();
+            String t = quartet.getValue3();
             while (fut_itr.hasNext()) {
                 String f = fut_itr.next();
-                Map<String,Set<String>> map_I = quartet.getValue0();
-                Map<Set<String>,String> map_Psi = quartet.getValue1();
-                String ta = quartet.getValue2();
-                String t = quartet.getValue3();
                 if(map_I.containsKey(f))                    // case: b,c
                 {
                     Set<String> val_f = map_I.get(f);
@@ -281,8 +300,12 @@ aspect translate {
                     }
                 }
             }
+            quartet = quartet.setAt0(map_I);
+            quartet = quartet.setAt1(map_Psi);
+            quartet = quartet.setAt2(ta);
+            quartet = quartet.setAt3(t);
+            return quartet;
         }
-        return quartet;
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> GetExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
