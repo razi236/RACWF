@@ -37,13 +37,14 @@ public class CostAnalysis extends Main{
             System.out.println("Computation of Cost is started:");
             this.arguments = args;
             final Model model = parse(arguments.files);
+            System.out.println("Parsedd:");
             model.generate_sync_schema(null, writer);
-
+            System.out.println("Generated Sync Schema:");
             Set<Set<String>> sync_schema = new HashSet<Set<String>>();
 
             Map<String, Set<Set<String>>> sync_schema_map = new HashMap<String, Set<Set<String>>>();
             sync_schema_map = scan_merge_schema();
-
+            System.out.println("Merged Schema:");
             Map<String,Set<String>> I = new HashMap<String,Set<String>>();
             Map<Set<String>,String> Psi = new HashMap<Set<String>,String>();
             String o = null;
@@ -53,7 +54,7 @@ public class CostAnalysis extends Main{
                 new Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>(I, Psi, ta, t);
             Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> trans_result =
                 new HashMap<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>();
-            trans_result = model.translate(trans_result,sync_schema_map,sync_schema,null);
+            //trans_result = model.translate(trans_result,sync_schema_map,sync_schema,null);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -87,6 +88,18 @@ public class CostAnalysis extends Main{
                     //System.out.println(scanner2.next());
                     sync_set.add(scanner2.next());
                 }
+                /*Iterator<String> set_itr = sync_set.iterator();
+                System.out.print("{");
+                if(set_itr.hasNext())
+                    System.out.print(set_itr.next());
+                while (set_itr.hasNext()) {
+                    System.out.print(",");
+                    System.out.print(set_itr.next());
+                }
+                System.out.print("}");
+                System.out.println();
+
+                 */
                 sync_schema = merge_schema(sync_schema, sync_set);
                 scanner2.close();
             }
@@ -99,21 +112,31 @@ public class CostAnalysis extends Main{
         return sync_schema_map;
     }
     public Set<Set<String>> merge_schema(Set<Set<String>> sync_schema, Set<String> sync_set){
-        Iterator<Set<String>> i = sync_schema.iterator();
+
         boolean flag = true;
-        while(i.hasNext())
+        if((sync_set.contains("this"))&&(!sync_schema.isEmpty()))
         {
-            Set<String> temp = new HashSet<String>(i.next());
-            Set<String> intersection = new HashSet<String>(temp);
-            intersection.retainAll(sync_set);
-            if(!intersection.isEmpty())
-            {
-                flag = false;
-                Set<String> temp1 = new HashSet<String>(temp);
-                sync_schema.remove(temp);
-                temp1.addAll(sync_set);
-                sync_schema.add(temp1);
-                //break;
+            flag = false;
+            Iterator<Set<String>> itr = sync_schema.iterator();
+            Set<String> temp1 = new HashSet<String>(itr.next());
+            sync_schema.remove(temp1);
+            temp1.addAll(sync_set);
+            sync_schema.add(temp1);
+        }
+        else {
+            Iterator<Set<String>> i = sync_schema.iterator();
+            while (i.hasNext()) {
+                Set<String> temp = new HashSet<String>(i.next());
+                Set<String> intersection = new HashSet<String>(temp);
+                intersection.retainAll(sync_set);
+                if (!intersection.isEmpty()) {
+                    flag = false;
+                    Set<String> temp1 = new HashSet<String>(temp);
+                    sync_schema.remove(temp);
+                    temp1.addAll(sync_set);
+                    sync_schema.add(temp1);
+                    //break;
+                }
             }
         }
         if(flag == true)

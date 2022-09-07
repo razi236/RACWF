@@ -687,7 +687,7 @@ aspect generate_sync_schema {
     }
 
     public void DestinyExp.generate_sync_schema(String m,PrintWriter o) {
-        o.print("destiny");
+        //o.print("destiny");
     }
 
     public void MinusExp.generate_sync_schema(String m,PrintWriter o) {

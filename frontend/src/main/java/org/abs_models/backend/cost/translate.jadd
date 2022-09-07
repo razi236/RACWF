@@ -180,21 +180,53 @@ aspect translate {
         max_t = max_t+")";
         Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart = map.get(method);
         String called_method = getMethod();
-        quart = transCallType(quart,max_ta,max_t,called_method);
-        //System.out.println("in sync call");
+        quart = transCallType(quart,max_ta,max_t,sync_schema,called_method);
+        //System.out.println("in call");
+        /*
+        Iterator<Set<String>> it = sync_schema.iterator();
+        System.out.print("Synch schema of "+method+ ":");
+        while (it.hasNext()) {
+            Iterator<String> it1 = it.next().iterator();
+            System.out.print("{");
+            while (it1.hasNext()) {
+                System.out.print(it1.next()+",");
+            }
+            System.out.print("}");
+            System.out.println();
+        }
+        */
         map.put(method,quart);
         return map;
 
     }
 
-    abstract public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> Call1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,String max_ta,String max_t,String method);
+    abstract public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> Call1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,String max_ta,String max_t,Set<Set<String>> sync_schema,String method);
 
-    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> AsyncCall1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,String max_ta,String max_t,String method)
+    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> AsyncCall1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,String max_ta,String max_t,Set<Set<String>> sync_schema,String method)
     {
+        String callee = getCallee().toString();
+        System.out.println("Callee of method "+method+" : "+callee);
+        Boolean flag = false;
+        Iterator<Set<String>> itr = sync_schema.iterator();
+        while (itr.hasNext()) {
+            Set<String> s = itr.next();
+            if((s.contains(callee))&&(s.contains("StringLiteral(this)")))
+            {
+                flag = true;
+            }
+        }
+        if(flag == true)
+        {
+            System.out.println("case:4");
+        }
+        else
+        {
+            System.out.println("case:5");
+        }
         System.out.println("in async call");
         return quartet;
     }
-    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> SyncCall1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,String max_ta,String max_t,String method)
+    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> SyncCall1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,String max_ta,String max_t,Set<Set<String>> sync_schema,String method)
     {
         System.out.println("in sync call");
         quartet.setAt2(max_ta);

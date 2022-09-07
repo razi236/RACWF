@@ -43,7 +43,7 @@ class IJK implements IJK
 interface ABC
 {
     Int xyz((ABC a,ABC b,ABC c),(String x));
-    Int efg((ABC a),());
+    Int efg((ABC j),());
 }
 class ABC implements ABC
 {
@@ -56,16 +56,19 @@ class ABC implements ABC
         IJK i = new IJK();
         IJK k = new IJK();
         ABC j = new ABC();
+        ABC m = new ABC();
         println(`Hello $x$`);
         consTime(10); // cost is a keyword in ABS compiler.
-        f1= !jkl(i,(j,k,l),()) after dl 5;
+        //f1= !jkl(i,(j,k,l),()) after dl 5;
+
+        Int x = efg(this,(j),()) after dl 3;
         f2= !jkl(i,(j,k,l),()) after dl 5;
-        f3= !jkl(i,(j,k,l),()) after f1&f2,f2,f1,f1,f2 dl 5;
+        Int x = efg(this,(m),()) after dl 3;
         consTime(5);
 
         return 0;
     }
-    Int efg((ABC a),())
+    Int efg((ABC j),())
     {
         return 0;
 
@@ -78,8 +81,9 @@ class ABC implements ABC
     ABC o2 = new ABC();
     ABC o3 = new ABC();
     consTime(25);
+    Int x = efg(o,(),()) after dl 3;
     f = !xyz(o,(o1,o2,o3),("Muhammad")) after dl 10;
     consTime(5);
-    f1 = efg(o,(),()) after dl 3;
-    f2 = efg(o,(),()) after f,f1 dl 3;
+    Int x = efg(o,(),()) after dl 3;
+    //f2 = efg(o,(),()) after f,f1 dl 3;
 }
