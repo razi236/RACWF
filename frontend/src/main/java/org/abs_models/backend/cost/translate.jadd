@@ -210,7 +210,7 @@ aspect translate {
         Iterator<Set<String>> itr = sync_schema.iterator();
         while (itr.hasNext()) {
             Set<String> s = itr.next();
-            if((s.contains(callee))&&(s.contains("StringLiteral(this)")))
+            if((s.contains(callee))&&(s.contains("this")))
             {
                 flag = true;
             }
