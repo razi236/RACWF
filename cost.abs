@@ -11,6 +11,8 @@
                                        Try to check in parameter list when 1st basic type comes stop.
                                        Thursday or Friday
 
+                                      Method calls on object "this" or all objects in parameter list should be done before than the newly created objects.
+
 */
 
 module Resource; // must be module Resource to declare some resource qualities.
@@ -43,7 +45,7 @@ class IJK implements IJK
 interface ABC
 {
     Int xyz((ABC a,ABC b,ABC c),(String x));
-    Int efg((ABC j),());
+    Unit efg((ABC j),());
 }
 class ABC implements ABC
 {
@@ -60,17 +62,15 @@ class ABC implements ABC
         println(`Hello $x$`);
         consTime(10); // cost is a keyword in ABS compiler.
         //f1= !jkl(i,(j,k,l),()) after dl 5;
-
-        Int x = efg(this,(j),()) after dl 3;
-        f2= !jkl(i,(j,k,l),()) after dl 5;
-        Int x = efg(this,(m),()) after dl 3;
+        //Int x = efg(this,(j),()) after dl 3;
+        //f2= !jkl(i,(j,k,l),()) after dl 5;
+        //efg(this,(m),()) after dl 3;
         consTime(5);
 
         return 0;
     }
-    Int efg((ABC j),())
+    Unit efg((ABC j),())
     {
-        return 0;
 
     }
 }
@@ -80,10 +80,10 @@ class ABC implements ABC
     ABC o1 = new ABC();
     ABC o2 = new ABC();
     ABC o3 = new ABC();
-    consTime(25);
-    Int x = efg(o,(),()) after dl 3;
-    f = !xyz(o,(o1,o2,o3),("Muhammad")) after dl 10;
-    consTime(5);
-    Int x = efg(o,(),()) after dl 3;
+    //consTime(25);
+    Int x = efg(o,(o1),()) after dl 3;
+    //f = !xyz(o,(o1,o2,o3),("Muhammad")) after dl 10;
+    //consTime(5);
+    efg(o,(o1),()) after dl 3;
     //f2 = efg(o,(),()) after f,f1 dl 3;
 }

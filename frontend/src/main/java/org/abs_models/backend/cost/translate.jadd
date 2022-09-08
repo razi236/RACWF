@@ -27,6 +27,10 @@ aspect translate {
         throw new NotImplementedYetException(this);
     }
 
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> ASTNode.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method,String fut){
+            throw new NotImplementedYetException(this);
+        }
+
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Model.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method){
         for (ModuleDecl d : getModuleDecls()) {
             if (translateStdLib || (! Constants.BUILT_IN_LIBS.contains(d.getName()))) {
@@ -138,7 +142,16 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AssignStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
-            map = getValue().translate(map,sync_map,sync_schema,method);
+            String fut = getVar().toString();
+            System.out.println(fut);
+            if(getValue() instanceof Call1Exp)
+            {
+                map = getValue().translate(map,sync_map,sync_schema,method,fut);
+            }
+            else
+            {
+                map = getValue().translate(map,sync_map,sync_schema,method);
+            }
            // o.println("Assignment Statement");
            return map;
     }
@@ -148,6 +161,60 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Call1Exp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
+        System.out.println("In non_returning method call");
+        Set<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> quart_set =  new HashSet<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>();
+        for (PureExp x : getQList())
+        {
+            Set<String> fut_set =  new HashSet<String>();
+            fut_set = getF(x,fut_set);
+            Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet = map.get(method);
+            quartet = trans(quartet,fut_set,sync_schema);
+            quart_set.add(quartet);
+        }
+        String max_ta = "max(";
+        String max_t = "max(";
+        Iterator<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> quart_set_itr = quart_set.iterator();
+        if(quart_set_itr.hasNext())
+        {
+            Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> first = quart_set_itr.next();
+            String first_ta = first.getValue2();
+            System.out.println(first_ta);
+            String first_t = first.getValue3();
+            max_ta = max_ta+first_ta;
+            max_t = max_t+first_t;
+        }
+        while (quart_set_itr.hasNext()) {
+            Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> next = quart_set_itr.next();
+            String next_ta = next.getValue2();
+            String next_t = next.getValue3();
+            max_ta = max_ta+","+next_ta;
+            max_t = max_t+","+next_t;
+        }
+        max_ta = max_ta+")";
+        max_t = max_t+")";
+        Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart = map.get(method);
+        String called_method = getMethod();
+        quart = transCallType(quart,max_ta,max_t,sync_schema,called_method);
+        //System.out.println("in call");
+        /*
+        Iterator<Set<String>> it = sync_schema.iterator();
+        System.out.print("Synch schema of "+method+ ":");
+        while (it.hasNext()) {
+            Iterator<String> it1 = it.next().iterator();
+            System.out.print("{");
+            while (it1.hasNext()) {
+                System.out.print(it1.next()+",");
+            }
+            System.out.print("}");
+            System.out.println();
+        }
+        */
+        map.put(method,quart);
+        return map;
+    }
+
+    public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Call1Exp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method,String fut) {
+        System.out.println("In returning method call");
         Set<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> quart_set =  new HashSet<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>();
         for (PureExp x : getQList())
         {
