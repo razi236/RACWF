@@ -112,38 +112,31 @@ public class CostAnalysis extends Main{
         return sync_schema_map;
     }
     public Set<Set<String>> merge_schema(Set<Set<String>> sync_schema, Set<String> sync_set){
-
+        Set<Set<String>> temp_schema = new HashSet<Set<String>>(sync_schema);
+        Set<String> union = new HashSet<String>(sync_set);
         boolean flag = true;
-        if((sync_set.contains("this"))&&(!sync_schema.isEmpty()))
-        {
-            flag = false;
-            Iterator<Set<String>> itr = sync_schema.iterator();
-            Set<String> temp1 = new HashSet<String>(itr.next());
-            sync_schema.remove(temp1);
-            temp1.addAll(sync_set);
-            sync_schema.add(temp1);
-        }
-        else {
+        if (!sync_schema.isEmpty()){
             Iterator<Set<String>> i = sync_schema.iterator();
             while (i.hasNext()) {
                 Set<String> temp = new HashSet<String>(i.next());
                 Set<String> intersection = new HashSet<String>(temp);
-                intersection.retainAll(sync_set);
+                intersection.retainAll(union);
+                System.out.println();
                 if (!intersection.isEmpty()) {
+                    System.out.println("intersaction is not empty");
                     flag = false;
-                    Set<String> temp1 = new HashSet<String>(temp);
-                    sync_schema.remove(temp);
-                    temp1.addAll(sync_set);
-                    sync_schema.add(temp1);
-                    //break;
+                    temp_schema.remove(new HashSet<String>(temp));
+                    union.addAll(temp);
                 }
             }
+            temp_schema.add(union);
         }
         if(flag == true)
         {
-            sync_schema.add(sync_set);
+            System.out.println("intersaction is empty");
+            temp_schema.add(sync_set);
         }
-        return sync_schema;
+        return temp_schema;
     }
     public void print_schema(Map<String,Set<Set<String>>> map) {
         Iterator<String> method_name_itr = map.keySet().iterator();

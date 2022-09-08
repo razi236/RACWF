@@ -138,15 +138,13 @@ aspect generate_sync_schema {
 
         o.print("/");
         getCallee().generate_sync_schema(m,o);
-        for (PureExp x : getPList())
+        for (PureExp x : getParamList())
         {
-            //x.generate_sync_schema(m,o);
-            o.print(",");
-            o.print(x);
-
+            if(!(x.getType().isStringType() || x.getType().isIntType() || x.getType().isFutureType() || x.getType().isBoolType() || x.getType().isFloatType() || x.getType().isUnitType() || x.getType().isRatType() )) {
+                o.print(",");
+                o.print(x);
+            }
         }
-       // o.print("}");
-
     }
 
     public void GetExp.generate_sync_schema(String m,PrintWriter o) {
@@ -403,14 +401,17 @@ aspect generate_sync_schema {
         }
 
     public void MethodSig.generate_sync_schema(String m,PrintWriter o) {
-      o.print(m+" ");
-      o.print("{this");
+      o.print(m);
+      o.print("/this");
       for (ParamDecl x : getParamList())
       {
-        o.print(",");
-        o.print(x.getName());
-      }
-      o.print("}");
+        if(!(x.getType().isStringType() || x.getType().isIntType() || x.getType().isFutureType() || x.getType().isBoolType() || x.getType().isFloatType() || x.getType().isUnitType() || x.getType().isRatType() ))
+        {
+            o.print(",");
+            o.print(x.getName());
+        }
+      //o.print("}");
+       }
     }
 
     public void MethodSig1.generate_sync_schema(String m,PrintWriter o) {

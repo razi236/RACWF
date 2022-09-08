@@ -13,6 +13,7 @@
 
                                       Method calls on object "this" or all objects in parameter list should be done before than the newly created objects.
 
+                                      Non-returning sync call should be Unit var = sync_call.
 */
 
 module Resource; // must be module Resource to declare some resource qualities.
@@ -33,23 +34,23 @@ data Quality =
 module ABS;
 interface IJK
 {
-    Unit jkl((ABC a, IJK k, IJK l),());
+    Unit jkl(ABC a, IJK k, IJK l);
 }
 class IJK implements IJK
 {
-    Unit jkl((ABC a, IJK k, IJK l),())
+    Unit jkl(ABC a, IJK k, IJK l)
     {
 
     }
 }
 interface ABC
 {
-    Int xyz((ABC a,ABC b,ABC c),(String x));
-    Unit efg((ABC j),());
+    Int xyz(ABC a,ABC b,ABC c,String x);
+    Unit efg(ABC j);
 }
 class ABC implements ABC
 {
-    Int xyz((ABC a,ABC b,ABC c),(String x))
+    Int xyz(ABC a,ABC b,ABC c,String x)
     {
         Fut<Unit> f1;
         Fut<Unit> f2;
@@ -61,15 +62,15 @@ class ABC implements ABC
         ABC m = new ABC();
         println(`Hello $x$`);
         consTime(10); // cost is a keyword in ABS compiler.
-        //f1= !jkl(i,(j,k,l),()) after dl 5;
-        //Int x = efg(this,(j),()) after dl 3;
-        //f2= !jkl(i,(j,k,l),()) after dl 5;
+        f1= !jkl(i,j,k,l) after dl 5;
+        Int x = efg(this,j) after dl 3;
+        f2= !jkl(i,j,k,l) after dl 5;
         //efg(this,(m),()) after dl 3;
         consTime(5);
 
         return 0;
     }
-    Unit efg((ABC j),())
+    Unit efg(ABC j)
     {
 
     }
@@ -81,9 +82,9 @@ class ABC implements ABC
     ABC o2 = new ABC();
     ABC o3 = new ABC();
     //consTime(25);
-    Int x = efg(o,(o1),()) after dl 3;
-    //f = !xyz(o,(o1,o2,o3),("Muhammad")) after dl 10;
+    Unit x = efg(o,o1) after dl 3;
+    f = !xyz(o,o1,o2,o3,"Muhammad") after dl 10;
     //consTime(5);
-    efg(o,(o1),()) after dl 3;
-    //f2 = efg(o,(),()) after f,f1 dl 3;
+    Unit y = efg(o1,o2) after dl 3;
+    //f2 = efg(o) after f,f1 dl 3;
 }

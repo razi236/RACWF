@@ -393,9 +393,7 @@ aspect doPrettyPrinter {
         doPrettyPrintCallType(stream, formatter);
         stream.print(getMethod().replaceAll("\\$", ""));
         stream.print("(");
-        getPList().doPrettyPrint(stream, formatter, ",");
-        stream.print(",");
-        getP1List().doPrettyPrint(stream, formatter, ",");
+        getParamList().doPrettyPrint(stream, formatter, ",");
         stream.print(")");
     }
     public void Call1Exp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter, VarOrFieldUse v) {
@@ -435,9 +433,7 @@ aspect doPrettyPrinter {
          doPrettyPrintCallType(stream, formatter);
          stream.print(getMethod().replaceAll("\\$", ""));
          stream.print("(");
-         getPList().doPrettyPrint(stream, formatter, ",");
-         stream.print(",");
-         getP1List().doPrettyPrint(stream, formatter, ",");
+         getParamList().doPrettyPrint(stream, formatter, ",");
          stream.print(")");
          stream.print(";");
     }

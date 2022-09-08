@@ -572,7 +572,7 @@ public class CreateJastAddASTListener extends ABSBaseListener {
 
     @Override public void exitAsyncCall1Exp(ABSParser.AsyncCall1ExpContext ctx) {
 
-            setV(ctx, new AsyncCall1Exp(v(ctx.o), ctx.m.getText(), v(ctx.o1), v(ctx.p), v(ctx.q), v(ctx.d)));
+            setV(ctx, new AsyncCall1Exp(v(ctx.o), ctx.m.getText(), v(ctx.o1), v(ctx.q), v(ctx.d)));
 
     }
 
@@ -582,7 +582,7 @@ public class CreateJastAddASTListener extends ABSBaseListener {
     }
 
     @Override public void exitSyncCall1Exp(ABSParser.SyncCall1ExpContext ctx) {
-        setV(ctx, new SyncCall1Exp(v(ctx.o), ctx.m.getText(), v(ctx.o1), v(ctx.p), v(ctx.q), v(ctx.d)));
+        setV(ctx, new SyncCall1Exp(v(ctx.o), ctx.m.getText(), v(ctx.o1),v(ctx.q), v(ctx.d)));
     }
 
 
