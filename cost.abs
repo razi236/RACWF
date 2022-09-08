@@ -11,7 +11,7 @@
                                        Try to check in parameter list when 1st basic type comes stop.
                                        Thursday or Friday
 
-                                      Method calls on object "this" or all objects in parameter list should be done before than the newly created objects.
+
 
                                       Non-returning sync call should be Unit var = sync_call.
 */
