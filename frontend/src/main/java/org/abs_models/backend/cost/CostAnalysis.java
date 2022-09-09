@@ -34,17 +34,17 @@ public class CostAnalysis extends Main{
             File file = new File("/Users/muhammadrizwanali/Desktop/GitHub/abstools/Synch_Schema.txt");
             writer = new PrintWriter(file);
             System.setProperty("line.separator", System.lineSeparator());
-            System.out.println("Computation of Cost is started:");
+            //System.out.println("Computation of Cost is started:");
             this.arguments = args;
             final Model model = parse(arguments.files);
-            System.out.println("Parsedd:");
+            //System.out.println("Parsedd:");
             model.generate_sync_schema(null, writer);
-            System.out.println("Generated Sync Schema:");
+            //System.out.println("Generated Sync Schema:");
             Set<Set<String>> sync_schema = new HashSet<Set<String>>();
 
             Map<String, Set<Set<String>>> sync_schema_map = new HashMap<String, Set<Set<String>>>();
             sync_schema_map = scan_merge_schema();
-            System.out.println("Merged Schema:");
+            //System.out.println("Merged Schema:");
             Map<String,Set<String>> I = new HashMap<String,Set<String>>();
             Map<Set<String>,String> Psi = new HashMap<Set<String>,String>();
             String o = null;
@@ -55,6 +55,7 @@ public class CostAnalysis extends Main{
             Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> trans_result =
                 new HashMap<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>();
             trans_result = model.translate(trans_result,sync_schema_map,sync_schema,null);
+            print_cost(trans_result);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -65,6 +66,76 @@ public class CostAnalysis extends Main{
         }
         return 0;
     }
+    public void print_cost(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> cost)
+    {
+        Iterator<String> method_name_itr = cost.keySet().iterator();
+        while (method_name_itr.hasNext()) {
+            String name = method_name_itr.next();
+            System.out.println("*************************************************************");
+            System.out.println(name+": ");
+            Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet = cost.get(name);
+            // I
+
+            System.out.print("I : {");
+            Map<String,Set<String>> map_I = quartet.getValue0();
+            Iterator<String> itr_I = map_I.keySet().iterator();
+            while (itr_I.hasNext()) {
+                String f = itr_I.next();
+                System.out.print(f + " -> ");
+                Set<String> syn_set = map_I.get(f);
+                Iterator<String> itr_syn_set = syn_set.iterator();
+                System.out.print("{");
+                if (itr_syn_set.hasNext())
+                    System.out.print(itr_syn_set.next());
+                while (itr_syn_set.hasNext())
+                {
+                    System.out.print(","+itr_syn_set.next());
+                }
+                System.out.print("}");
+            }
+            System.out.print("}");
+            System.out.println();
+
+            // Psi
+
+            System.out.print("Psi : {");
+            Map<Set<String>,String> map_Psi = quartet.getValue1();
+            Iterator<Set<String>> itr_Psi = map_Psi.keySet().iterator();
+            while (itr_Psi.hasNext())
+            {
+                Set<String> set_Psi = itr_Psi.next();
+                String cur_cost = map_Psi.get(set_Psi);
+                System.out.print("{");
+                Iterator<String> syn_set_Psi_itr = set_Psi.iterator();
+                if (syn_set_Psi_itr.hasNext())
+                    System.out.print(syn_set_Psi_itr.next());
+                while (syn_set_Psi_itr.hasNext())
+                {
+                    System.out.print(","+syn_set_Psi_itr.next());
+                }
+                System.out.print("}");
+                System.out.print(" -> "+cur_cost);
+            }
+            System.out.print("}");
+            System.out.println();
+
+            // ta
+
+            System.out.print("ta :");
+            String ta = quartet.getValue2();
+            System.out.print(ta);
+            System.out.println();
+
+            // t
+
+            System.out.print("t :");
+            String t = quartet.getValue3();
+            System.out.print(t);
+            System.out.println();
+            //System.out.println("*************************************************************");
+        }
+    }
+
     public Map<String, Set<Set<String>>> scan_merge_schema() throws FileNotFoundException {
         Scanner scanner = new Scanner(new File("/Users/muhammadrizwanali/Desktop/GitHub/abstools/Synch_Schema.txt"));
         String method_name = null;
@@ -123,7 +194,7 @@ public class CostAnalysis extends Main{
                 intersection.retainAll(union);
                 System.out.println();
                 if (!intersection.isEmpty()) {
-                    System.out.println("intersaction is not empty");
+                    //System.out.println("intersaction is not empty");
                     flag = false;
                     temp_schema.remove(new HashSet<String>(temp));
                     union.addAll(temp);
@@ -133,7 +204,7 @@ public class CostAnalysis extends Main{
         }
         if(flag == true)
         {
-            System.out.println("intersaction is empty");
+            //System.out.println("intersaction is empty");
             temp_schema.add(sync_set);
         }
         return temp_schema;
