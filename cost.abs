@@ -34,10 +34,12 @@ class ABC implements ABC
 {
     Int xyz(ABC a,ABC b,IJK c,String x)
     {
-        Fut<Unit> f; Fut<Unit> f1;
+        Fut<Unit> f; Fut<Unit> f1; Fut<Unit> f2;
         consTime(15);
+        //consTime(5);
         f = !jkl(c,a,c) after dl 5;
         f1 = !jkl(c,a,c) after f dl 5;
+        //f2 = !jkl(c,a,c) after f1,f dl 5;
         return 0;
     }
     Unit efg(ABC j)

@@ -76,7 +76,7 @@ public class CostAnalysis extends Main{
             Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet = cost.get(name);
             // I
 
-            System.out.print("I : {");
+            System.out.print("I : { ");
             Map<String,Set<String>> map_I = quartet.getValue0();
             Iterator<String> itr_I = map_I.keySet().iterator();
             while (itr_I.hasNext()) {
@@ -91,14 +91,14 @@ public class CostAnalysis extends Main{
                 {
                     System.out.print(","+itr_syn_set.next());
                 }
-                System.out.print("}");
+                System.out.print("} ");
             }
             System.out.print("}");
             System.out.println();
 
             // Psi
 
-            System.out.print("Psi : {");
+            System.out.print("Psi : { ");
             Map<Set<String>,String> map_Psi = quartet.getValue1();
             Iterator<Set<String>> itr_Psi = map_Psi.keySet().iterator();
             while (itr_Psi.hasNext())
@@ -114,7 +114,7 @@ public class CostAnalysis extends Main{
                     System.out.print(","+syn_set_Psi_itr.next());
                 }
                 System.out.print("}");
-                System.out.print(" -> "+cur_cost);
+                System.out.print(" -> "+cur_cost+" ");
             }
             System.out.print("}");
             System.out.println();

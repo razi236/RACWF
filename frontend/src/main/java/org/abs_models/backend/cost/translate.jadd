@@ -204,8 +204,11 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Call1Exp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method,String fut) {
+        Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map1 = new HashMap<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>(map);
         System.out.println("In returning method call");
-        Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart = map.get(method);
+        Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart = map1.get(method);
+        Map<String,Set<String>> map_I = new HashMap<String,Set<String>>(quart.getValue0());
+        Map<Set<String>,String> map_Psi = new HashMap<Set<String>,String>(quart.getValue1());
         String called_method = getMethod();
         Set<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> quart_set =  new HashSet<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>();
         List<PureExp> fut_list = getQList();
@@ -220,7 +223,6 @@ aspect translate {
                 quartet = trans(quartet,fut_set,sync_schema);
                 quart_set.add(quartet);
             }
-
             String max_ta = "max(";
             String max_t = "max(";
             Iterator<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> quart_set_itr = quart_set.iterator();
@@ -228,7 +230,7 @@ aspect translate {
             {
                 Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> first = quart_set_itr.next();
                 String first_ta = first.getValue2();
-                System.out.println(first_ta);
+                //System.out.println(first_ta);
                 String first_t = first.getValue3();
                 max_ta = max_ta+first_ta;
                 max_t = max_t+first_t;
@@ -242,6 +244,8 @@ aspect translate {
             }
             max_ta = max_ta+")";
             max_t = max_t+")";
+            quart = quart.setAt0(map_I);
+            quart = quart.setAt1(map_Psi);
             quart = transCallType(quart,max_ta,max_t,sync_schema,called_method,fut);
         }
         else
@@ -265,8 +269,8 @@ aspect translate {
             System.out.println();
         }
         */
-        map.put(method,quart);
-        return map;
+        map1.put(method,quart);
+        return map1;
 
     }
 
@@ -276,10 +280,10 @@ aspect translate {
     {
         Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> temp_quartet = quartet;
         String callee = getCallee().toString();
-        System.out.println("Callee of method "+method+" : "+callee);
+        //System.out.println("Callee of method "+method+" : "+callee);
         Boolean flag = false;
-        Map<String,Set<String>> map_i = temp_quartet.getValue0();
-        Map<Set<String>,String> map_psi = temp_quartet.getValue1();
+        Map<String,Set<String>> map_i = new HashMap<String,Set<String>>(temp_quartet.getValue0());
+        Map<Set<String>,String> map_psi = new HashMap<Set<String>,String>(temp_quartet.getValue1());
         String ta = temp_quartet.getValue2();
         String t = temp_quartet.getValue3();
         Set<String> set_i = new HashSet<String>();
@@ -394,7 +398,7 @@ aspect translate {
                                 String result = psi_val+"+"+ta;
                                 map_Psi.put(psi,result);
                             }
-                            t = t+ta;
+                            t = t+"+"+ta;
                             ta = null;
                         }
                     }
@@ -411,7 +415,11 @@ aspect translate {
                             }
                         }
                         String val_psi = map_Psi.get(val_f);
-                        String t1 = "max("+t+ta+","+val_psi+")";
+                        String t1 = null;
+                        if(ta!=null)
+                            t1 = "max("+t+ta+","+val_psi+")";
+                        else
+                            t1 = "max("+t+","+val_psi+")";
                         map_Psi.remove(val_f);
                         Iterator<Set<String>> psi_itr1 = map_Psi.keySet().iterator();
                         while (psi_itr1.hasNext()) {
