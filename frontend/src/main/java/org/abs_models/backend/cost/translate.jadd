@@ -156,11 +156,13 @@ aspect translate {
            return map;
     }
 
+    /*
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Call.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
         return map;
     }
-
+    */
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Call1Exp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
+        /*
         System.out.println("In non_returning method call");
         Set<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> quart_set =  new HashSet<Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>();
         for (PureExp x : getQList())
@@ -196,20 +198,8 @@ aspect translate {
         String called_method = getMethod();
         //quart = transCallType(quart,max_ta,max_t,sync_schema,called_method,fut);
         //System.out.println("in call");
-        /*
-        Iterator<Set<String>> it = sync_schema.iterator();
-        System.out.print("Synch schema of "+method+ ":");
-        while (it.hasNext()) {
-            Iterator<String> it1 = it.next().iterator();
-            System.out.print("{");
-            while (it1.hasNext()) {
-                System.out.print(it1.next()+",");
-            }
-            System.out.print("}");
-            System.out.println();
-        }
-        */
         map.put(method,quart);
+        */
         return map;
     }
 
@@ -290,6 +280,7 @@ aspect translate {
         Boolean flag = false;
         Map<String,Set<String>> map_i = temp_quartet.getValue0();
         Map<Set<String>,String> map_psi = temp_quartet.getValue1();
+        String ta = temp_quartet.getValue2();
         String t = temp_quartet.getValue3();
         Set<String> set_i = new HashSet<String>();
         Iterator<Set<String>> itr = sync_schema.iterator();
@@ -312,17 +303,19 @@ aspect translate {
         {
             System.out.println("case:4");
             map_i.put(fut,set_i);
-            //temp_quartet.setAt0(map_i);
-            String s1 = max_ta+"+c_"+method;
-            System.out.println(s1);
-            temp_quartet.setAt2(s1);
-            temp_quartet.setAt3(max_t);
+            temp_quartet = temp_quartet.setAt0(map_i);
+            if(max_ta != null)
+                temp_quartet = temp_quartet.setAt2(max_ta+"+c_"+method);
+            else
+                temp_quartet = temp_quartet.setAt2("c_"+method);
+
+            temp_quartet = temp_quartet.setAt3(max_t);
         }
         else
         {
             System.out.println("case:5");
             map_i.put(fut,set_i);
-            temp_quartet.setAt0(map_i);
+            temp_quartet = temp_quartet.setAt0(map_i);
             String cur_cost = null;
             if(map_psi.containsKey(set_i))
             {
@@ -331,12 +324,12 @@ aspect translate {
             }
             else
             {
-                cur_cost = t+"+max(c_"+method+",0)";
+                cur_cost = max_t+"+max(c_"+method+",0)";
             }
             map_psi.put(set_i,cur_cost);
-            temp_quartet.setAt1(map_psi);
-            temp_quartet.setAt2(max_ta);
-            temp_quartet.setAt3(max_t);
+            temp_quartet = temp_quartet.setAt1(map_psi);
+            temp_quartet = temp_quartet.setAt2(max_ta);
+            temp_quartet = temp_quartet.setAt3(max_t);
         }
         System.out.println("in async call");
         return temp_quartet;

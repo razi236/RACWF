@@ -1,0 +1,20 @@
+[Wait for generic future type]        Task Dependencies
+[Done]                                Resource Qualities Declaration
+[With Timed ABS]                      Deadline Missed Notification
+[With JAVA Backend?]                  Cost Analysis
+[Done]                                Try to check in parameter list when 1st basic type comes stop.
+[?]                                   Comparison with other Cost Analysis
+[?]                                   Find some tools targeting workflow plannings
+[?]                                   Tools that targets programs (focus actor programs)
+[?]                                   SAC paper will be tool oriented
+
+
+
+Check value of ta and t in cases with dependency
+
+
+
+                                      Non-returning sync call should be Unit var = sync_call.
+-> Check Call1Exp issue is adding I and ta, from where these values are adding and updating
+-> Sync method call is not working
+-> Finish other cases and write user manual to get feedback from others
