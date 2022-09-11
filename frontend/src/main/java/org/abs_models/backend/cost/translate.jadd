@@ -850,12 +850,27 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> IfStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
-      /*
-        getThen().generate_sync_schema(m,o);
-        if (hasElse()) {
-            getElse().generate_sync_schema(m,o);
-        }
-      */
+      Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map_1 = getThen().translate(map,sync_map,sync_schema,method);
+      Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart = map.get(method);
+      if (hasElse())
+      {
+        Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map_2 = getElse().translate(map,sync_map,sync_schema,method);
+        Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart_1 = map_1.get(method);
+        String ta_1 = quart_1.getValue2();
+        String t_1 = quart_1.getValue3();
+        Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart_2 = map_2.get(method);
+        String ta_2 = quart_2.getValue2();
+        String t_2 = quart_2.getValue3();
+        String ta = "max("+ta_1+","+ta_2+")";
+        String t = "max("+t_1+","+t_2+")";
+        quart = quart.setAt2(ta);
+        quart = quart.setAt3(t);
+        map.put(method,quart);
+      }
+      else
+      {
+        map = map_1;
+      }
       return map;
     }
 

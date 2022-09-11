@@ -54,12 +54,16 @@ class ABC implements ABC
     ABC o1 = new ABC();
     ABC o2 = new ABC();
     IJK o3 = new IJK();
-    consTime(25);
-    i = xyz(o,o1,o2,o3,"Muhammad") after dl 10;
-    f = !xyz(o,o1,o2,o3,"Muhammad") after dl 10;
-    await f?;
-    i = f.get;
+    Boolean flag = true;
+    //consTime(25);
+    if(flag == true)
+        i = xyz(o,o1,o2,o3,"Muhammad") after dl 10;
+    else
+        Unit x = efg(o1,o2) after dl 3;
+    //f = !xyz(o,o1,o2,o3,"Muhammad") after dl 10;
+    //await f?;
+    //i = f.get;
     //consTime(5);
     //consTime(15);
-    //Unit x = efg(o1,o2) after f dl 3;
+    //
 }
