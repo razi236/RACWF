@@ -492,7 +492,120 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> GetExp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
+        String f = getPureExp().toString();
+        Set<String> fut_set =  new HashSet<String>();
+        fut_set.add(f);
+        Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet = map.get(method);
+        quartet = trans(quartet,fut_set,sync_schema);
+        map.put(method,quartet);
         return map;
+    }
+
+    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> GetExp.trans(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,Set<String> fut_set,Set<Set<String>> sync_schema)
+    {
+        if (fut_set.isEmpty()) // case: a
+        {
+            return quartet;
+        }
+        else
+        {
+            Iterator<String> fut_itr = fut_set.iterator();
+            Map<String,Set<String>> map_I = quartet.getValue0();
+            Map<Set<String>,String> map_Psi = quartet.getValue1();
+            String ta = quartet.getValue2();
+            String t = quartet.getValue3();
+            while (fut_itr.hasNext()) {
+                String f = fut_itr.next();
+                if(map_I.containsKey(f))                    // case: b,c
+                {
+                    Set<String> val_f = map_I.get(f);
+                    if(val_f.contains("this"))              // case: b
+                    {
+                        Iterator<String> f_itr = map_I.keySet().iterator();
+                        while (f_itr.hasNext()) {
+                            String fut = f_itr.next();
+                            Set<String> val = map_I.get(fut);
+                            if(val.contains("this"))
+                            {
+                                map_I.remove(fut,val);
+                            }
+                        }
+                        if(ta != null)
+                        {
+                            Iterator<Set<String>> psi_itr = map_Psi.keySet().iterator();
+                            while (psi_itr.hasNext()) {
+                                Set<String> psi = psi_itr.next();
+                                String psi_val = map_Psi.get(psi);
+                                String result = psi_val+"+"+ta;
+                                map_Psi.put(psi,result);
+                            }
+                            t = t+"+"+ta;
+                            ta = null;
+                        }
+                    }
+                    else                                    // case : c
+                    {
+                        map_I.remove(f,map_I.get(f));
+                        Iterator<String> f_itr = map_I.keySet().iterator();
+                        while (f_itr.hasNext()) {
+                            String fut = f_itr.next();
+                            Set<String> val = map_I.get(fut);
+                            if(val.contains("this"))
+                            {
+                                map_I.remove(fut,val);
+                            }
+                        }
+                        String val_psi = map_Psi.get(val_f);
+                        String t1 = null;
+                        if(ta!=null)
+                            t1 = "max("+t+ta+","+val_psi+")";
+                        else
+                            t1 = "max("+t+","+val_psi+")";
+                        map_Psi.remove(val_f,val_psi);
+                        Iterator<Set<String>> psi_itr1 = map_Psi.keySet().iterator();
+                        while (psi_itr1.hasNext()) {
+                            Set<String> psi1 = psi_itr1.next();
+                            String psi_val1 = map_Psi.get(psi1);
+                            String result1 = psi_val1+"||"+t1;
+                            map_Psi.put(psi1,result1);
+                        }
+                        t = t1;
+                        ta = null;
+                    }
+
+                }
+                else // case: d
+                {
+                    System.out.println("Fut not in I");
+                    Iterator<String> f_itr_1 = map_I.keySet().iterator();
+                    while (f_itr_1.hasNext()) {
+                        String fut_1 = f_itr_1.next();
+                        Set<String> val_1 = map_I.get(fut_1);
+                        if(val_1.contains("this"))
+                        {
+                            map_I.remove(fut_1,val_1);
+                        }
+                    }
+                    if(ta != null)
+                    {
+                        Iterator<Set<String>> psi_itr_1 = map_Psi.keySet().iterator();
+                        while (psi_itr_1.hasNext()) {
+                            Set<String> psi_1 = psi_itr_1.next();
+                            String psi_val_1 = map_Psi.get(psi_1);
+                            String result_1 = psi_val_1+"+"+ta;
+                            map_Psi.put(psi_1,result_1);
+                        }
+                        t = t+ta;
+                        ta = null;
+                    }
+                }
+            }
+            quartet = quartet.setAt0(map_I);
+            quartet = quartet.setAt1(map_Psi);
+            quartet = quartet.setAt2(ta);
+            quartet = quartet.setAt3(t);
+            return quartet;
+        }
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AddResStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
@@ -515,7 +628,135 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AwaitStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
+        System.out.println("in await");
+        String f = getGuard().toString();
+        f = cleanGuard(f);
+        System.out.println("Guard = "+f);
+        Set<String> fut_set =  new HashSet<String>();
+        fut_set.add(f);
+        Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet = map.get(method);
+        quartet = trans(quartet,fut_set,sync_schema);
+        map.put(method,quartet);
         return map;
+    }
+    public String AwaitStmt.cleanGuard(String s) {
+          String cost = s;
+          Scanner scanner = new Scanner(cost);
+          scanner.useDelimiter("d");
+          cost = scanner.next();
+          cost = scanner.next();
+          Scanner scanner1 = new Scanner(cost);
+          scanner1.useDelimiter("[\\(\\)]");
+          cost = scanner1.next();
+          scanner1.close();
+          scanner.close();
+          return cost;
+    }
+    public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> AwaitStmt.trans(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,Set<String> fut_set,Set<Set<String>> sync_schema)
+    {
+        if (fut_set.isEmpty()) // case: a
+        {
+            return quartet;
+        }
+        else
+        {
+            Iterator<String> fut_itr = fut_set.iterator();
+            Map<String,Set<String>> map_I = quartet.getValue0();
+            Map<Set<String>,String> map_Psi = quartet.getValue1();
+            String ta = quartet.getValue2();
+            String t = quartet.getValue3();
+            while (fut_itr.hasNext()) {
+                String f = fut_itr.next();
+                if(map_I.containsKey(f))                    // case: b,c
+                {
+                    Set<String> val_f = map_I.get(f);
+                    if(val_f.contains("this"))              // case: b
+                    {
+                        Iterator<String> f_itr = map_I.keySet().iterator();
+                        while (f_itr.hasNext()) {
+                            String fut = f_itr.next();
+                            Set<String> val = map_I.get(fut);
+                            if(val.contains("this"))
+                            {
+                                map_I.remove(fut,val);
+                            }
+                        }
+                        if(ta != null)
+                        {
+                            Iterator<Set<String>> psi_itr = map_Psi.keySet().iterator();
+                            while (psi_itr.hasNext()) {
+                                Set<String> psi = psi_itr.next();
+                                String psi_val = map_Psi.get(psi);
+                                String result = psi_val+"+"+ta;
+                                map_Psi.put(psi,result);
+                            }
+                            t = t+"+"+ta;
+                            ta = null;
+                        }
+                    }
+                    else                                    // case : c
+                    {
+                        map_I.remove(f,map_I.get(f));
+                        Iterator<String> f_itr = map_I.keySet().iterator();
+                        while (f_itr.hasNext()) {
+                            String fut = f_itr.next();
+                            Set<String> val = map_I.get(fut);
+                            if(val.contains("this"))
+                            {
+                                map_I.remove(fut,val);
+                            }
+                        }
+                        String val_psi = map_Psi.get(val_f);
+                        String t1 = null;
+                        if(ta!=null)
+                            t1 = "max("+t+ta+","+val_psi+")";
+                        else
+                            t1 = "max("+t+","+val_psi+")";
+                        map_Psi.remove(val_f,val_psi);
+                        Iterator<Set<String>> psi_itr1 = map_Psi.keySet().iterator();
+                        while (psi_itr1.hasNext()) {
+                            Set<String> psi1 = psi_itr1.next();
+                            String psi_val1 = map_Psi.get(psi1);
+                            String result1 = psi_val1+"||"+t1;
+                            map_Psi.put(psi1,result1);
+                        }
+                        t = t1;
+                        ta = null;
+                    }
+
+                }
+                else // case: d
+                {
+                    System.out.println("Fut not in I");
+                    Iterator<String> f_itr_1 = map_I.keySet().iterator();
+                    while (f_itr_1.hasNext()) {
+                        String fut_1 = f_itr_1.next();
+                        Set<String> val_1 = map_I.get(fut_1);
+                        if(val_1.contains("this"))
+                        {
+                            map_I.remove(fut_1,val_1);
+                        }
+                    }
+                    if(ta != null)
+                    {
+                        Iterator<Set<String>> psi_itr_1 = map_Psi.keySet().iterator();
+                        while (psi_itr_1.hasNext()) {
+                            Set<String> psi_1 = psi_itr_1.next();
+                            String psi_val_1 = map_Psi.get(psi_1);
+                            String result_1 = psi_val_1+"+"+ta;
+                            map_Psi.put(psi_1,result_1);
+                        }
+                        t = t+ta;
+                        ta = null;
+                    }
+                }
+            }
+            quartet = quartet.setAt0(map_I);
+            quartet = quartet.setAt1(map_Psi);
+            quartet = quartet.setAt2(ta);
+            quartet = quartet.setAt3(t);
+            return quartet;
+        }
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AndGuard.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {

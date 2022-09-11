@@ -57,7 +57,9 @@ class ABC implements ABC
     consTime(25);
     i = xyz(o,o1,o2,o3,"Muhammad") after dl 10;
     f = !xyz(o,o1,o2,o3,"Muhammad") after dl 10;
-    consTime(5);
-    consTime(15);
+    await f?;
+    i = f.get;
+    //consTime(5);
+    //consTime(15);
     //Unit x = efg(o1,o2) after f dl 3;
 }
