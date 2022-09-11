@@ -131,9 +131,17 @@ aspect generate_sync_schema {
     }
 
     public void Call.generate_sync_schema(String m,PrintWriter o) {
-
+        o.print("/");
+                getCallee().generate_sync_schema(m,o);
+                for (PureExp x : getParamList())
+                {
+                    if(!(x.getType().isStringType() || x.getType().isIntType() || x.getType().isFutureType() || x.getType().isBoolType() || x.getType().isFloatType() || x.getType().isUnitType() || x.getType().isRatType() )) {
+                        o.print(",");
+                        o.print(x);
+                    }
+                }
     }
-
+    /*
     public void Call1Exp.generate_sync_schema(String m,PrintWriter o) {
 
         o.print("/");
@@ -146,6 +154,33 @@ aspect generate_sync_schema {
             }
         }
     }
+    */
+
+    public void AsyncCall1Exp.generate_sync_schema(String m,PrintWriter o) {
+
+            o.print("/");
+            getCallee().generate_sync_schema(m,o);
+            for (PureExp x : getParamList())
+            {
+                if(!(x.getType().isStringType() || x.getType().isIntType() || x.getType().isFutureType() || x.getType().isBoolType() || x.getType().isFloatType() || x.getType().isUnitType() || x.getType().isRatType() )) {
+                    o.print(",");
+                    o.print(x);
+                }
+            }
+        }
+
+    public void SyncCall1Exp.generate_sync_schema(String m,PrintWriter o) {
+
+                o.print("/");
+                getCallee().generate_sync_schema(m,o);
+                for (PureExp x : getParamList())
+                {
+                    if(!(x.getType().isStringType() || x.getType().isIntType() || x.getType().isFutureType() || x.getType().isBoolType() || x.getType().isFloatType() || x.getType().isUnitType() || x.getType().isRatType() )) {
+                        o.print(",");
+                        o.print(x);
+                    }
+                }
+            }
 
     public void GetExp.generate_sync_schema(String m,PrintWriter o) {
 

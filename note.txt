@@ -10,11 +10,11 @@
 
 
 
-Check value of ta and t in cases with dependency
+Check why is error on f2?
+I think its due to multiple futs with same sync schema in I.
 
-
-
-                                      Non-returning sync call should be Unit var = sync_call.
--> Check Call1Exp issue is adding I and ta, from where these values are adding and updating
--> Sync method call is not working
 -> Finish other cases and write user manual to get feedback from others
+
+** Non-returning sync call should be Unit var = sync_call.
+** Sync Call is not working with non returning method call.
+Sync call is an exp and it must be either in assignment_stmt. So better is to avoid from unit return type and return 0 if don't want to return anything.
