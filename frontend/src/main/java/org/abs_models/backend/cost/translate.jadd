@@ -143,18 +143,18 @@ aspect translate {
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AssignStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
             String fut = getVar().toString();
-            System.out.println(fut);
+            //System.out.println(fut);
             if(getValue() instanceof Call1Exp)
             {
                 if(getValue() instanceof AsyncCall1Exp)
                 {
-                    System.out.println("= async call");
+                    //System.out.println("= async call");
                     map = getValue().translate(map,sync_map,sync_schema,method,fut);
                 }
                 else if(getValue() instanceof SyncCall1Exp)
                 {
                     map = getValue().translate(map,sync_map,sync_schema,method);
-                    System.out.println("= sync call");
+                    //System.out.println("= sync call");
                 }
                 else
                     map = map;
@@ -329,7 +329,7 @@ aspect translate {
         }
         if(flag == true)
         {
-            System.out.println("case:4");
+            //System.out.println("case:4");
             map_i.put(fut,set_i);
             temp_quartet = temp_quartet.setAt0(map_i);
             if(max_ta != null)
@@ -341,34 +341,40 @@ aspect translate {
         }
         else
         {
-            System.out.println("case:5");
+            //System.out.println("case:5");
             map_i.put(fut,set_i);
             temp_quartet = temp_quartet.setAt0(map_i);
             String cur_cost = null;
             if(map_psi.containsKey(set_i))
             {
                 cur_cost = map_psi.get(set_i);
-                cur_cost = cur_cost+"max(c_"+method+",0)";
+                cur_cost = cur_cost+"+max(c_"+method+",0)";
             }
             else
             {
-                cur_cost = max_t+"+max(c_"+method+",0)";
+                if(max_t == null)
+                    cur_cost = "max(c_"+method+",0)";
+                else
+                    cur_cost = max_t+"+max(c_"+method+",0)";
             }
             map_psi.put(set_i,cur_cost);
             temp_quartet = temp_quartet.setAt1(map_psi);
             temp_quartet = temp_quartet.setAt2(max_ta);
             temp_quartet = temp_quartet.setAt3(max_t);
         }
-        System.out.println("in async call");
+        //System.out.println("in async call");
         return temp_quartet;
     }
     public Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> SyncCall1Exp.transCallType(Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet,String max_ta,String max_t,Set<Set<String>> sync_schema,String method,String fut)
     {
-        System.out.println("in sync call");
+        //System.out.println("in sync call");
         quartet = quartet.setAt2(max_ta);
-        quartet = quartet.setAt3(max_t+"+c_"+method);
-        System.out.println(" ta is "+max_ta);
-        System.out.println(" t is "+max_t+"+c_"+method);
+        if(max_t == null)
+            quartet = quartet.setAt3("c_"+method);
+        else
+            quartet = quartet.setAt3(max_t+"+c_"+method);
+        //System.out.println(" ta is "+max_ta);
+        //System.out.println(" t is "+max_t+"+c_"+method);
         return quartet;
     }
     public Set<String> Call1Exp.getF(PureExp x,Set<String> s)
@@ -850,19 +856,23 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> IfStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
-      Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map_1 = getThen().translate(map,sync_map,sync_schema,method);
+      Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> temp_map_1 = new HashMap<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>(map);
+      Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> temp_map_2 = new HashMap<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>(map);
+      Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map_1 = new HashMap<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>(getThen().translate(temp_map_1,sync_map,sync_schema,method));
       Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart = map.get(method);
+      Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart_1 = map_1.get(method);
+      String ta_1 = quart_1.getValue2();
+      String t_1 = quart_1.getValue3();
       if (hasElse())
       {
-        Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map_2 = getElse().translate(map,sync_map,sync_schema,method);
-        Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart_1 = map_1.get(method);
-        String ta_1 = quart_1.getValue2();
-        String t_1 = quart_1.getValue3();
+        Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map_2 = new HashMap<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>(getElse().translate(temp_map_2,sync_map,sync_schema,method));
         Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart_2 = map_2.get(method);
         String ta_2 = quart_2.getValue2();
         String t_2 = quart_2.getValue3();
         String ta = "max("+ta_1+","+ta_2+")";
         String t = "max("+t_1+","+t_2+")";
+        System.out.println("t_1 = "+t_1);
+        System.out.println("t_2 = "+t_2);
         quart = quart.setAt2(ta);
         quart = quart.setAt3(t);
         map.put(method,quart);

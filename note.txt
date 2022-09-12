@@ -18,3 +18,9 @@ I think its due to multiple futs with same sync schema in I.
 ** Non-returning sync call should be Unit var = sync_call.
 ** Sync Call is not working with non returning method call.
 Sync call is an exp and it must be either in assignment_stmt. So better is to avoid from unit return type and return 0 if don't want to return anything.
+
+
+** Write user manual of the Rpl language and the tool (compiler and cost analysis).
+ Summarize in simple words, what the language is for and what the tools do and then go for technical details.
+
+

@@ -28,42 +28,49 @@ class IJK implements IJK
 interface ABC
 {
     Int xyz(ABC a,ABC b,IJK c,String x);
-    Unit efg(ABC j);
+    Int efg(ABC j);
 }
 class ABC implements ABC
 {
     Int xyz(ABC a,ABC b,IJK c,String x)
     {
         ABC o = new ABC();
+        Int x1 = 0;
         Fut<Unit> f; Fut<Unit> f1; Fut<Unit> f2;
         //consTime(15);
         //consTime(5);
-        //f = !jkl(c,a,c) after dl 5;
-        //f1 = !jkl(c,a,c) after f dl 5;
-        //Unit x1 = efg(this,o) after dl 3;
+        f = !jkl(c,a,c) after dl 5;
+        f1 = !jkl(c,a,c) after f dl 5;
+        x1 = efg(this,o) after f1 dl 3;
         return 0;
     }
-    Unit efg(ABC j)
+    Int efg(ABC j)
     {
-
+        return 0;
     }
 }
 {
-    Fut<Int> f;Fut<Int> f1;Fut<Int> f2; List<Int> fids = list[]; Int i=0;
+    Fut<Int> f;Fut<Int> f1;Fut<Int> f2; List<Int> fids = list[]; Int i=0; Bool b = true;
     ABC o = new ABC();
     ABC o1 = new ABC();
     ABC o2 = new ABC();
     IJK o3 = new IJK();
-    Boolean flag = true;
     //consTime(25);
-    if(flag == true)
+    //i = xyz(o,o1,o2,o3,"Muhammad") after dl 10;
+    f = !xyz(o,o1,o2,o3,"Muhammad") after dl 10;
+    f1 = !xyz(o,o1,o2,o3,"Muhammad") after dl 10;
+    /*if(b==true)
+    {
         i = xyz(o,o1,o2,o3,"Muhammad") after dl 10;
+    }
     else
-        Unit x = efg(o1,o2) after dl 3;
-    //f = !xyz(o,o1,o2,o3,"Muhammad") after dl 10;
-    //await f?;
+    {
+        i = efg(o,o1) after dl 3;
+    }*/
+
+    await f?;
     //i = f.get;
     //consTime(5);
     //consTime(15);
-    //
+    //Unit x = efg(o1,o2) after dl 3;
 }

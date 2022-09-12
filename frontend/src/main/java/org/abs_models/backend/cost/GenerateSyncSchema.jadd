@@ -236,7 +236,6 @@ aspect generate_sync_schema {
     }
 
     public void IfStmt.generate_sync_schema(String m,PrintWriter o) {
-
         getThen().generate_sync_schema(m,o);
         if (hasElse()) {
             getElse().generate_sync_schema(m,o);
@@ -264,7 +263,7 @@ aspect generate_sync_schema {
     public void VarDecl.generate_sync_schema(String m,PrintWriter o) {
         if (hasInitExp()) {
             //o.println(" Initialization ");
-            getInitExp().generate_sync_schema(m,o);
+            //getInitExp().generate_sync_schema(m,o);
         }
 
     }
@@ -715,7 +714,7 @@ aspect generate_sync_schema {
     }
 
     public void NullExp.generate_sync_schema(String m,PrintWriter o) {
-        o.print("null");
+        //o.print("null");
     }
 
     public void ThisExp.generate_sync_schema(String m,PrintWriter o) {
