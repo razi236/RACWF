@@ -1,4 +1,4 @@
-# How to install and use the ABS Compiler #
+# How to install and Compile #
 
 ## Building the compiler ##
 

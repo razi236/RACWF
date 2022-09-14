@@ -426,7 +426,7 @@ public class Main {
             while (e.hasMoreElements()) {
                 JarEntry jarEntry = e.nextElement();
                 if (!jarEntry.isDirectory()) {
-                    if (jarEntry.getName().endsWith(".abs")) {
+                    if (jarEntry.getName().endsWith(".abs")||jarEntry.getName().endsWith(".rpl")) {
                         parseABSSourceFile(units, "jar:"+file.toURI()+"!/"+jarEntry.getName(), jarFile.getInputStream(jarEntry), verbose);
                     }
                 }
@@ -460,7 +460,7 @@ public class Main {
     }
 
     public static boolean isABSSourceFile(File f) {
-        return f.getName().endsWith(".abs") || f.getName().endsWith(".mtvl");
+        return f.getName().endsWith(".abs") || f.getName().endsWith(".mtvl") || f.getName().endsWith(".rpl");
     }
 
     private static void parseABSSourceFile(java.util.List<CompilationUnit> units, String name, InputStream inputStream, boolean verbose) throws IOException {

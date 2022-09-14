@@ -16,13 +16,13 @@ data Quality =
 module ABS;
 interface IJK
 {
-    Unit jkl(ABC a, IJK k);
+    Int jkl(ABC a, IJK k);
 }
 class IJK implements IJK
 {
-    Unit jkl(ABC a, IJK k)
+    Int jkl(ABC a, IJK k)
     {
-
+        return 0;
     }
 }
 interface ABC
@@ -36,12 +36,13 @@ class ABC implements ABC
     {
         ABC o = new ABC();
         Int x1 = 0;
-        Fut<Unit> f; Fut<Unit> f1; Fut<Unit> f2;
+        Fut<Int> f; Fut<Int> f1; Fut<Int> f2;
         //consTime(15);
         //consTime(5);
         f = !jkl(c,a,c) after dl 5;
-        f1 = !jkl(c,a,c) after f dl 5;
-        x1 = efg(this,o) after f1 dl 3;
+        f1 = !jkl(c,a,c) after dl 5;
+        //f2 = !efg(this,o) after f&f1 dl 3;
+        //f3 = !efg(this,o) after f&f2 dl 3;
         return 0;
     }
     Int efg(ABC j)
