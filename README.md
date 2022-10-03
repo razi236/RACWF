@@ -6,6 +6,20 @@ language.
 
 ## Language Manual
 
+### Introduction
+
+RABS is inspired by an active object language [ABS](https://abs-models.org/), and has a Java-like syntax and actor-based concurrency model. In actor-based concurrency models, actors are primitives for concurrent computation. Actors can send a finite number of messages to each other, create a finite number of new actors, or alter their private states. One of the primary characteristics of actor-based concurrency models is that only one message is processed per actor, so the invariants of each actor are preserved without locks.
+
+In addition, the language has
+explicit notions for logical disjunction and conjunction between the task dependencies, qualitative assessment of resources, method invocation with deadlines and time
+advancement. The language also supports a static cost analysis which allows the workflow analysers to estimate the effect
+of changes in collaborative workflows with respect to cost in terms of
+execution time.
+
+### Syntax
+
+![](../../../../../var/folders/k1/72zmnn415gvd2drbwm7f2zhm0000gn/T/TemporaryItems/NSIRD_screencaptureui_BLV1jd/Screenshot 2022-10-03 at 10.31.05.png)
+
 
 ## **Installing Dependencies**
 
