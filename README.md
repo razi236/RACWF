@@ -18,7 +18,7 @@ execution time.
 
 ### Syntax
 
-![](../../../../../var/folders/k1/72zmnn415gvd2drbwm7f2zhm0000gn/T/TemporaryItems/NSIRD_screencaptureui_BLV1jd/Screenshot 2022-10-03 at 10.31.05.png)
+![](syntax.png)
 
 
 ## **Installing Dependencies**
