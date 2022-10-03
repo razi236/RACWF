@@ -1,78 +1,61 @@
-ABS Tools
+RABS Tools
 =========
 
-[![compile](https://github.com/abstools/abstools/actions/workflows/compile.yml/badge.svg?branch=master)](https://github.com/abstools/abstools/actions/workflows/compile.yml)<!-- [![test](https://github.com/abstools/abstools/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/abstools/abstools/actions/workflows/test.yml) --> [![GitHub release](https://img.shields.io/github/release/abstools/abstools.svg)](https://github.com/abstools/abstools/releases/latest)
-[![Gitter](https://badges.gitter.im/abstools/general.svg)](https://gitter.im/abstools/general?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+Inside this repository we develop the core tools of the RABS modelling
+language.
 
-Inside this repository we develop the core tools of the ABS modelling
-language.  The current language manual is at <https://abs-models.org/manual/>.
-
-To compile the command-line compiler and manual, run `./gradlew assemble` (See <https://abs-models.org/getting_started/local-install/> for more information).
-
-To run the ABS collaboratory (a browser-based IDE for ABS) locally using
-Docker, execute the following command:
-
-    docker run -p 8080:80 --rm abslang/collaboratory:latest
-
-Then connect your browser to <http://localhost:8080/>.  It is not necessary to
-clone the repository or compile the toolchain to run the ABS collaboratory in this way.
-
-To run the absc compiler locally using docker, create a script such as
-<https://github.com/abstools/abstools/blob/master/frontend/src/main/resources/bash/absc-docker>
-and put it in your path.
-
-Folders
--------
-
-* `frontend` - the ABS compiler and runtime support.  See
-  <https://abs-models.org/getting_started/local-install/> for installation
-  instructions.
-
-* `abs-docs` - the ABS language manual, available online at
-  <http://abs-models.org/manual/>.  To generate the manual locally,
-  run `make manual`.
-
-  * `abs-docs/ReferenceManual` - an older LaTeX ABS reference manual,
-    now mostly of historical interest
-
-  * `abs-docs/Ott` - a formal grammar for a large subset of ABS,
-    written in [Ott](https://www.cl.cam.ac.uk/~pes20/ott/)
+## Language Manual
 
 
-* `org.abs-models.releng` - Files used by Jenkins and Buckminster for
-  continuous integration at <https://envisage.ifi.uio.no:8080/jenkins/>.
+## **Installing Dependencies**
 
-* `abs-unit` - demonstration, description and initial ideas about the
-  ABSUnit (a unit testing framework for ABS) (with Maven dependencies
-  management)
+Running the RABS compiler requires Java (version 11 or greater) and Erlang (version 23 or greater) installed. Java can be downloaded, e.g., from https://adoptopenjdk.net. Erlang is available at https://www.erlang.org/downloads (but also check below for platform-specific instructions).
 
-* various leftovers from previous projects, to be evaluated and
-  reactivated or pruned
+### **Installing dependencies on MacOS**
 
-Note for Windows Users
-----------------------
+On MacOS, the homebrew package manager can be used to install the dependencies. After installing homebrew, run the following commands in a terminal:
 
-Please clone the archive without line ending conversion (unfortunately
-activated by default on Windows).  Use `-c core.autocrlf=false` as argument
-for the initial `git clone` command, i.e.,
+`brew tap adoptopenjdk/openjdk`
 
-    git clone https://github.com/abstools/abstools -c core.autocrlf=false
+`brew install erlang git adoptopenjdk11`
 
-Otherwise, running the tools inside Docker will fail with obscure error
-messages.
+### Installing dependencies on Windows
 
-Working with the repository
----------------------------
+On windows, the chocolatey package manager can be used to install the dependencies. First install chocolatey following the instructions at https://chocolatey.org/install, then run the following command in a terminal with Administrator rights:
 
-Consider rebasing instead of merging your changes:
+`choco install openjdk11 git erlang visualstudio2019buildtools`
 
-    git pull --rebase
+To compile the RABS tools, make sure to run the command `./gradlew` build from a developer shell (Start -> Visual Studio 2019 -> Developer PowerShell for VS 2019).
 
-This avoids spurious "merge branch to master" commits.
+### Installing dependencies on Linux
 
-`git pull --rebase` will, in case both you and the remote repository
-have new commits, replay your local commits on top of upstream changes
-instead of adding a new local commit that merges the `master` and
-`origin/master` branches.  Conflicts have to be resolved per patch
-(via `git add` + `git rebase --continue`) instead of in one go, but we
-get a cleaner history.
+On Linux, check if your distribution offers the necessary programs pre-packaged in the version needed (JDK11, Erlang >= 23, a C compiler); otherwise download from the distribution pages linked above.
+
+## Compiling the RABS compiler from source
+
+To compile the RABS compiler from source, clone the git repository and run gradle (after installing the necessary dependencies):
+
+
+### Linux or macOS
+
+`git clone https://github.com/razi236/ResourceABS`
+
+`cd abstools`
+
+`./gradlew assemble`
+
+`frontend/bin/absc --help`
+
+### Windows
+
+`git clone "https://github.com/razi236/ResourceABS"`
+
+`cd abstools`
+
+`.\gradlew assemble`
+
+`frontend\bin\absc.bat --help`
+
+
+
+
