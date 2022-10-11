@@ -1,0 +1,99 @@
+module Resource;
+data Quality =
+    Efficiency(Int)
+    | BioTechnician
+    | LIS
+    | ProcessingMachine
+    | EmbeddingMachine
+    | Pathologist
+    | Receptionist
+    ;
+
+module Pathology;
+
+interface Reception
+{
+    Unit registerCase(Int priority, String sampleType);
+    Unit setSpecimenList(Triple<Int, Int, String> x);
+    List<Triple<Int, Int, String>> getSpecimenList();
+    Triple<Int, Int, String> popSpecimen();
+}
+class Reception implements Reception
+{
+    List<Triple<Int, Int, String>> specimenList = list[];
+    Int caseNum = 1;
+    Unit registerCase(Int priority, String sampleType)
+    {
+        Bool flag = False;
+        Triple<Int, Int, String> newSpecimen = Triple(caseNum,priority,sampleType);
+        foreach(y in specimenList){
+            if(sndT(y)<=priority){
+                flag = True;
+            }
+            if(sndT(y)>priority){
+                specimenList = appendright(specimenList,newSpecimen);
+                flag = True;
+            }
+        }
+        if(flag == False){
+            List<Triple<Int, Int, String>> tempList = list[Triple(caseNum,priority,sampleType)];
+            specimenList = concatenate(tempList,specimenList);
+        }
+        caseNum = caseNum + 1;
+        this.print();
+    }
+    Unit print()
+    {
+        foreach(y in specimenList){
+            println(`($fstT(y)$,$sndT(y)$,$trdT(y)$)`);
+        }
+        println("*******************");
+    }
+    Unit setSpecimenList(Triple<Int, Int, String> x)
+    {
+        specimenList = appendright(specimenList,x);
+    }
+    List<Triple<Int, Int, String>> getSpecimenList()
+    {
+        return specimenList;
+    }
+    Triple<Int, Int, String> popSpecimen()
+    {
+        Triple<Int, Int, String> s = head(specimenList);
+        specimenList = tail(specimenList);
+        return s;
+    }
+}
+interface Grossing
+{
+    List<Triple<Int, Int, String>> gross(Triple<Int, Int, String> x);
+}
+class Grossing implements Grossing
+{
+    List<Triple<Int, Int, String>> gross(Triple<Int, Int, String> x)
+    {
+        // Create a list of blocks associated to a single case, with same case ID and priority.
+        List<Triple<Int, Int, String>> blockList = list[];
+        // To Do
+        return blockList;
+    }
+}
+interface Processing
+{
+    List<Triple<Int, Int, String>> process();
+}
+
+{
+    Reception reception = new Reception();
+    Grossing grossing = new Grossing();
+    Triple<Int, Int, String> sp = Triple(1,1,"");
+    List<Triple<Int, Int, String>> blockList = list[];
+    List<Int> ri = list[];
+    registerCase(reception,3,"Skin Test") after dl 1;
+    registerCase(reception,1,"Blood Test") after dl 1;
+    registerCase(reception,1,"Blood Test 1") after dl 1;
+    registerCase(reception,2,"Blood Test") after dl 1;
+    sp = popSpecimen(reception) after dl 1;
+    blockList = gross(grossing,sp) after dl 10;
+    await r!add1(list[set[BioTechnician, Efficiency(2)]]);
+}

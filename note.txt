@@ -24,3 +24,6 @@ Sync call is an exp and it must be either in assignment_stmt. So better is to av
  Summarize in simple words, what the language is for and what the tools do and then go for technical details.
 
 
+*** Our language do not have Map, List and loops in syntax.
+
+
