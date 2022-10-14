@@ -67,8 +67,8 @@ public class PrettyPrinterBackEnd extends Main {
         ABSFormatter formatter = new DefaultABSFormatter(writer);
         model.doPrettyPrint(writer, formatter);*/
 
-        File file = new File("/Users/muhammadrizwanali/Desktop/GitHub/abstools/RABS.abs");
-        FileInputStream inputStream = new FileInputStream("/Users/muhammadrizwanali/Desktop/GitHub/abstools/ResourceManagerAPI.abs");
+        File file = new File("RABS.abs");
+        FileInputStream inputStream = new FileInputStream("ResourceManagerAPI.abs");
         FileOutputStream outputStream = new FileOutputStream(file);
         PrintWriter writer = null;
         try {

@@ -1,13 +1,5 @@
 module Resource;
-data Quality =
-    Efficiency(Int)
-    | BioTechnician
-    | LIS
-    | ProcessingMachine
-    | EmbeddingMachine
-    | Pathologist
-    | Receptionist
-    ;
+
 
 module Pathology;
 
@@ -16,7 +8,6 @@ interface Reception
     Unit registerCase(Int priority, String sampleType);
     Unit setSpecimenList(Triple<Int, Int, String> x);
     List<Triple<Int, Int, String>> getSpecimenList();
-    Triple<Int, Int, String> popSpecimen();
 }
 class Reception implements Reception
 {
@@ -55,13 +46,8 @@ class Reception implements Reception
     }
     List<Triple<Int, Int, String>> getSpecimenList()
     {
-        return specimenList;
-    }
-    Triple<Int, Int, String> popSpecimen()
-    {
-        Triple<Int, Int, String> s = head(specimenList);
-        specimenList = tail(specimenList);
-        return s;
+        List<Triple<Int, Int, String>> temp = specimenList;
+        return temp;
     }
 }
 interface Grossing
@@ -86,14 +72,15 @@ interface Processing
 {
     Reception reception = new Reception();
     Grossing grossing = new Grossing();
-    Triple<Int, Int, String> sp = Triple(1,1,"");
+    Triple<Int, Int, String> sp = Triple(1,1,"Ali");
+    List<Triple<Int, Int, String>> caseList = list[];
     List<Triple<Int, Int, String>> blockList = list[];
-    List<Int> ri = list[];
+    List<Int> rid = list[];
     registerCase(reception,3,"Skin Test") after dl 1;
     registerCase(reception,1,"Blood Test") after dl 1;
     registerCase(reception,1,"Blood Test 1") after dl 1;
     registerCase(reception,2,"Blood Test") after dl 1;
-    sp = popSpecimen(reception) after dl 1;
-    blockList = gross(grossing,sp) after dl 10;
-    await r!add1(list[set[BioTechnician, Efficiency(2)]]);
+    caseList = getSpecimenList(reception) after dl 5;
+    //blockList = gross(grossing,sp) after dl 10;
+    rid = await r!add1(list[set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(5)],set[BioTechnician, Efficiency(3)]]);
 }

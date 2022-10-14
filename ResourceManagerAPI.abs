@@ -3,13 +3,12 @@ module ResourceManager;
 import * from Resource;
 export *;
 
-
 data Availability = Free | Busy;
 
 interface ResourceManager {
     List<Int> add1(List<Set<Quality>> newResources);
-    List<Int> hold(List<Set<Quality>> wantedResources);
-    Unit release(List<Int> ids);
+    List<Int> hold1(List<Set<Quality>> wantedResources);
+    Unit release1(List<Int> ids);
 }
 
 class ResourceManager implements ResourceManager {
@@ -27,7 +26,7 @@ class ResourceManager implements ResourceManager {
         return result;
     }
 
-    List<Int> hold(List<Set<Quality>> wantedResources) {
+    List<Int> hold1(List<Set<Quality>> wantedResources) {
         List<Int> result = list[];
         Map<Int, Pair<Availability, Set<Quality>>> lr = this.resources;
         while (result == Nil) {
@@ -59,7 +58,7 @@ class ResourceManager implements ResourceManager {
         return result;
     }
 
-    Unit release(List<Int> ids) {
+    Unit release1(List<Int> ids) {
         Set<Int> all_ids = keys(resources);
         foreach (id in ids) {
             if (contains(all_ids, id)) {

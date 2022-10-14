@@ -37,6 +37,7 @@ class ABC implements ABC,JKL
     ABC o = new ABC();
     JKL o1 = new JKL();
     ABC o2 = new ABC();
-    Fut<Int> f = !xyz(o,(o1,o2),("Rizwan")) after dl 10;
+    Fut<Int> f;
+    f = !xyz(o,o1,o2,"Rizwan") after dl 10;
 
 }
