@@ -1,8 +1,12 @@
 module Resource;
-
+data Quality =
+    Efficiency(Int)
+    | Pathologist
+    | BioTechnician
+    ;
 
 module Pathology;
-
+import * from Resource;
 interface Reception
 {
     Unit registerCase(Int priority, String sampleType);
@@ -46,7 +50,7 @@ class Reception implements Reception
     }
     List<Triple<Int, Int, String>> getSpecimenList()
     {
-        List<Triple<Int, Int, String>> temp = specimenList;
+        List<Triple<Int, Int, String>> temp = list[];
         return temp;
     }
 }
@@ -76,11 +80,15 @@ interface Processing
     List<Triple<Int, Int, String>> caseList = list[];
     List<Triple<Int, Int, String>> blockList = list[];
     List<Int> rid = list[];
+    Fut<List<Triple<Int, Int, String>>> f;
     registerCase(reception,3,"Skin Test") after dl 1;
     registerCase(reception,1,"Blood Test") after dl 1;
     registerCase(reception,1,"Blood Test 1") after dl 1;
     registerCase(reception,2,"Blood Test") after dl 1;
-    caseList = getSpecimenList(reception) after dl 5;
-    //blockList = gross(grossing,sp) after dl 10;
+    //caseList = getSpecimenList(reception) after dl 5;
+    f = !gross(grossing,sp) after dl 10;
+    await f?;
+    blockList = f.get;
+
     rid = await r!add1(list[set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(5)],set[BioTechnician, Efficiency(3)]]);
 }

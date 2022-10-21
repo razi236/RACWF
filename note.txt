@@ -26,6 +26,4 @@ Sync call is an exp and it must be either in assignment_stmt. So better is to av
 
 *** Our language do not have Map, List and loops in syntax.
 
-
-Issue in import from module Resource to module ResourceManager
 Issue of usage of ResourceManager in our language
