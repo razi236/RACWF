@@ -9,6 +9,7 @@ aspect doPrettyPrinter {
     /** Controls whether to include the standard library in pretty-printing
      */
     public boolean Model.doPrettyPrintStdLib = false;
+    public boolean Model.doPrettyPrintResourceManager = false;
 
     public void List.doPrettyPrint(PrintWriter stream, ABSFormatter formatter, String separator) {
         if (getNumChild() > 0) {
@@ -92,7 +93,7 @@ aspect doPrettyPrinter {
 
     public void Model.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
         for (ModuleDecl d : getModuleDecls()) {
-            if (doPrettyPrintStdLib || (! Constants.BUILT_IN_LIBS.contains(d.getName()))) {
+            if (doPrettyPrintStdLib || doPrettyPrintResourceManager || (! Constants.BUILT_IN_LIBS.contains(d.getName()))) {
                 d.doPrettyPrint(stream, formatter);
             }
         }
@@ -107,8 +108,8 @@ aspect doPrettyPrinter {
 
     public void ModuleDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
         stream.println("module " + getName() + ";");
-        stream.println("import * from ResourceManager;");
-        stream.println("export *;");
+        stream.println("import * from ABS.ResourceManager;");
+        //stream.println("export *;");
         formatter.afterStmt();
 
         for (Export e : getExportList()) {
@@ -121,7 +122,7 @@ aspect doPrettyPrinter {
         formatter.afterStmt();
 
         for (Import i : getImportList()) {
-            if (i instanceof StarImport && ((StarImport)i).getModuleName().equals(Constants.STDLIB_NAME)) continue;
+            if (i instanceof StarImport && ((StarImport)i).getModuleName().equals(Constants.ResourceManager_NAME)) continue;
             i.doPrettyPrint(stream, formatter);
             stream.println();
             formatter.afterStmt();
@@ -290,8 +291,8 @@ aspect doPrettyPrinter {
             stream.println("{");
             formatter.afterOpenBrace();
             formatter.afterStmt();
-            stream.println("ResourceManager r = new ResourceManager();");
-            formatter.afterStmt();
+            //stream.println("ResourceManager r = new ResourceManager();");
+            //formatter.afterStmt();
             getStmtList().doPrettyPrint(stream, formatter);
             stream.println();
             formatter.beforeCloseBrace();

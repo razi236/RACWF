@@ -1,12 +1,5 @@
-module Resource;
-data Quality =
-    Efficiency(Int)
-    | Pathologist
-    | BioTechnician
-    ;
-
 module Pathology;
-import * from Resource;
+import * from ABS.ResourceManager;
 interface Reception
 {
     Unit registerCase(Int priority, String sampleType);
@@ -56,15 +49,18 @@ class Reception implements Reception
 }
 interface Grossing
 {
-    List<Triple<Int, Int, String>> gross(Triple<Int, Int, String> x);
+    List<Triple<Int, Int, String>> gross(Triple<Int, Int, String> x, ResourceManager rm);
 }
 class Grossing implements Grossing
 {
-    List<Triple<Int, Int, String>> gross(Triple<Int, Int, String> x)
+    List<Triple<Int, Int, String>> gross(Triple<Int, Int, String> x, ResourceManager rm)
     {
         // Create a list of blocks associated to a single case, with same case ID and priority.
-        List<Triple<Int, Int, String>> blockList = list[];
+        List<Triple<Int, Int, String>> blockList = list[x]; // tempory assign x
+        List<Int> rid = list[];
+        rid = holdRes(rm,list[set[BioTechnician, Efficiency(2)],set[ProcessingMachine, Efficiency(10)]]) after dl 1;
         // To Do
+        releaseRes(rm,rid) after dl 1;
         return blockList;
     }
 }
@@ -72,23 +68,35 @@ interface Processing
 {
     List<Triple<Int, Int, String>> process();
 }
+class Processing implements Processing
+{
+    List<Triple<Int, Int, String>> process()
+    {
+        List<Triple<Int, Int, String>> temp = list[];
+        // To Do
+        return temp;
+    }
+}
 
 {
+    ResourceManager r = new ResourceManager();
     Reception reception = new Reception();
     Grossing grossing = new Grossing();
     Triple<Int, Int, String> sp = Triple(1,1,"Ali");
     List<Triple<Int, Int, String>> caseList = list[];
     List<Triple<Int, Int, String>> blockList = list[];
     List<Int> rid = list[];
+    Fut<List<Int>> fid;
+    List<Triple<Int, Int, String>> processList = list[];
     Fut<List<Triple<Int, Int, String>>> f;
     registerCase(reception,3,"Skin Test") after dl 1;
     registerCase(reception,1,"Blood Test") after dl 1;
     registerCase(reception,1,"Blood Test 1") after dl 1;
     registerCase(reception,2,"Blood Test") after dl 1;
     //caseList = getSpecimenList(reception) after dl 5;
-    f = !gross(grossing,sp) after dl 10;
+    fid = !addRes(r,list[set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(5)],set[BioTechnician, Efficiency(3)],set[ProcessingMachine, Efficiency(10)],set[EmbeddingMachine, Efficiency(5)]]) after dl 1;
+    await fid?;
+    f = !gross(grossing,sp,r) after dl 10;
     await f?;
     blockList = f.get;
-
-    rid = await r!add1(list[set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(5)],set[BioTechnician, Efficiency(3)]]);
 }

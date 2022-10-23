@@ -31,6 +31,7 @@ public class PrettyPrinterBackEnd extends Main {
     public int compile(Absc args) throws Exception {
         this.arguments = args;
         final Model model = parse(arguments.files);
+
         /*
         if (arguments.prettyprint_keepsugar) {
             model.doAACrewrite = false;
@@ -68,7 +69,8 @@ public class PrettyPrinterBackEnd extends Main {
         model.doPrettyPrint(writer, formatter);*/
 
         File file = new File("RABS.abs");
-        FileInputStream inputStream = new FileInputStream("ResourceManagerAPI.abs");
+        PrintWriter writer = null;
+        /*FileInputStream inputStream = new FileInputStream("ResourceManagerAPI.abs");
         FileOutputStream outputStream = new FileOutputStream(file);
         PrintWriter writer = null;
         try {
@@ -94,15 +96,17 @@ public class PrettyPrinterBackEnd extends Main {
             if (outputStream != null) {
                 outputStream.close();
             }
-        }
+        }*/
         BufferedWriter br = null;
         FileWriter fr = null;
         try {
-            fr = new FileWriter(file, true);
+            fr = new FileWriter(file);
             br = new BufferedWriter(fr);
             writer = new PrintWriter(br);
             System.setProperty("line.separator", System.lineSeparator());
             ABSFormatter formatter = new DefaultABSFormatter(writer);
+            model.doPrettyPrintStdLib = false;
+            model.doPrettyPrintResourceManager = false;
             model.doPrettyPrint(writer, formatter);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

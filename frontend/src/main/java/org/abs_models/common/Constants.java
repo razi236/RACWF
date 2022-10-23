@@ -14,6 +14,8 @@ public class Constants {
     public static final String FLI_NAME = "ABS.FLI";
     public static final String META_NAME = "ABS.Meta";
     public static final String DC_NAME = "ABS.DC";
+
+    public static final String ResourceManager_NAME = "ABS.ResourceManager";
     public static final String SCHEDULE_NAME = "ABS.Scheduler";
     public static final String PL_NAME = "ABS.Productline";
     public static final String EXCEPTIONS_NAME = "ABS.StdLib.Exceptions";
@@ -29,7 +31,8 @@ public class Constants {
                                                    PL_NAME,
                                                    EXCEPTIONS_NAME,
                                                    SMARTDEPLOY_NAME,
-                                                   JUNIT_NAME));
+                                                   JUNIT_NAME,
+                                                    ResourceManager_NAME));
 
     public static final String FUNCTIONAL_BREAK_POINT_FUNCTION = "watch";
     public static boolean isFunctionalBreakPointFunctionName(String functionName) {
