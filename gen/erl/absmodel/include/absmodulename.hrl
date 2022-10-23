@@ -2,4 +2,4 @@
 -undef(ABSMAINMODULE).
 -define(ABSMAINMODULE,m_Pathology).
 -undef(ABSCOMPILERVERSION).
--define(ABSCOMPILERVERSION,"v1.9.3-232-g8f9cdd6e9").
+-define(ABSCOMPILERVERSION,"v1.9.3-233-gdc1bdb761").

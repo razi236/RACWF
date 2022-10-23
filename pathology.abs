@@ -43,8 +43,7 @@ class Reception implements Reception
     }
     List<Triple<Int, Int, String>> getSpecimenList()
     {
-        List<Triple<Int, Int, String>> temp = list[];
-        return temp;
+        return specimenList;
     }
 }
 interface Grossing
@@ -61,6 +60,7 @@ class Grossing implements Grossing
         rid = holdRes(rm,list[set[BioTechnician, Efficiency(2)],set[ProcessingMachine, Efficiency(10)]]) after dl 1;
         // To Do
         releaseRes(rm,rid) after dl 1;
+        println(toString(blockList));
         return blockList;
     }
 }
@@ -82,21 +82,23 @@ class Processing implements Processing
     ResourceManager r = new ResourceManager();
     Reception reception = new Reception();
     Grossing grossing = new Grossing();
-    Triple<Int, Int, String> sp = Triple(1,1,"Ali");
-    List<Triple<Int, Int, String>> caseList = list[];
+    List<Triple<Int, Int, String>> specimenList = list[];
+    Fut<List<Triple<Int, Int, String>>> f_specimenList;
     List<Triple<Int, Int, String>> blockList = list[];
     List<Int> rid = list[];
-    Fut<List<Int>> fid;
+    Fut<List<Int>> f_rid;
     List<Triple<Int, Int, String>> processList = list[];
     Fut<List<Triple<Int, Int, String>>> f;
     registerCase(reception,3,"Skin Test") after dl 1;
     registerCase(reception,1,"Blood Test") after dl 1;
     registerCase(reception,1,"Blood Test 1") after dl 1;
     registerCase(reception,2,"Blood Test") after dl 1;
-    //caseList = getSpecimenList(reception) after dl 5;
-    fid = !addRes(r,list[set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(5)],set[BioTechnician, Efficiency(3)],set[ProcessingMachine, Efficiency(10)],set[EmbeddingMachine, Efficiency(5)]]) after dl 1;
-    await fid?;
-    f = !gross(grossing,sp,r) after dl 10;
+    f_specimenList = !getSpecimenList(reception) after dl 5;
+    specimenList = f_specimenList.get;
+    Triple<Int, Int, String> specimen = head(specimenList);
+    f_rid = !addRes(r,list[set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(5)],set[BioTechnician, Efficiency(3)],set[ProcessingMachine, Efficiency(10)],set[EmbeddingMachine, Efficiency(5)]]) after dl 1;
+    await f_rid?;
+    f = !gross(grossing,specimen,r) after dl 10;
     await f?;
     blockList = f.get;
 }
