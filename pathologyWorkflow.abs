@@ -1,0 +1,156 @@
+module Pathology;
+import * from ABS.ResourceManager;
+interface Pathology
+{
+    Int registerCase(ResourceManager rm, Grossing g, Processing pr, Embedding em, Sectioning sc, Staining st);
+}
+class Pathology implements Pathology
+{
+    List<Triple<Int,Int,String>> processingTray = list[];
+    Int caseNum = 1;
+    Int registerCase(ResourceManager rm, Grossing g, Processing pr, Embedding em, Sectioning sc, Staining st)
+    {
+        Pair<Int,String> newSpecimen = Pair(caseNum,"Test"+toString(caseNum));
+        consTime(1);
+        Fut<Int> f;
+        f = !gross(g,rm,pr,em,sc,st,newSpecimen) after dl 100;
+        await f?;
+        caseNum = caseNum+1;
+        return 0;
+    }
+}
+interface Grossing
+{
+    Int gross(ResourceManager rm, Processing pr, Embedding em, Sectioning sc, Staining st, Pair<Int,String> x);
+}
+class Grossing implements Grossing
+{
+    List<Triple<Int,Int,String>> processingTray = list[];
+    Int gross(ResourceManager rm, Processing pr, Embedding em, Sectioning sc, Staining st, Pair<Int,String> x)
+    {
+        Int i = 1;
+        List<Int> rid = list[];
+        rid = holdRes(rm,list[set[BioTechnician, Efficiency(2)]]) after dl 1;
+        consTime(5);
+        while(i<=3)
+        {
+            Triple<Int, Int, String> block = Triple(fst(x),i,snd(x));
+            if(length(processingTray)<10)
+                processingTray = appendright(processingTray,block);
+                //println(toString(processingTray));
+            if(length(processingTray)==10){
+                Fut<Int> f;
+                f = !process(pr,rm,em,sc,st,processingTray) after dl 100;
+                await f?;
+                processingTray = Nil;
+            }
+            i = i+1;
+        }
+        releaseRes(rm,rid) after dl 1;
+        return 0;
+    }
+}
+interface Processing
+{
+    Int process(ResourceManager rm,Embedding em,Sectioning sc,Staining st,List<Triple<Int,Int,String>> processingTray);
+}
+class Processing implements Processing
+{
+    List<Triple<Int,Int,String>> blockTray = list[];
+    Int process(ResourceManager rm,Embedding em,Sectioning sc,Staining st,List<Triple<Int,Int,String>> processingTray)
+    {
+        blockTray = Nil;
+        List<Int> rid = list[];
+        rid = holdRes(rm,list[set[ProcessingMachine, Efficiency(10)]]) after dl 1;
+        // Processing
+        consTime(5);
+        blockTray = concatenate(blockTray,processingTray);
+        println(toString(blockTray));
+        releaseRes(rm,rid) after dl 1;
+        while (!isEmpty(blockTray)){
+            Fut<Int> f;
+            f = !embed(em,rm,sc,st,head(blockTray)) after dl 15; // Manual Embedding
+            await f?;
+            blockTray = tail(blockTray);
+        }
+        return 0;
+    }
+}
+interface Embedding
+{
+    // Manual Embedding
+    Int embed(ResourceManager rm,Sectioning sc,Staining st,Triple<Int,Int,String> block);
+}
+class Embedding implements Embedding
+{
+    Int embed(ResourceManager rm,Sectioning sc,Staining st,Triple<Int,Int,String> block)
+    {
+        List<Int> rid = list[];
+        rid = holdRes(rm,list[set[BioTechnician, Efficiency(2)]]) after dl 1;
+        consTime(5);
+        releaseRes(rm,rid) after dl 1;
+        Fut<Int> f;
+        f = !section(sc,rm,st,block) after dl 15;
+        await f?;
+        return 0;
+    }
+}
+interface Sectioning
+{
+    Int section(ResourceManager rm,Staining st,Triple<Int,Int,String> block);
+}
+class Sectioning implements Sectioning
+{
+    List<Triple<Int,Int,String>> slideTray = list[];
+    Int section(ResourceManager rm,Staining st,Triple<Int,Int,String> block){
+        List<Int> rid = list[];
+        rid = holdRes(rm,list[set[BioTechnician, Efficiency(2)]]) after dl 1;
+        consTime(5);
+        releaseRes(rm,rid) after dl 1;
+        if(length(slideTray)<5)
+            slideTray = appendright(slideTray,block);
+            //println(toString(slideTray));
+        if(length(slideTray)==5){
+            Fut<Int> f;
+            f = !stain(st,rm,slideTray) after dl 100;
+            await f?;
+            slideTray = Nil;
+        }
+        return 0;
+    }
+}
+interface Staining
+{
+    Int stain(ResourceManager rm,List<Triple<Int,Int,String>> slideTray);
+}
+class Staining implements Staining
+{
+    Int stain(ResourceManager rm,List<Triple<Int,Int,String>> slideTray){
+        List<Int> rid = list[];
+        rid = holdRes(rm,list[set[StainingMachine, Efficiency(5)]]) after dl 1;
+        consTime(5);
+        releaseRes(rm,rid) after dl 1;
+        return 0;
+    }
+}
+
+{
+    ResourceManager rm = new ResourceManager();
+    Pathology p = new Pathology();
+    Grossing g = new Grossing();
+    Processing pr = new Processing();
+    Embedding em = new Embedding();
+    Sectioning sc = new Sectioning();
+    Staining st = new Staining();
+    Fut<List<Int>> f_rid;
+    f_rid = !addRes(rm,list[set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(5)],set[BioTechnician, Efficiency(3)],set[ProcessingMachine, Efficiency(10)],set[StainingMachine, Efficiency(5)]]) after dl 1;
+    await f_rid?;
+    Int i = 0;
+    while(i<15){
+    //while(True){
+        Fut<Int> f;
+        f = !registerCase(p,rm,g,pr,em,sc,st) after dl 100;
+        consTime(2);
+        i = i+1;
+    }
+}

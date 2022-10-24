@@ -1413,6 +1413,7 @@ data Quality =
     | BioTechnician
     | ProcessingMachine
     | EmbeddingMachine
+    | StainingMachine
     ;
 data Availability = Free | Busy;
 
@@ -1420,12 +1421,16 @@ interface ResourceManager {
     List<Int> addRes(List<Set<Quality>> newResources);
     List<Int> holdRes(List<Set<Quality>> wantedResources);
     Unit releaseRes(List<Int> ids);
+    Unit print();
 }
 
 class ResourceManager implements ResourceManager {
     Map<Int, Pair<Availability, Set<Quality>>> resources = map[];
     Int resource_counter = 0;
 
+    Unit print() {
+        println(toString(resources));
+    }
     List<Int> addRes(List<Set<Quality>> newResources) {
         List<Int> result = list[];
         foreach (r in newResources) {
@@ -1433,7 +1438,7 @@ class ResourceManager implements ResourceManager {
             resources = insert(resources, Pair(resource_counter, Pair(Free, r)));
             result = Cons(resource_counter, result);
         }
-        println(toString(resources));
+        //println(toString(resources));
         return result;
     }
 
@@ -1463,14 +1468,16 @@ class ResourceManager implements ResourceManager {
                 lr = this.resources;
             } else {
                 // we're happy
+                /*
                 println("***********************************************");
                 println("We have acquired all the requested resources :)");
                 println("***********************************************");
+                */
                 this.resources = lr;
             }
         }
 
-        println(toString(this.resources));
+        //println(toString(this.resources));
         return result;
     }
 
@@ -1482,10 +1489,13 @@ class ResourceManager implements ResourceManager {
                 resources = put(resources, id, Pair(Free, snd(entry)));
             }
         }
+        /*
         println("***********************************************");
         println("We have released all the acquired resources :)");
         println("***********************************************");
-        println(toString(this.resources));
+        */
+
+        //println(toString(this.resources));
     }
 }
 
