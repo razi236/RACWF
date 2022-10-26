@@ -1,0 +1,108 @@
+module ScpExample;
+import * from ABS.ResourceManager;
+interface Retailer
+{
+    Int sale(ResourceManager rm, Supplier sp, Courier cr, Int p);
+}
+class Retailer implements Retailer
+{
+    Int sale(ResourceManager rm, Supplier sp, Courier cr, Int p)
+    {
+        Fut<Int> f1; Fut<Int> f2; Fut<Int> f3;
+        WareHouse wh = new WareHouse();
+        Bool found = False;
+        Fut<Bool> f;
+        f = !inWareHouse(wh,p) after dl 1;
+        found = f.get;
+        /*
+        if(found) {
+            //f1 = !pack(wh,p) after dl 5;
+            //f2 = !supply(sp,rm,cr,p) after dl 15;
+        }
+        else {
+
+        }
+        */
+        //f3 = !deliver(cr,rm,p) after f1,f2 dl 10;
+        //await f3?;
+        return 0;
+    }
+}
+
+interface WareHouse
+{
+    Bool inWareHouse(Int p);
+    Int pack(Int p);
+}
+class WareHouse implements WareHouse
+{
+    List<Int> products = list[1,2,3,4,5,6,7,8,9,10];
+    Bool inWareHouse(Int p)
+    {
+        Bool found = False;
+        foreach(x in products)
+        {
+            if(x == p)
+                found = True;
+        }
+        return found;
+    }
+    Int pack(Int p)
+    {
+        Int k1 = random(8);
+        consTime(k1);   // Packing Time
+        return 0;
+    }
+}
+
+interface Supplier
+{
+    Int supply(ResourceManager rm, Courier cr, Int p);
+}
+class Supplier implements Supplier
+{
+    Int supply(ResourceManager rm, Courier cr, Int p)
+    {
+        Fut<Int> f4;
+        Int k2 = random(8);
+        consTime(k2);   // Packing Time
+        f4 = !deliver(cr,rm,p) after dl 10;
+        await f4?;
+        return 0;
+    }
+}
+
+interface Courier
+{
+    Int deliver(ResourceManager rm, Int p);
+}
+class Courier implements Courier
+{
+    Int deliver(ResourceManager rm, Int p)
+    {
+        List<Int> rid = list[];
+        rid = holdRes(rm,list[set[VanDriver, Efficiency(5)],set[DeliveryVan, Efficiency(1500)]]) after dl 1;
+        Int k3 =  random(10);
+        consTime(k3);
+        releaseRes(rm,rid) after dl 1;
+        println("Delivered :)");
+        return 0;
+    }
+}
+{
+    ResourceManager rm = new ResourceManager();
+    Retailer rt = new Retailer();
+    Supplier sp = new Supplier();
+    Courier cr = new Courier();
+    Fut<List<Int>> f_rid;
+    f_rid = !addRes(rm,list[set[VanDriver, Efficiency(5)],set[DeliveryVan, Efficiency(1500)]]) after dl 1;
+    await f_rid?;
+    Fut<Int> f5;
+    f5 = !sale(rt,rm,sp,cr,5) after dl 20;
+    await f5?;
+}
+
+
+
+
+

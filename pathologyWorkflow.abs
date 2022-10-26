@@ -35,11 +35,11 @@ class Grossing implements Grossing
         while(i<=3)
         {
             Triple<Int, Int, String> block = Triple(fst(x),i,snd(x));
-            if(length(processingTray)<10)
+            if(length(processingTray)<5)
                 processingTray = appendright(processingTray,block);
                 //println("Processing Tary;");
                 //println(toString(processingTray));
-            if(length(processingTray)==10){
+            if(length(processingTray)==5){
                 Fut<Int> f;
                 f = !process(pr,rm,em,sc,st,ma,processingTray) after dl 100;
                 //await f?;
@@ -181,7 +181,7 @@ class MicroscopicAnalysis implements MicroscopicAnalysis
     f_rid = !addRes(rm,list[set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[Pathologist, Efficiency(2)],set[Pathologist, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[ProcessingMachine, Efficiency(10)],set[StainingMachine, Efficiency(5)]]) after dl 1;
     await f_rid?;
     Int i = 0;
-    while(i<5){
+    while(i<7){
     //while(True){
         Fut<Int> f;
         f = !registerCase(p,rm,g,pr,em,sc,st,ma) after dl 150;
@@ -189,4 +189,5 @@ class MicroscopicAnalysis implements MicroscopicAnalysis
         consTime(2);
         i = i+1;
     }
+
 }

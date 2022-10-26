@@ -1414,6 +1414,9 @@ data Quality =
     | ProcessingMachine
     | EmbeddingMachine
     | StainingMachine
+    | TruckDriver
+    | VanDriver
+    | DeliveryVan
     ;
 data Availability = Free | Busy;
 
@@ -1509,12 +1512,18 @@ class AwaitFut implements AwaitFut
     Bool resolved = False;
     Unit awaitFut(List<Fut<Int>> fut)
     {
-           foreach(f in fut)
-           {
-               await f?;
-           }
-           resolved = True;
-           println("Future Resolved:)");
+        try {
+            if(!isEmpty(fut)){
+               foreach(f in fut)
+               {
+                   await f?;
+               }
+               resolved = True;
+               println("Future Resolved:)");
+            }
+        } catch {
+            NullPointerException  => println(`Future is not initialized`);
+        }
     }
     Bool checkFut()
     {
