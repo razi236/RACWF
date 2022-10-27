@@ -291,8 +291,8 @@ aspect doPrettyPrinter {
             stream.println("{");
             formatter.afterOpenBrace();
             formatter.afterStmt();
-            //stream.println("ResourceManager r = new ResourceManager();");
-            //formatter.afterStmt();
+            stream.println("ResourceManager rm = new ResourceManager();");
+            formatter.afterStmt();
             getStmtList().doPrettyPrint(stream, formatter);
             stream.println();
             formatter.beforeCloseBrace();
@@ -393,7 +393,7 @@ aspect doPrettyPrinter {
         getCallee().doPrettyPrint(stream, formatter);
         doPrettyPrintCallType(stream, formatter);
         stream.print(getMethod().replaceAll("\\$", ""));
-        stream.print("(");
+        stream.print("(rm,");
         getParamList().doPrettyPrint(stream, formatter, ",");
         stream.print(")");
     }
@@ -433,7 +433,7 @@ aspect doPrettyPrinter {
          getCallee().doPrettyPrint(stream, formatter);
          doPrettyPrintCallType(stream, formatter);
          stream.print(getMethod().replaceAll("\\$", ""));
-         stream.print("(");
+         stream.print("(rm,");
          getParamList().doPrettyPrint(stream, formatter, ",");
          stream.print(")");
          stream.print(";");
@@ -492,19 +492,19 @@ aspect doPrettyPrinter {
     }
 
     public void AddResStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            stream.print("await r!add1(");
+            stream.print("await rm!addRes(");
             getParamList().doPrettyPrint(stream, formatter, ",");
             stream.print(");");
     }
 
     public void HoldExp.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-             stream.print("await r!hold1(");
+             stream.print("await rm!holdRes(");
              getParamList().doPrettyPrint(stream, formatter, ",");
              stream.print(")");
     }
 
     public void ReleaseResStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-                stream.print("await r!release1(");
+                stream.print("await rm!releaseRes(");
                 getRes().doPrettyPrint(stream, formatter);
                 stream.print(");");
     }
@@ -1106,7 +1106,7 @@ aspect doPrettyPrinter {
         getReturnType().doPrettyPrint(stream, formatter);
         stream.print(" ");
         stream.print(getName().replaceAll("\\$", ""));
-        stream.print("(");
+        stream.print("(ResourceManager rm,");
         getParams().doPrettyPrint(stream, formatter, ",");
         stream.print(")");
     }
