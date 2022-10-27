@@ -787,7 +787,7 @@ aspect translate {
         if(psi.isEmpty())
         {
             String new_cost = getMin().toString();
-            new_cost = cleanCost(new_cost);
+            //new_cost = cleanCost(new_cost);
             //System.out.println("New Cost of method "+method+"  is "+new_cost);
             //Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet = map.get(method);
             String current_cost = quartet.getValue3();
