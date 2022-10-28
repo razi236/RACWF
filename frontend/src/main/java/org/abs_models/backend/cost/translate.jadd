@@ -869,7 +869,8 @@ aspect translate {
         Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart_2 = map_2.get(method);
         String ta_2 = quart_2.getValue2();
         String t_2 = quart_2.getValue3();
-        String ta = "max("+ta_1+","+ta_2+")";
+        //String ta = "max("+ta_1+","+ta_2+")";
+        String ta = null;
         String t = "max("+t_1+","+t_2+")";
         System.out.println("t_1 = "+t_1);
         System.out.println("t_2 = "+t_2);
