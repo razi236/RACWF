@@ -805,7 +805,7 @@ aspect translate {
         {
             Map<Set<String>,String> temp_psi = new HashMap<Set<String>,String>(psi);
             String new_cost = getMin().toString();
-            new_cost = cleanCost(new_cost);
+            //new_cost = cleanCost(new_cost);
             String current_cost = quartet.getValue3();
             String result = null;
             if(current_cost == null)

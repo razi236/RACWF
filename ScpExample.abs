@@ -11,16 +11,21 @@ class Retailer implements Retailer
         Fut<Int> f1; Fut<Int> f2; Fut<Int> f3;
         WareHouse wh = new WareHouse();
         Bool found = False;
+        Int k = 10;
         //Fut<Bool> f;
-        //f = !inWareHouse(wh,p) after dl 1;
+        //consTime(k);
+        //found = inWareHouse(wh,p) after dl 1;
+
         //found = f.get;
-        if(True) {
-            f1 = !pack(wh,p) after dl 5;
+        if(found) {
+           f1 = !pack(wh,p) after dl 5;
+           await f1?;
         }
         else {
             f2 = !supply(sp,cr,p) after dl 15;
+            await f2?;
         }
-        f3 = !deliver(cr,p) after f1,f2 dl 10;
+        f3 = !deliver(cr,p) after dl 10;
         await f3?;
         return 0;
     }
