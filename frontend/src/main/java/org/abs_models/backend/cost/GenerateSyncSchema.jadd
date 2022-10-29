@@ -243,8 +243,6 @@ aspect generate_sync_schema {
     }
 
     public void ReturnStmt.generate_sync_schema(String m,PrintWriter o) {
-
-
     }
 
     public void SkipStmt.generate_sync_schema(String m,PrintWriter o) {

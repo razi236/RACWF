@@ -634,10 +634,10 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AwaitStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
-        System.out.println("in await");
+        //System.out.println("in await");
         String f = getGuard().toString();
         f = cleanGuard(f);
-        System.out.println("Guard = "+f);
+        //System.out.println("Guard = "+f);
         Set<String> fut_set =  new HashSet<String>();
         fut_set.add(f);
         Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet = map.get(method);
@@ -733,7 +733,7 @@ aspect translate {
                 }
                 else // case: d
                 {
-                    System.out.println("Fut not in I");
+                    //System.out.println("Fut not in I");
                     Iterator<String> f_itr_1 = map_I.keySet().iterator();
                     while (f_itr_1.hasNext()) {
                         String fut_1 = f_itr_1.next();
