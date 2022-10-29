@@ -173,7 +173,7 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Call1Exp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
-        System.out.println("In non_returning method call");
+        //System.out.println("In non_returning method call");
         Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map1 = new HashMap<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>(map);
         Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart = map1.get(method);
         Map<String,Set<String>> map_I = new HashMap<String,Set<String>>(quart.getValue0());
@@ -183,7 +183,7 @@ aspect translate {
         List<PureExp> fut_list = getQList();
         if(fut_list.getNumChild()>0)
         {
-            System.out.println("with dependency");
+            //System.out.println("with dependency");
             for (PureExp x : fut_list)
             {
                 Set<String> fut_set =  new HashSet<String>();
@@ -219,7 +219,7 @@ aspect translate {
         }
         else
         {
-            System.out.println("without dependency");
+            //System.out.println("without dependency");
             quart = transCallType(quart,quart.getValue2(),quart.getValue3(),sync_schema,called_method,null);
         }
         map.put(method,quart);
@@ -229,7 +229,7 @@ aspect translate {
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> Call1Exp.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method,String fut) {
         //System.out.println("In Call");
         Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map1 = new HashMap<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>(map);
-        System.out.println("In returning method call");
+        //System.out.println("In returning method call");
         Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quart = map1.get(method);
         Map<String,Set<String>> map_I = new HashMap<String,Set<String>>(quart.getValue0());
         Map<Set<String>,String> map_Psi = new HashMap<Set<String>,String>(quart.getValue1());
@@ -238,7 +238,7 @@ aspect translate {
         List<PureExp> fut_list = getQList();
         if(fut_list.getNumChild()>0)
         {
-            System.out.println("with dependency");
+            //System.out.println("with dependency");
             for (PureExp x : fut_list)
             {
                 Set<String> fut_set =  new HashSet<String>();
@@ -274,7 +274,7 @@ aspect translate {
         }
         else
         {
-            System.out.println("without dependency");
+            //System.out.println("without dependency");
             quart = transCallType(quart,quart.getValue2(),quart.getValue3(),sync_schema,called_method,fut);
         }
 

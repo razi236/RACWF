@@ -13,7 +13,7 @@ class Retailer implements Retailer
         Bool found = False;
         Int k = 10;
         //Fut<Bool> f;
-        consTime(k);
+        //consTime(k);
         //found = inWareHouse(wh,p) after dl 1;
 
         //found = f.get;
@@ -25,7 +25,7 @@ class Retailer implements Retailer
             f2 = !supply(sp,cr,p) after dl 15;
             await f2?;
         }
-        f3 = !deliver(cr,p) after f1&f2 dl 10;
+        f3 = !deliver(cr,p) after f1,f2 dl 10;
         await f3?;
         return 0;
     }
