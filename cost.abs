@@ -1,19 +1,5 @@
-module Resource; // must be module Resource to declare some resource qualities.
-data Quality =
-    Efficiency(Int)
-    | Pathologist
-    | Radiologist
-    | Gynaecologist
-    | Orthopedic
-    | Driver
-    | VanDriver
-    | Van
-    | Truck
-    | Engineer
-    | Teacher
-    ;
-
 module ABS;
+import * from ABS.ResourceManager;
 interface IJK
 {
     Int jkl(ABC a, IJK k);
@@ -58,18 +44,20 @@ class ABC implements ABC
     IJK o3 = new IJK();
     //consTime(25);
     //i = xyz(o,o1,o2,o3,"Muhammad") after dl 10;
-    f = !xyz(o,o1,o2,o3,"Muhammad") after dl 10;
+    f = !xyz(o1,o,o2,o3,"Muhammad") after dl 10;
     f1 = !xyz(o,o1,o2,o3,"Muhammad") after dl 10;
-    /*if(b==true)
+    //f2 = !xyz(o,o1,o2,o3,"Muhammad") after f1,f dl 10;
+    /*
+    if(b==true)
     {
         i = xyz(o,o1,o2,o3,"Muhammad") after dl 10;
     }
     else
     {
         i = efg(o,o1) after dl 3;
-    }*/
-
-    await f?;
+    }
+    */
+    //await f?;
     //i = f.get;
     //consTime(5);
     //consTime(15);

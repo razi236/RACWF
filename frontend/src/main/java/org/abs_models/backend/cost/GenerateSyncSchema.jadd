@@ -437,7 +437,7 @@ aspect generate_sync_schema {
       o.print("/this");
       for (ParamDecl x : getParamList())
       {
-        if(!(x.getType().isStringType() || x.getType().isIntType() || x.getType().isFutureType() || x.getType().isBoolType() || x.getType().isFloatType() || x.getType().isUnitType() || x.getType().isRatType() ))
+        if( x.getType().isInterfaceType())
         {
             o.print(",");
             o.print(x.getName());
