@@ -16,14 +16,29 @@ I think its due to multiple futs with same sync schema in I.
 -> Finish other cases and write user manual to get feedback from others
 
 ** Non-returning sync call should be Unit var = sync_call.
-** Sync Call is not working with non returning method call.
-Sync call is an exp and it must be either in assignment_stmt. So better is to avoid from unit return type and return 0 if don't want to return anything.
+** Sync Call is not working with non-returning method call.
+Sync call is an exp, and it must be either in assignment_stmt. So better is to avoid from unit return type and return 0 if don't want to return anything.
 
 
-** Write user manual of the Rpl language and the tool (compiler and cost analysis).
+** [Done] Write user manual of the Rpl language and the tool (compiler and cost analysis).
  Summarize in simple words, what the language is for and what the tools do and then go for technical details.
 
 
 *** Our language do not have Map, List and loops in syntax.
 
 Issue of usage of ResourceManager in our language
+
+
+*** To Do (31 October)
+-> In case, if you get a chance to update the SCP paper, please remove f1,f2 from Line 12 of Figure 11.
+-> At Deadline missed proper message should be displayed, which method and running on which object.
+-> In case of future initialized inside conditional branch, and used as dependency in method call out of conditional branch, it should be an error.
+-> Make class diagram of pathologyWorkflow.abs.
+-> DataBase integration within the tool ?
+-> Can we couple multiple workflows running on different machines ?
+-> Document all the leaves I had, sick leaves and welfare leaves. For covid leaves apply for that.
+-> Also mention the reason why you should have to apply for leave. Ask Faustin.
+-> Evaluation of our tool with other available tools, to have some benchmark,
+-> Write future plan in some draft bullet form and review yourself what you want to achieve with respect ot available time and contribution.
+-> Have a look at other conferences, like BPM or other related ones. Don't stick on formal method conferences.
+-> Next Meeting. 12:00 Monday 7th Nov.

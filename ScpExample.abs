@@ -17,7 +17,7 @@ class Retailer implements Retailer
         //found = inWareHouse(wh,p) after dl 1;
 
         //found = f.get;
-        if(found) {
+        if(!found) {
            f1 = !pack(wh,p) after dl 5;
            await f1?;
         }
@@ -25,7 +25,7 @@ class Retailer implements Retailer
             f2 = !supply(sp,cr,p) after dl 15;
             await f2?;
         }
-        f3 = !deliver(cr,p) after f1,f2 dl 10;
+        f3 = !deliver(cr,p) after dl 1;
         await f3?;
         return 0;
     }
@@ -82,8 +82,8 @@ class Courier implements Courier
     {
         List<Int> rid = list[];
         rid = hold(list[set[VanDriver, Efficiency(5)],set[DeliveryVan, Efficiency(1500)]]);
-        Int k3 =  random(10);
-        consTime(k3);
+        Int k3 =  random(3);
+        //consTime(k3);
         rel(rid);
         println("Delivered :)");
         return 0;
@@ -94,8 +94,9 @@ class Courier implements Courier
     Supplier sp = new Supplier();
     Courier cr = new Courier();
     add(list[set[VanDriver, Efficiency(5)],set[DeliveryVan, Efficiency(1500)]]);
-    Int x = 0;
-    x = sale(rt,sp,cr,5) after dl 20;
+    Fut<Int> f;
+    f = !sale(rt,sp,cr,5) after dl 500;
+    await f?;
 }
 
 

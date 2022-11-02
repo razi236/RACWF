@@ -21,6 +21,28 @@ aspect doPrettyPrinter {
         }
     }
 
+    public void List.doPrettyPrint(PrintWriter stream, String method, ABSFormatter formatter) {
+        if (getNumChild() > 0) {
+            Stmt s = (Stmt) getChild(0);
+            if (s instanceof ReturnStmt) {
+                s.doPrettyPrint(stream,formatter,method);
+            }
+            else {
+                s.doPrettyPrint(stream, formatter);
+            }
+            //getChild(0).doPrettyPrint(stream, formatter);
+            for (int i = 1; i < getNumChild(); i++) {
+                Stmt s1 = (Stmt) getChild(i);
+                if (s1 instanceof ReturnStmt) {
+                    s1.doPrettyPrint(stream,formatter,method);
+                }
+                else {
+                    s1.doPrettyPrint(stream, formatter);
+                }
+                //getChild(i).doPrettyPrint(stream, formatter);
+            }
+        }
+    }
     public void List.doPrettyPrint(PrintWriter stream, ABSFormatter formatter, String separator, String test) {
         if (getNumChild() > 0) {
             int count = 0;
@@ -88,8 +110,11 @@ aspect doPrettyPrinter {
         throw new NotImplementedYetException(this);
     }
     public void ASTNode.doPrettyPrint(PrintWriter stream, ABSFormatter formatter, VarOrFieldUse v ) {
-            throw new NotImplementedYetException(this);
-        }
+        throw new NotImplementedYetException(this);
+    }
+    public void ASTNode.doPrettyPrint(PrintWriter stream, ABSFormatter formatter, String m ) {
+        throw new NotImplementedYetException(this);
+    }
 
     public void Model.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
         for (ModuleDecl d : getModuleDecls()) {
@@ -281,6 +306,24 @@ aspect doPrettyPrinter {
         formatter.afterCloseBrace();
     }
 
+    public void Block.doPrettyPrint(PrintWriter stream, ABSFormatter formatter, String m) {
+        getAnnotationList().doPrettyPrint(stream, formatter, "");
+        if (getNumAnnotation() > 0) {
+            stream.println();
+            formatter.afterStmt();
+        }
+        formatter.beforeOpenBrace();
+        stream.println("{");
+        formatter.afterOpenBrace();
+        formatter.afterStmt();
+        getStmtList().doPrettyPrint(stream, m, formatter);
+        stream.println();
+        formatter.beforeCloseBrace();
+        formatter.afterStmt();
+        stream.print("}");
+        formatter.afterCloseBrace();
+    }
+
     public void MainBlock.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
             getAnnotationList().doPrettyPrint(stream, formatter, "");
             if (getNumAnnotation() > 0) {
@@ -433,8 +476,12 @@ aspect doPrettyPrinter {
          getCallee().doPrettyPrint(stream, formatter);
          doPrettyPrintCallType(stream, formatter);
          stream.print(getMethod().replaceAll("\\$", ""));
-         stream.print("(rm,");
-         getParamList().doPrettyPrint(stream, formatter, ",");
+         List<PureExp> list = getParamList();
+             if(list.getNumChild()>0)
+                 stream.print("(rm,");
+             else
+                 stream.print("(rm");
+         list.doPrettyPrint(stream, formatter, ",");
          stream.print(")");
          stream.print(";");
     }
@@ -599,6 +646,9 @@ aspect doPrettyPrinter {
     }
 
     public void ReturnStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
+    }
+
+    public void ReturnStmt.doPrettyPrint(PrintWriter stream, ABSFormatter formatter, String m) {
         stream.print("try {");
         stream.println();
         formatter.afterStmt();
@@ -614,7 +664,9 @@ aspect doPrettyPrinter {
         stream.print("} catch {");
         stream.println();
         formatter.afterStmt();
-        stream.print("AssertionFailException => println(`Deadline Missed`);");
+        stream.print("AssertionFailException => println(`The method \"");
+        stream.print(m);
+        stream.print("\" have missed the deadline.`);");
         stream.println();
         formatter.afterStmt();
         stream.print("}");
@@ -1106,8 +1158,14 @@ aspect doPrettyPrinter {
         getReturnType().doPrettyPrint(stream, formatter);
         stream.print(" ");
         stream.print(getName().replaceAll("\\$", ""));
-        stream.print("(ResourceManager rm,");
-        getParams().doPrettyPrint(stream, formatter, ",");
+        List<ParamDecl> list = getParams();
+            if(list.getNumChild()>0)
+                stream.print("(ResourceManager rm,");
+            else
+                stream.print("(ResourceManager rm");
+        list.doPrettyPrint(stream, formatter, ",");
+        //stream.print("(ResourceManager rm,");
+        //getParams().doPrettyPrint(stream, formatter, ",");
         stream.print(")");
     }
 
@@ -1277,13 +1335,20 @@ aspect doPrettyPrinter {
 
     public void MethodImpl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
         getMethodSig().doPrettyPrint(stream, formatter);
-        getBlock().doPrettyPrint(stream, formatter);
+        if(hasReturnStmt()) {
+            String m = getMethodSig().getName().replaceAll("\\$", "");
+            getBlock().doPrettyPrint(stream, formatter, m);
+        }
+        else{
+            getBlock().doPrettyPrint(stream, formatter);
+        }
+        //getBlock().doPrettyPrint(stream, formatter);
     }
 
     public void MethodImpl1.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
-            getMethodSig1().doPrettyPrint(stream, formatter);
-            getBlock().doPrettyPrint(stream, formatter);
-        }
+        getMethodSig1().doPrettyPrint(stream, formatter);
+        getBlock().doPrettyPrint(stream, formatter);
+    }
 
     public void TypeParameterDecl.doPrettyPrint(PrintWriter stream, ABSFormatter formatter) {
         stream.print(getName());
