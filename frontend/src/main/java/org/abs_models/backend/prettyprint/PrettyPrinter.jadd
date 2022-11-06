@@ -3,6 +3,11 @@ import java.io.PrintWriter;
 import org.abs_models.backend.prettyprint.*;
 import java.util.stream.Collectors;
 import com.google.common.collect.Streams;
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 aspect doPrettyPrinter {
 
@@ -335,6 +340,30 @@ aspect doPrettyPrinter {
             formatter.afterOpenBrace();
             formatter.afterStmt();
             stream.println("ResourceManager rm = new ResourceManager();");
+            formatter.afterStmt();
+            stream.print("await rm!addRes(list[");
+            String sql = "SELECT * FROM Resources";
+            //Connection conn = null;
+            String url = "jdbc:sqlite:identifier.sqlite";
+            try (Connection conn = DriverManager.getConnection(url);
+                 Statement stmt  = conn.createStatement();
+                 ResultSet rs    = stmt.executeQuery(sql)){
+                 if(rs.next()){
+                    stream.print("set[" + rs.getString("ResourceCategory") + ", Efficiency(" +
+                       rs.getInt("ResourceEfficiency") + ")]");
+                       }
+
+                // loop through the result set
+                while (rs.next()) {
+                    stream.print(", set[" + rs.getString("ResourceCategory") + ", Efficiency(" +
+                                           rs.getInt("ResourceEfficiency") + ")]");
+                }
+                stream.println("]);");
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
             formatter.afterStmt();
             getStmtList().doPrettyPrint(stream, formatter);
             stream.println();

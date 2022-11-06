@@ -1,5 +1,5 @@
 module Pathology;
-import * from ABS.ResourceManager;
+//import * from ABS.ResourceManager;
 interface Pathology
 {
     Int registerCase(Grossing g, Processing pr, Embedding em, Sectioning sc, Staining st, MicroscopicAnalysis ma);
@@ -197,7 +197,7 @@ class MicroscopicAnalysis implements MicroscopicAnalysis
     Sectioning sc = new Sectioning();
     Staining st = new Staining();
     MicroscopicAnalysis ma = new MicroscopicAnalysis();
-    add(list[set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[Pathologist, Efficiency(2)],set[Pathologist, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[ProcessingMachine, Efficiency(10)],set[StainingMachine, Efficiency(5)]]);
+    //add(list[set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[Pathologist, Efficiency(2)],set[Pathologist, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[ProcessingMachine, Efficiency(10)],set[StainingMachine, Efficiency(5)]]);
     List<Fut<Int>> futList = list[];
     Int i = 0;
     Fut<Int> f;

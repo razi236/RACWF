@@ -1,4 +1,4 @@
-
+// Resource Library
 data Availability = Free | Busy;
 
 interface ResourceManager {
