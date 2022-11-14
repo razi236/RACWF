@@ -49,9 +49,9 @@ To compile the RABS compiler from source, clone the git repository and run gradl
 
 `./gradlew assemble`
 
-`frontend/bin/absc --prettyprint *.abs`
+`frontend/bin/absc -t *.abs`
 
-`frontend/bin/absc --erlang RABS.abs`
+`frontend/bin/absc -e RABS.abs`
 
 `gen/erl/run`
 
@@ -63,9 +63,9 @@ To compile the RABS compiler from source, clone the git repository and run gradl
 
 `.\gradlew assemble`
 
-`frontend\bin\absc.bat --prettyprint *.abs`
+`frontend\bin\absc.bat -t *.abs`
 
-`frontend\bin\absc.bat --erlang RABS.abs`
+`frontend\bin\absc.bat -e RABS.abs`
 
 `gen/erl/run`
 

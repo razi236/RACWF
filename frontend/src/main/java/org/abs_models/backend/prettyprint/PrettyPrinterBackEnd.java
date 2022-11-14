@@ -19,11 +19,12 @@ public class PrettyPrinterBackEnd extends Main {
 
     public static int doMain(Absc args) {
         PrettyPrinterBackEnd backend = new PrettyPrinterBackEnd();
-        //backend.selectAll();
+        //backend.importCSV();
         backend.arguments = args;
         int result = 0;
         try {
             result = backend.compile(args);
+
         } catch (Exception e) {
             System.err.println("An error occurred during compilation:\n" + e.getMessage());
             if (backend.arguments.debug) {
@@ -64,6 +65,25 @@ public class PrettyPrinterBackEnd extends Main {
             System.out.println(e.getMessage());
         }
     }
+
+    public void importCSV(){
+        String sql =
+            "CREATE TABLE cities(\n" +
+            "  \"name\" TEXT,\n" +
+            "  \"population\" TEXT,\n" +
+            "  \"id\" TEXT\n" +
+            ");";
+        //String sql2 = ".import Quality.csv ResourceQuality1";
+        Connection conn = this.connect();
+        try (
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)){
+             conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 
     public int compile(Absc args) throws Exception {
         this.arguments = args;

@@ -203,10 +203,10 @@ class MicroscopicAnalysis implements MicroscopicAnalysis
     Fut<Int> f;
     f = !registerCase(p,g,pr,em,sc,st,ma) after dl 150;
     Fut<Int> f1;
-    f1 = !registerCase(p,g,pr,em,sc,st,ma) after dl 150;
-    Fut<Int> f2;
-    f2 = !registerCase(p,g,pr,em,sc,st,ma) after dl 150;
+    //f1 = !registerCase(p,g,pr,em,sc,st,ma) after dl 150;
+    //Fut<Int> f2;
+    //f2 = !registerCase(p,g,pr,em,sc,st,ma) after dl 150;
     await f?;
-    await f1?;
-    await f2?;
+    //await f1?;
+    //await f2?;
 }

@@ -1,5 +1,4 @@
 module ABS;
-import * from ABS.ResourceManager;
 interface DL
 {
     Int check();
@@ -13,6 +12,7 @@ class DL implements DL
             consTime(1);
             i = i+1;
         }
+        //consTime(10);
         return 0;
     }
 }
@@ -58,34 +58,9 @@ class ABC implements ABC
     }
 }
 {
-    /*
-    Fut<Int> f;Fut<Int> f1;Fut<Int> f2; List<Int> fids = list[]; Int i=0;
-    ABC o = new ABC();
-    ABC o1 = new ABC();
-    ABC o2 = new ABC();
-    IJK o3 = new IJK();
-    //consTime(25);
-    //i = xyz(o,o1,o2,o3,"Muhammad") after dl 10;
-    f = !xyz(o1,o,o2,o3,"Muhammad") after dl 10;
-    f1 = !xyz(o,o1,o2,o3,"Muhammad") after dl 10;
-    //f2 = !xyz(o,o1,o2,o3,"Muhammad") after f1,f dl 10;
-    if(b==true)
-    {
-        i = xyz(o,o1,o2,o3,"Muhammad") after dl 10;
-    }
-    else
-    {
-        i = efg(o,o1) after dl 3;
-    }
-    //await f?;
-    //i = f.get;
-    //consTime(5);
-    //consTime(15);
-    //Unit x = efg(o1,o2) after dl 3;
-    */
     DL o = new DL();
     Fut<Int> f;
     consTime(5);
-    f = !check(o) after dl 10;
+    f = !check(o) after dl 9;
     await f?;
 }

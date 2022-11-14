@@ -30,13 +30,33 @@ Sync call is an exp, and it must be either in assignment_stmt. So better is to a
 
 [?]       In case, if you get a chance to update the SCP paper, please remove f1,f2 from Line 12 of Figure 11.
 [Done]   At Deadline missed proper message should be displayed, which method and running on which object.
-[]       In case of future initialized inside conditional branch, and used as dependency in method call out of conditional branch, it should be an error.
+[need to update parsere]       In case of future initialized inside conditional branch, and used as dependency in method call out of conditional branch, it should be an error.
 [Done]   Make class diagram of pathologyWorkflow.abs.
-[?]       DataBase integration within the tool ?
-[?]       Can we couple multiple workflows running on different machines ?
+[Done]   DataBase integration within the tool ?
+[?]      Can we couple multiple workflows running on different machines ?
 [67]     Document all the leaves I had, sick leaves and welfare leaves. For covid leaves apply for that.
-[Done]       Also mention the reason why you should have to apply for leave. Ask Faustin.
+[Done]   Also mention the reason why you should have to apply for leave. Ask Faustin.
 []       Evaluation of our tool with other available tools, to have some benchmark,
 []       Write future plan in some draft bullet form and review yourself what you want to achieve with respect ot available time and contribution.
 []       Have a look at other conferences, like BPM or other related ones. Don't stick on formal method conferences.
-[Done]   Next Meeting. 12:00 Monday 7th Nov.
+
+*  Implement a GUI with JDBC with swing API, to add and remove resources in the database.
+*  Graphical Model to Rpl code translation
+
+
+TO DO: 7th November 2022.
+
+[]      preprocessing, and capture which future have been created and synchronised.
+[]      check alt paper for benchmarks.(how they compared with other tools).
+[]      ask Faustin for extension (when, how and what)?
+[]      resources in different tables based on type of resources etc.
+[]      use resource capacity in consTime to have an idea how much time a resource take to finish a task, also how much the other resources will consume?
+[]      Job have 100 times unit deadline and resources have some capacity, check which resource suits best to do this job optimally?
+[]      Parametrised consTime() with respect to resource capacity.
+[]      1st dry run and check how it can be done?
+[]      Think in a way that we can have a short paper from it.
+[***]   what should be in a paper, what need to be done in 1 year.
+[]      Paper submission in FM conference.
+
+
+
