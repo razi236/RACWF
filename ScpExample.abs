@@ -1,5 +1,5 @@
 module ScpExample;
-import * from ABS.ResourceManager;
+//import * from ABS.ResourceManager;
 interface Retailer
 {
     Int sale(Supplier sp, Courier cr, Int p);
@@ -83,7 +83,7 @@ class Courier implements Courier
         List<Int> rid = list[];
         rid = hold(list[set[VanDriver, Efficiency(5)],set[DeliveryVan, Efficiency(1500)]]);
         Int k3 =  random(3);
-        //consTime(k3);
+        consTime(k3);
         rel(rid);
         println("Delivered :)");
         return 0;
@@ -93,7 +93,7 @@ class Courier implements Courier
     Retailer rt = new Retailer();
     Supplier sp = new Supplier();
     Courier cr = new Courier();
-    add(list[set[VanDriver, Efficiency(5)],set[DeliveryVan, Efficiency(1500)]]);
+    //add(list[set[VanDriver, Efficiency(5)],set[DeliveryVan, Efficiency(1500)]]);
     Fut<Int> f;
     f = !sale(rt,sp,cr,5) after dl 500;
     await f?;
