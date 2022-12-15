@@ -61,6 +61,6 @@ class ABC implements ABC
     DL o = new DL();
     Fut<Int> f;
     consTime(5);
-    f = !check(o) after dl 9;
+    f = !check(o) after dl 11;
     await f?;
 }
