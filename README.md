@@ -43,7 +43,7 @@ To compile the RABS compiler from source, clone the git repository and run gradl
 
 ### Linux or macOS
 
-`https://github.com/selabhvl/rpltools`
+`git clone https://github.com/selabhvl/rpltools`
 
 `cd abstools`
 
