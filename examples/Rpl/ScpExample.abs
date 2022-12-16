@@ -1,5 +1,4 @@
 module ScpExample;
-import * from ABS.ResourceManager;
 interface Retailer
 {
     Int sale(Supplier sp, Courier cr, Int p);
@@ -11,20 +10,21 @@ class Retailer implements Retailer
         Fut<Int> f1; Fut<Int> f2; Fut<Int> f3;
         WareHouse wh = new WareHouse();
         Bool found = False;
-        Fut<Bool> f;
-        f = !inWareHouse(wh,p) after dl 1;
-        found = f.get;
-        if(found) {
-            f1 = !pack(wh,p) after dl 5;
+        Int k = 10;
+        consTime(k);
+        //found = inWareHouse(wh,p) after dl 1;
+        if(!found) {
+           f1 = !pack(wh,p) after dl 5;
+           await f1?;
         }
         else {
             f2 = !supply(sp,cr,p) after dl 15;
+            await f2?;
         }
-        f3 = !deliver(cr,p) after dl 10;
+        f3 = !deliver(cr,p) after dl 1;
         await f3?;
         return 0;
     }
-
 }
 interface WareHouse
 {
@@ -47,7 +47,7 @@ class WareHouse implements WareHouse
     Int pack(Int p)
     {
         Int k1 = random(8);
-        consTime(1);   // Packing Time
+        consTime(k1);   // Packing Time
         return 0;
     }
 }
@@ -61,7 +61,7 @@ class Supplier implements Supplier
     {
         Fut<Int> f4;
         Int k2 = random(8);
-        consTime(2);   // Packing Time
+        consTime(k2);   // Packing Time
         f4 = !deliver(cr,p) after dl 10;
         await f4?;
         return 0;
@@ -78,8 +78,8 @@ class Courier implements Courier
     {
         List<Int> rid = list[];
         rid = hold(list[set[VanDriver, Efficiency(5)],set[DeliveryVan, Efficiency(1500)]]);
-        Int k3 =  random(10);
-        consTime(3);
+        Int k3 =  random(3);
+        consTime(k3);
         rel(rid);
         println("Delivered :)");
         return 0;
@@ -89,12 +89,10 @@ class Courier implements Courier
     Retailer rt = new Retailer();
     Supplier sp = new Supplier();
     Courier cr = new Courier();
-    add(list[set[VanDriver, Efficiency(5)],set[DeliveryVan, Efficiency(1500)]]);
-    Fut<Int> f5;
-    f5 = !sale(rt,sp,cr,5) after dl 20;
-    await f5?;
+    Fut<Int> f;
+    f = !sale(rt,sp,cr,5) after dl 1000;
+    await f?;
 }
-
 
 
 

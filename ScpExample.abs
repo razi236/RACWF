@@ -1,5 +1,4 @@
 module ScpExample;
-//import * from ABS.ResourceManager;
 interface Retailer
 {
     Int sale(Supplier sp, Courier cr, Int p);
@@ -12,11 +11,8 @@ class Retailer implements Retailer
         WareHouse wh = new WareHouse();
         Bool found = False;
         Int k = 10;
-        //Fut<Bool> f;
-        //consTime(k);
+        consTime(k);
         //found = inWareHouse(wh,p) after dl 1;
-
-        //found = f.get;
         if(!found) {
            f1 = !pack(wh,p) after dl 5;
            await f1?;
@@ -93,7 +89,6 @@ class Courier implements Courier
     Retailer rt = new Retailer();
     Supplier sp = new Supplier();
     Courier cr = new Courier();
-    //add(list[set[VanDriver, Efficiency(5)],set[DeliveryVan, Efficiency(1500)]]);
     Fut<Int> f;
     f = !sale(rt,sp,cr,5) after dl 1000;
     await f?;

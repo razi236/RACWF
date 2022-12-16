@@ -1,4 +1,7 @@
-// Resource Library
+// Resource Management
+// Translation fetches resources from the database and store them in a resource map in the ABS program.
+// The following code helps to add, acquire and release the resources.
+
 data Availability = Free | Busy;
 
 interface ResourceManager {
@@ -82,6 +85,10 @@ class ResourceManager implements ResourceManager {
         //println(toString(this.resources));
     }
 }
+
+// ABS does not support disjunction between future return tests (await f1? || await f2?)
+// The following code is a syntactic sugar for the disjunction between the return tests.
+// The code is not generic, supports only futures of integer type (Fut<Int>).
 
 interface AwaitFut
 {
