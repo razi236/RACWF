@@ -413,17 +413,13 @@ aspect translate {
                     Set<String> val_f = map_I.get(f);
                     if(val_f.contains("this"))              // case: b
                     {
-                        Iterator<Map.Entry<String,Set<String>>> f_itr = map_I.entrySet().iterator();
+                        Iterator<String> f_itr = map_I.keySet().iterator();
                         while (f_itr.hasNext()) {
-                            //String fut = f_itr.next();
-                            //System.out.println(fut);
-                            //Set<String> val = map_I.get(fut);
-                            Map.Entry<String,Set<String>> entry = f_itr.next();
-                            System.out.println(entry.getKey());
-                            if(entry.getValue().contains("this"))
+                            String fut = f_itr.next();
+                            Set<String> val = map_I.get(fut);
+                            if(val.contains("this"))
                             {
                                 f_itr.remove();
-                                System.out.println("removed"+entry.getKey());
                             }
                         }
                         if(ta != null)
@@ -454,7 +450,7 @@ aspect translate {
                         String val_psi = map_Psi.get(val_f);
                         String t1 = null;
                         if(ta!=null)
-                            t1 = "max("+t+ta+","+val_psi+")";
+                            t1 = "max("+t+"+"+ta+","+val_psi+")";
                         else
                             t1 = "max("+t+","+val_psi+")";
                         map_Psi.remove(val_f,val_psi);
@@ -462,7 +458,7 @@ aspect translate {
                         while (psi_itr1.hasNext()) {
                             Set<String> psi1 = psi_itr1.next();
                             String psi_val1 = map_Psi.get(psi1);
-                            String result1 = psi_val1+"||"+t1;
+                            String result1 = "max("+psi_val1+","+t1+")";
                             map_Psi.put(psi1,result1);
                         }
                         t = t1;
@@ -472,7 +468,7 @@ aspect translate {
                 }
                 else // case: d
                 {
-                    System.out.println("Fut not in I");
+                    //System.out.println("Fut not in I");
                     Iterator<String> f_itr_1 = map_I.keySet().iterator();
                     while (f_itr_1.hasNext()) {
                         String fut_1 = f_itr_1.next();
@@ -491,7 +487,7 @@ aspect translate {
                             String result_1 = psi_val_1+"+"+ta;
                             map_Psi.put(psi_1,result_1);
                         }
-                        t = t+"+"+ta;
+                        t = t+ta;
                         ta = null;
                     }
                 }
@@ -575,7 +571,7 @@ aspect translate {
                         String val_psi = map_Psi.get(val_f);
                         String t1 = null;
                         if(ta!=null)
-                            t1 = "max("+t+ta+","+val_psi+")";
+                            t1 = "max("+t+"+"+ta+","+val_psi+")";
                         else
                             t1 = "max("+t+","+val_psi+")";
                         map_Psi.remove(val_f,val_psi);
@@ -583,7 +579,7 @@ aspect translate {
                         while (psi_itr1.hasNext()) {
                             Set<String> psi1 = psi_itr1.next();
                             String psi_val1 = map_Psi.get(psi1);
-                            String result1 = psi_val1+"||"+t1;
+                            String result1 = "max("+psi_val1+","+t1+")";
                             map_Psi.put(psi1,result1);
                         }
                         t = t1;
@@ -612,7 +608,7 @@ aspect translate {
                             String result_1 = psi_val_1+"+"+ta;
                             map_Psi.put(psi_1,result_1);
                         }
-                        t = t+ta;
+                        t = t+"+"+ta;
                         ta = null;
                     }
                 }
@@ -728,7 +724,7 @@ aspect translate {
                         String val_psi = map_Psi.get(val_f);
                         String t1 = null;
                         if(ta!=null)
-                            t1 = "max("+t+ta+","+val_psi+")";
+                            t1 = "max("+t+"+"+ta+","+val_psi+")";
                         else
                             t1 = "max("+t+","+val_psi+")";
                         map_Psi.remove(val_f,val_psi);
@@ -736,7 +732,7 @@ aspect translate {
                         while (psi_itr1.hasNext()) {
                             Set<String> psi1 = psi_itr1.next();
                             String psi_val1 = map_Psi.get(psi1);
-                            String result1 = psi_val1+"||"+t1;
+                            String result1 = "max("+psi_val1+","+t1+")";
                             map_Psi.put(psi1,result1);
                         }
                         t = t1;
