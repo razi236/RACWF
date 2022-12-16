@@ -73,5 +73,14 @@ To compile the RABS compiler from source, clone the git repository and run gradl
 
 `gen/erl/run`
 
+## Cost Analysis
+The following command computes the worst case execution time (WCET) of the model.
+
+### Linux or macOS
+
+`frontend/bin/absc -c ./examples/Rpl/*.abs`
+
+### Windows
+`frontend\bin\absc.bat -c ./examples/Rpl/*.abs`
 
 

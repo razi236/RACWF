@@ -74,7 +74,7 @@ public class Absc implements Callable<Integer> {
                 description = "@|bold Pretty-printer:|@ pretty print model and exit")
         public boolean prettyprint = false;
 
-        @Option(names = { "--cost" }, required = true,
+        @Option(names = { "-c" }, required = true,
             description = "@|bold Cost Analysis:|@ compute cost and exit")
         public boolean cost = false;
 
