@@ -465,7 +465,11 @@ aspect doPrettyPrinter {
         getCallee().doPrettyPrint(stream, formatter);
         doPrettyPrintCallType(stream, formatter);
         stream.print(getMethod().replaceAll("\\$", ""));
-        stream.print("(rm,");
+        List<PureExp> list = getParamList();
+        if(list.getNumChild()>0)
+             stream.print("(rm,");
+        else
+             stream.print("(rm");
         getParamList().doPrettyPrint(stream, formatter, ",");
         stream.print(")");
     }
