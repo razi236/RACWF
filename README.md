@@ -41,46 +41,10 @@ On Linux, check if your distribution offers the necessary programs pre-packaged 
 To compile the RABS compiler from source, clone the git repository and run gradle (after installing the necessary dependencies):
 
 
-### Linux or macOS
-
 `git clone https://github.com/razi236/ResourceABS`
 
 `cd abstools`
 
 `./gradlew assemble`
 
-`frontend/bin/absc -t ./examples/Rpl/*.abs`
-
--t translates the Rpl code into corresponding ABS code (RABS.abs)
-
-`frontend/bin/absc -e RABS.abs`
-
-`gen/erl/run`
-
-### Windows
-
-`git clone "https://github.com/razi236/ResourceABS"`
-
-`cd abstools`
-
-`.\gradlew assemble`
-
-`frontend\bin\absc.bat -t ./examples/Rpl/*.abs`
-
--t translates the Rpl code into corresponding ABS code (RABS.abs)
-
-`frontend\bin\absc.bat -e RABS.abs`
-
-`gen/erl/run`
-
-## Cost Analysis
-The following command computes the worst case execution time (WCET) of the model.
-
-### Linux or macOS
-
-`frontend/bin/absc -c ./examples/Rpl/*.abs`
-
-### Windows
-`frontend\bin\absc.bat -c ./examples/Rpl/*.abs`
-
-
+`./rplTools.sh`
