@@ -45,7 +45,7 @@ class IJK implements IJK
 interface ABC
 {
     Int xyz(ABC a,IJK c,String x);
-    Int efg(ABC j);
+    Int efg();
 }
 class ABC implements ABC
 {
@@ -74,7 +74,7 @@ class ABC implements ABC
         await f3?;
         return 0;
     }
-    Int efg(ABC j)
+    Int efg()
     {
         return 0;
     }
@@ -85,4 +85,5 @@ class ABC implements ABC
     consTime(5);
     //f = !check(o) after dl 11;
     //await f?;
+    println("RplTools");
 }

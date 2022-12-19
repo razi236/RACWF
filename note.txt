@@ -60,3 +60,7 @@ TO DO: 7th November 2022.
 
 
 
+[] Write script to translate and execute the program.
+
+
+

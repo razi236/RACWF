@@ -50,8 +50,12 @@ aspect doPrettyPrinter {
     }
     public void List.doPrettyPrint(PrintWriter stream, ABSFormatter formatter, String separator, String test) {
         if (getNumChild() > 0) {
+            stream.println();
+            formatter.afterStmt();
+            stream.println("{");
             int count = 0;
             for (int i = 1; i <= getNumChild(); i++) {
+                formatter.afterStmt();
                 stream.print("Bool b"+i+" = False;");
                 stream.println();
                 formatter.afterStmt();
@@ -89,6 +93,9 @@ aspect doPrettyPrinter {
             stream.println();
             //formatter.afterStmt();
             formatter.beforeCloseBrace();
+            formatter.afterStmt();
+            stream.print("}");
+            stream.println();
             formatter.afterStmt();
             stream.print("}");
             stream.println();
