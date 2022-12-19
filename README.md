@@ -38,6 +38,7 @@ On Linux, check if your distribution offers the necessary programs pre-packaged 
 
 ## Compiling the RplTools from source
 
+The directory `abstools/examples/Rpl` have some examples. For simplicity, please put your source file (*.abs) in the same directory (`abstools/examples/Rpl`).
 To compile the RplTools from source, clone the git repository and run gradle (after installing the necessary dependencies):
 
 
