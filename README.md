@@ -41,7 +41,9 @@ On Linux, check if your distribution offers the necessary programs pre-packaged 
 To compile the RplTools from source, clone the git repository and run gradle (after installing the necessary dependencies):
 
 `git clone https://github.com/razi236/ResourceABS`
+
 `cd abstools`
+
 `./gradlew assemble`
 
 The directory `abstools/examples/Rpl` has some examples. For simplicity, please put your source file (*.abs) in the same directory (`abstools/examples/Rpl`). 
