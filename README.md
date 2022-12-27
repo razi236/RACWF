@@ -42,12 +42,12 @@ To compile the RplTools from source, clone the git repository and run gradle (af
 
 `git clone https://github.com/razi236/ResourceABS`
 
-`cd abstools`
+`cd ResourceABS`
 
 `./gradlew assemble`
 
-The directory `abstools/examples/Rpl` has some examples. For simplicity, please put your source file (*.abs) in the same directory (`abstools/examples/Rpl`). 
+The directory `ResourceABS/examples/Rpl` has some examples. For simplicity, please put your source file (*.abs) in the same directory (`ResourceABS/examples/Rpl`). 
 
-Afterwards, move back to `abstools` directory and use the following commands to run RplTools.
+Afterwards, move back to `ResourceABS` directory and use the following commands to run RplTools.
 
 `./rplTools.sh`
