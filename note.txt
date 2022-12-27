@@ -60,7 +60,13 @@ TO DO: 7th November 2022.
 
 
 
-[] Write script to translate and execute the program.
+[Done] Write script to translate and execute the program.
+[]  Extension should be *.rpl.
+[]  seperate the abstools and rpltools
+[]  user should clone with abstools seperately
+[]  makefile, instead of .sh extension
+[]  If want to discuss can discuss on first week of January
+
 
 
 
