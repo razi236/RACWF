@@ -238,15 +238,15 @@ aspect translate {
         List<PureExp> fut_list = getQList();
         if(fut_list.getNumChild()>0)
         {
-            System.out.println("with dependency");
+            //System.out.println("with dependency");
             for (PureExp x : fut_list)
             {
                 Set<String> fut_set =  new HashSet<String>();
                 fut_set = getF(x,fut_set);
                 Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet = map.get(method);
-                System.out.println("trans called");
+                //System.out.println("trans called");
                 quartet = trans(quartet,fut_set,sync_schema);
-                System.out.println("trans returned");
+                //System.out.println("trans returned");
                 quart_set.add(quartet);
             }
             String max_ta = "max(";
@@ -272,7 +272,7 @@ aspect translate {
             max_t = max_t+")";
             quart = quart.setAt0(map_I);
             quart = quart.setAt1(map_Psi);
-            System.out.println("transCallType called");
+            //System.out.println("transCallType called");
             quart = transCallType(quart,max_ta,max_t,sync_schema,called_method,fut);
         }
         else
@@ -506,10 +506,10 @@ aspect translate {
         Set<String> fut_set =  new HashSet<String>();
         fut_set.add(f);
         Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet = map.get(method);
-        System.out.println("trans called");
+        //System.out.println("trans called");
         if(!fut_set.isEmpty()){
         quartet = trans(quartet,fut_set,sync_schema);
-        System.out.println("trans returned");
+        //System.out.println("trans returned");
         map.put(method,quartet);}
         return map;
     }
@@ -641,16 +641,16 @@ aspect translate {
     }
 
     public Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> AwaitStmt.translate(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> map,Map<String, Set<Set<String>>> sync_map,Set<Set<String>> sync_schema,String method) {
-        System.out.println("in await");
+        //System.out.println("in await");
         String f = getGuard().toString();
         f = cleanGuard(f);
         //System.out.println("Guard = "+f);
         Set<String> fut_set =  new HashSet<String>();
         fut_set.add(f);
         Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet = map.get(method);
-        System.out.println("trans called");
+        //System.out.println("trans called");
         quartet = trans(quartet,fut_set,sync_schema);
-        System.out.println("trans returned");
+        //System.out.println("trans returned");
         map.put(method,quartet);
         return map;
     }
