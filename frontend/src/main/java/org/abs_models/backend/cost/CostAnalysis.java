@@ -31,7 +31,7 @@ public class CostAnalysis extends Main{
     public int compute(Absc args) throws Exception {
         PrintWriter writer = null;
         try {
-            File file = new File("/Users/muhammadrizwanali/Desktop/GitHub/abstools/Synch_Schema.txt");
+            File file = new File("Synch_Schema.txt");
             writer = new PrintWriter(file);
             System.setProperty("line.separator", System.lineSeparator());
             //System.out.println("Computation of Cost is started:");
@@ -137,7 +137,7 @@ public class CostAnalysis extends Main{
     }
 
     public Map<String, Set<Set<String>>> scan_merge_schema() throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("/Users/muhammadrizwanali/Desktop/GitHub/abstools/Synch_Schema.txt"));
+        Scanner scanner = new Scanner(new File("Synch_Schema.txt"));
         String method_name = null;
         String objs = null;
         Map<String, Set<Set<String>>> sync_schema_map = new HashMap<String, Set<Set<String>>>();
