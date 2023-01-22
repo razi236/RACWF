@@ -10,7 +10,7 @@ then
 {
   echo "Please enter the filename:"
   read file
-  frontend/bin/absc -t ./examples/Rpl/$file.rpl
+  frontend/bin/absc -t ./examples/$file.rpl
   cp RABS.abs ABS.rpl
   frontend/bin/absc -e ABS.rpl
   gen/erl/run
@@ -19,6 +19,6 @@ else
 {
   echo "Please enter the filename:"
   read file
-  frontend/bin/absc -c ./examples/Rpl/$file.rpl
+  frontend/bin/absc -c ./examples/$file.rpl
 }
 fi

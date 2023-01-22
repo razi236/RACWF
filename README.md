@@ -40,14 +40,14 @@ On Linux, check if your distribution offers the necessary programs pre-packaged 
 
 To compile the RplTools from source, clone the git repository and run gradle (after installing the necessary dependencies):
 
-`git clone https://github.com/razi236/ResourceABS`
+`git clone https://github.com/razi236/RplTools.git`
 
-`cd ResourceABS`
+`cd RplTools`
 
 `./gradlew assemble`
 
-The directory `ResourceABS/examples/Rpl` has some examples. For simplicity, please put your source file (*.abs) in the same directory (`ResourceABS/examples/Rpl`). 
+The directory `RplTools/examples` has some examples. For simplicity, please put your source file (*.rpl) in the same directory (`RplTools/examples`). 
 
-Afterwards, move back to `ResourceABS` directory and use the following commands to run RplTools.
+Afterwards, move back to `RplTools` directory and use the following command to run RplTools.
 
 `./rplTools.sh`
