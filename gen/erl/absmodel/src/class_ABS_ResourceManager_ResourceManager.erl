@@ -4,7 +4,7 @@
 -export([get_val_internal/2,set_val_internal/3,init_internal/0,get_state_for_modelapi/1,implemented_interfaces/0,exported/0]).
 -compile(export_all).
 
-implemented_interfaces() -> [ <<"Object">>, <<"ResourceManager">> ].
+implemented_interfaces() -> [ <<"ResourceManager">>, <<"Object">> ].
 
 exported() -> #{  }.
 
@@ -83,10 +83,10 @@ exported() -> #{  }.
          %% ABS.rpl:27--27
         put(vars, (get(vars))#{'result' => m_ABS_StdLib_funs:f_list(Cog,[],[O,DC| Stack])}),
          %% ABS.rpl:28--32
-        put(vars, (get(vars))#{'tmp705400860' => maps:get('newResources', get(vars))}),
+        put(vars, (get(vars))#{'tmp233142783' => maps:get('newResources', get(vars))}),
          %% ABS.rpl:28--32
         []=(fun Loop ([])->
-            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp705400860', get(vars)),[O,DC| Stack])) of
+            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp233142783', get(vars)),[O,DC| Stack])) of
             false -> [];
             true -> receive
                     {stop_world, CogRef} ->
@@ -96,9 +96,9 @@ exported() -> #{  }.
                     after 0 -> ok
                 end,
                  %% ABS.rpl:28--32
-                put(vars, (get(vars))#{'r' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp705400860', get(vars)),[O,DC| Stack])}),
+                put(vars, (get(vars))#{'r' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp233142783', get(vars)),[O,DC| Stack])}),
                  %% ABS.rpl:28--32
-                put(vars, (get(vars))#{'tmp705400860' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp705400860', get(vars)),[O,DC| Stack])}),
+                put(vars, (get(vars))#{'tmp233142783' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp233142783', get(vars)),[O,DC| Stack])}),
                  %% ABS.rpl:29--29
                 put(this, C:set_val_internal(get(this), 'resource_counter',(C:get_val_internal(get(this), 'resource_counter') + 1) )),
                  %% ABS.rpl:30--30
@@ -138,10 +138,10 @@ exported() -> #{  }.
                     after 0 -> ok
                 end,
                  %% ABS.rpl:41--53
-                put(vars, (get(vars))#{'tmp233271622' => maps:get('wantedResources', get(vars))}),
+                put(vars, (get(vars))#{'tmp895280806' => maps:get('wantedResources', get(vars))}),
                  %% ABS.rpl:41--53
                 []=(fun Loop ([])->
-                    case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp233271622', get(vars)),[O,DC| Stack])) of
+                    case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp895280806', get(vars)),[O,DC| Stack])) of
                     false -> [];
                     true -> receive
                             {stop_world, CogRef} ->
@@ -151,16 +151,16 @@ exported() -> #{  }.
                             after 0 -> ok
                         end,
                          %% ABS.rpl:41--53
-                        put(vars, (get(vars))#{'q' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp233271622', get(vars)),[O,DC| Stack])}),
+                        put(vars, (get(vars))#{'q' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp895280806', get(vars)),[O,DC| Stack])}),
                          %% ABS.rpl:41--53
-                        put(vars, (get(vars))#{'tmp233271622' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp233271622', get(vars)),[O,DC| Stack])}),
+                        put(vars, (get(vars))#{'tmp895280806' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp895280806', get(vars)),[O,DC| Stack])}),
                          %% ABS.rpl:42--42
                         put(vars, (get(vars))#{'found' => false}),
                          %% ABS.rpl:43--52
-                        put(vars, (get(vars))#{'tmp40829249' => m_ABS_StdLib_funs:f_entries(Cog,maps:get('lr', get(vars)),[O,DC| Stack])}),
+                        put(vars, (get(vars))#{'tmp1727379710' => m_ABS_StdLib_funs:f_entries(Cog,maps:get('lr', get(vars)),[O,DC| Stack])}),
                          %% ABS.rpl:43--52
                         []=(fun Loop ([])->
-                            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp40829249', get(vars)),[O,DC| Stack])) of
+                            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp1727379710', get(vars)),[O,DC| Stack])) of
                             false -> [];
                             true -> receive
                                     {stop_world, CogRef} ->
@@ -170,9 +170,9 @@ exported() -> #{  }.
                                     after 0 -> ok
                                 end,
                                  %% ABS.rpl:43--52
-                                put(vars, (get(vars))#{'entry' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp40829249', get(vars)),[O,DC| Stack])}),
+                                put(vars, (get(vars))#{'entry' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp1727379710', get(vars)),[O,DC| Stack])}),
                                  %% ABS.rpl:43--52
-                                put(vars, (get(vars))#{'tmp40829249' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp40829249', get(vars)),[O,DC| Stack])}),
+                                put(vars, (get(vars))#{'tmp1727379710' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp1727379710', get(vars)),[O,DC| Stack])}),
                                  %% ABS.rpl:44--46
                                 case ((not (maps:get('found', get(vars)))) and (cmp:eq(m_ABS_StdLib_funs:f_fst(Cog,m_ABS_StdLib_funs:f_snd(Cog,maps:get('entry', get(vars)),[O,DC| Stack]),[O,DC| Stack]),dataFree))) and (m_ABS_StdLib_funs:f_isSubset(Cog,maps:get('q', get(vars)),m_ABS_StdLib_funs:f_snd(Cog,m_ABS_StdLib_funs:f_snd(Cog,maps:get('entry', get(vars)),[O,DC| Stack]),[O,DC| Stack]),[O,DC| Stack])) of
                                     true ->  %% ABS.rpl:48--48
@@ -249,10 +249,10 @@ end.
          %% ABS.rpl:77--77
         put(vars, (get(vars))#{'all_ids' => m_ABS_StdLib_funs:f_keys(Cog,C:get_val_internal(get(this), 'resources'),[O,DC| Stack])}),
          %% ABS.rpl:78--83
-        put(vars, (get(vars))#{'tmp873688017' => maps:get('ids', get(vars))}),
+        put(vars, (get(vars))#{'tmp591352568' => maps:get('ids', get(vars))}),
          %% ABS.rpl:78--83
         []=(fun Loop ([])->
-            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp873688017', get(vars)),[O,DC| Stack])) of
+            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp591352568', get(vars)),[O,DC| Stack])) of
             false -> [];
             true -> receive
                     {stop_world, CogRef} ->
@@ -262,9 +262,9 @@ end.
                     after 0 -> ok
                 end,
                  %% ABS.rpl:78--83
-                put(vars, (get(vars))#{'id' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp873688017', get(vars)),[O,DC| Stack])}),
+                put(vars, (get(vars))#{'id' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp591352568', get(vars)),[O,DC| Stack])}),
                  %% ABS.rpl:78--83
-                put(vars, (get(vars))#{'tmp873688017' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp873688017', get(vars)),[O,DC| Stack])}),
+                put(vars, (get(vars))#{'tmp591352568' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp591352568', get(vars)),[O,DC| Stack])}),
                  %% ABS.rpl:79--79
                 case m_ABS_StdLib_funs:f_contains(Cog,maps:get('all_ids', get(vars)),maps:get('id', get(vars)),[O,DC| Stack]) of
                     true ->  %% ABS.rpl:80--80
