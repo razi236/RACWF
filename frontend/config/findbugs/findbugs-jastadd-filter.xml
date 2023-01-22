@@ -5,10 +5,10 @@
   </Match>
   <Match>
     <!-- this package is generated code; don't complain about it -->
-    <Package name="org.abs_models.frontend.ast" />
+    <Package name="org.rpl.frontend.ast" />
   </Match>
   <Match>
     <!-- this package is generated code; don't complain about it -->
-    <Package name="org.abs_models.frontend.antlr.parser" />
+    <Package name="org.rpl.frontend.antlr.parser" />
   </Match>
 </FindBugsFilter>

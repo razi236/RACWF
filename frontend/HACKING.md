@@ -8,15 +8,15 @@ language implementation.  Contributions welcome!
 Adding new classes containing a `public static void main(String[]
 args)` method should be avoided.  Instead, implement new analysis
 tools etc. as subcommands: see the class
-`org.abs_models.frontend.typechecker.CheckSPLCommand` for an example.
+`org.rpl.frontend.typechecker.CheckSPLCommand` for an example.
 
 When calling `java absfrontend.jar`, the main method invoked is
-contained in the class `org.abs_models.Absc`.  Register your
+contained in the class `org.rpl.RPLc`.  Register your
 subcommand in the `subcommands` array of the `@Command` annotation to
 that class, and put your code into a `public Void call()` method in
 your class; it will be invoked when the user calls `absc
 thenewsubcommand ...`.  Again, see
-`org.abs_models.frontend.typechecker.CheckSPLCommand` for an example.
+`org.rpl.frontend.typechecker.CheckSPLCommand` for an example.
 
 ## Adding new language elements
 
@@ -64,7 +64,7 @@ thenewsubcommand ...`.  Again, see
 
 ### Type Checking the SPL
 
-The main entry point for SPL checking is the class `org.abs_models.frontend.typechecker.CheckSPLCommand`.
+The main entry point for SPL checking is the class `org.rpl.frontend.typechecker.CheckSPLCommand`.
 
 The SPL type checker is invoked by calling `typecheckPL()` on the
 `Model` AST node.  This top level method is defined by a JastAdd

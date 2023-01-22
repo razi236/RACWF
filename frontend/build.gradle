@@ -16,7 +16,7 @@ configurations {
 }
 
 application {
-    mainClass = 'org.abs_models.frontend.parser.Main'
+    mainClass = 'org.rpl.frontend.parser.Main'
 }
 
 java {
@@ -86,7 +86,7 @@ task generateJastAddAST(type: JavaExec) {
     args += "--o=$buildDir/generated-src/jastadd/main"
     args += '--rewrite=regular'
     args += '--visitCheck=false'
-    args += '--package=org.abs_models.frontend.ast'
+    args += '--package=org.rpl.frontend.ast'
     args += fileTree(dir: 'src/main/java',
                      includes: ['**/*.ast', '**/*.jrag', '**/*.jadd']).files
 }
@@ -97,7 +97,7 @@ sourcesJar.dependsOn 'generateJastAddAST'
 
 // antlr
 generateGrammarSource {
-    arguments += [ '-package', 'org.abs_models.frontend.antlr.parser' ]
+    arguments += [ '-package', 'org.rpl.frontend.antlr.parser' ]
 }
 compileJava.dependsOn 'generateGrammarSource'
 sourcesJar.dependsOn 'generateGrammarSource'
@@ -180,7 +180,7 @@ jar {
     archiveAppendix=gitBranch()
     duplicatesStrategy='exclude'
     manifest {
-        attributes 'Main-Class': 'org.abs_models.Absc',
+        attributes 'Main-Class': 'org.rpl.Absc',
             'Implementation-Title': 'ABS Frontend',
             //'Implementation-Version': project.version.tokenize('-').first(),
             'Bundle-Version': project.version,
@@ -224,7 +224,7 @@ assemble.dependsOn copyScripts
 task generateAutocomplete(type: JavaExec) {
     mainClass = 'picocli.AutoComplete'
     classpath = sourceSets.main.runtimeClasspath
-    args = [ '--force', '--completionScript', 'bin/bash/absc_completion.sh', 'org.abs_models.Absc' ]
+    args = [ '--force', '--completionScript', 'bin/bash/absc_completion.sh', 'org.rpl.Absc' ]
 }
 assemble.dependsOn generateAutocomplete
 

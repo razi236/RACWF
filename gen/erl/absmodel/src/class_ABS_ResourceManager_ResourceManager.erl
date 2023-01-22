@@ -4,7 +4,7 @@
 -export([get_val_internal/2,set_val_internal/3,init_internal/0,get_state_for_modelapi/1,implemented_interfaces/0,exported/0]).
 -compile(export_all).
 
-implemented_interfaces() -> [ <<"ResourceManager">>, <<"Object">> ].
+implemented_interfaces() -> [ <<"Object">>, <<"ResourceManager">> ].
 
 exported() -> #{  }.
 
@@ -14,11 +14,11 @@ exported() -> #{  }.
 'init_internal'()->
     #state{}.
 
- %% RABS.abs:20
+ %% ABS.rpl:20
 'get_val_internal'(#state{'resources'=G},'resources')->
     object:register_read('resources'),
     G;
- %% RABS.abs:21
+ %% ABS.rpl:21
 'get_val_internal'(#state{'resource_counter'=G},'resource_counter')->
     object:register_read('resource_counter'),
     G;
@@ -27,11 +27,11 @@ exported() -> #{  }.
     %% Will never occur in generated code.
     none.
 
- %% RABS.abs:20
+ %% ABS.rpl:20
 'set_val_internal'(S,'resources',V)->
     object:register_write('resources'),
     S#state{'resources'=V};
- %% RABS.abs:21
+ %% ABS.rpl:21
 'set_val_internal'(S,'resource_counter',V)->
     object:register_write('resource_counter'),
     S#state{'resource_counter'=V}.
@@ -46,9 +46,9 @@ exported() -> #{  }.
 'init'(O=#object{oid=Oid,cog=Cog=#cog{ref=CogRef,dcobj=DC}},[Stack])->
     C=(get(this))#state.class,
     put(vars, #{}),
-     %% RABS.abs:20--20
+     %% ABS.rpl:20--20
     put(this, C:set_val_internal(get(this),'resources',m_ABS_StdLib_funs:f_map(Cog,[],[O,DC| Stack]))),
-     %% RABS.abs:21--21
+     %% ABS.rpl:21--21
     put(this, C:set_val_internal(get(this),'resource_counter',0)),
     gc:register_object(O),
     O.
@@ -56,13 +56,13 @@ exported() -> #{  }.
 
 %% --- Methods
 
- %% RABS.abs:23
- %% RABS.abs:23
+ %% ABS.rpl:23
+ %% ABS.rpl:23
 'm_print'(O=#object{oid=Oid,cog=Cog=#cog{ref=CogRef,dcobj=DC}},Stack)->
     C=(get(this))#state.class,
     put(vars, #{ 'this' => O }),
     try
-         %% RABS.abs:24--24
+         %% ABS.rpl:24--24
         T_1 = builtin:println(Cog,builtin:toString(Cog,C:get_val_internal(get(this), 'resources'))),
         T_1,
         dataUnit
@@ -73,20 +73,20 @@ exported() -> #{  }.
             io:format(standard_error, "stacktrace: ~tp~n", [Stacktrace]),
             object:die(O, Exception), exit(Exception)
     end.
- %% RABS.abs:26
- %% RABS.abs:26
+ %% ABS.rpl:26
+ %% ABS.rpl:26
 'm_addRes'(O=#object{oid=Oid,cog=Cog=#cog{ref=CogRef,dcobj=DC}},V_newResources_0,Stack)->
     C=(get(this))#state.class,
     put(vars, #{ 'this' => O,
  'newResources' => V_newResources_0 }),
     try
-         %% RABS.abs:27--27
+         %% ABS.rpl:27--27
         put(vars, (get(vars))#{'result' => m_ABS_StdLib_funs:f_list(Cog,[],[O,DC| Stack])}),
-         %% RABS.abs:28--32
-        put(vars, (get(vars))#{'tmp245867715' => maps:get('newResources', get(vars))}),
-         %% RABS.abs:28--32
+         %% ABS.rpl:28--32
+        put(vars, (get(vars))#{'tmp705400860' => maps:get('newResources', get(vars))}),
+         %% ABS.rpl:28--32
         []=(fun Loop ([])->
-            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp245867715', get(vars)),[O,DC| Stack])) of
+            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp705400860', get(vars)),[O,DC| Stack])) of
             false -> [];
             true -> receive
                     {stop_world, CogRef} ->
@@ -95,19 +95,19 @@ exported() -> #{  }.
                         task:wait_for_token(Cog,[O,DC| Stack])
                     after 0 -> ok
                 end,
-                 %% RABS.abs:28--32
-                put(vars, (get(vars))#{'r' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp245867715', get(vars)),[O,DC| Stack])}),
-                 %% RABS.abs:28--32
-                put(vars, (get(vars))#{'tmp245867715' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp245867715', get(vars)),[O,DC| Stack])}),
-                 %% RABS.abs:29--29
+                 %% ABS.rpl:28--32
+                put(vars, (get(vars))#{'r' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp705400860', get(vars)),[O,DC| Stack])}),
+                 %% ABS.rpl:28--32
+                put(vars, (get(vars))#{'tmp705400860' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp705400860', get(vars)),[O,DC| Stack])}),
+                 %% ABS.rpl:29--29
                 put(this, C:set_val_internal(get(this), 'resource_counter',(C:get_val_internal(get(this), 'resource_counter') + 1) )),
-                 %% RABS.abs:30--30
+                 %% ABS.rpl:30--30
                 put(this, C:set_val_internal(get(this), 'resources',m_ABS_StdLib_funs:f_insert(Cog,C:get_val_internal(get(this), 'resources'),{ dataPair,C:get_val_internal(get(this), 'resource_counter'),{ dataPair,dataFree,maps:get('r', get(vars))}},[O,DC| Stack]))),
-                 %% RABS.abs:31--31
+                 %% ABS.rpl:31--31
                 put(vars, (get(vars))#{'result' := [C:get_val_internal(get(this), 'resource_counter') | maps:get('result', get(vars))]}),
             Loop([])  end end)
         ([]),
-         %% RABS.abs:34--34
+         %% ABS.rpl:34--34
         maps:get('result', get(vars))
     catch
         _:Exception:Stacktrace ->
@@ -115,18 +115,18 @@ exported() -> #{  }.
             io:format(standard_error, "stacktrace: ~tp~n", [Stacktrace]),
             object:die(O, Exception), exit(Exception)
     end.
- %% RABS.abs:37
- %% RABS.abs:37
+ %% ABS.rpl:37
+ %% ABS.rpl:37
 'm_holdRes'(O=#object{oid=Oid,cog=Cog=#cog{ref=CogRef,dcobj=DC}},V_wantedResources_0,Stack)->
     C=(get(this))#state.class,
     put(vars, #{ 'this' => O,
  'wantedResources' => V_wantedResources_0 }),
     try
-         %% RABS.abs:38--38
+         %% ABS.rpl:38--38
         put(vars, (get(vars))#{'result' => m_ABS_StdLib_funs:f_list(Cog,[],[O,DC| Stack])}),
-         %% RABS.abs:39--39
+         %% ABS.rpl:39--39
         put(vars, (get(vars))#{'lr' => C:get_val_internal(get(this), 'resources')}),
-         %% RABS.abs:40--40
+         %% ABS.rpl:40--40
         []=(fun Loop ([])->
             case cmp:eq(maps:get('result', get(vars)),[]) of
             false -> [];
@@ -137,11 +137,11 @@ exported() -> #{  }.
                         task:wait_for_token(Cog,[O,DC| Stack])
                     after 0 -> ok
                 end,
-                 %% RABS.abs:41--53
-                put(vars, (get(vars))#{'tmp1765165869' => maps:get('wantedResources', get(vars))}),
-                 %% RABS.abs:41--53
+                 %% ABS.rpl:41--53
+                put(vars, (get(vars))#{'tmp233271622' => maps:get('wantedResources', get(vars))}),
+                 %% ABS.rpl:41--53
                 []=(fun Loop ([])->
-                    case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp1765165869', get(vars)),[O,DC| Stack])) of
+                    case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp233271622', get(vars)),[O,DC| Stack])) of
                     false -> [];
                     true -> receive
                             {stop_world, CogRef} ->
@@ -150,17 +150,17 @@ exported() -> #{  }.
                                 task:wait_for_token(Cog,[O,DC| Stack])
                             after 0 -> ok
                         end,
-                         %% RABS.abs:41--53
-                        put(vars, (get(vars))#{'q' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp1765165869', get(vars)),[O,DC| Stack])}),
-                         %% RABS.abs:41--53
-                        put(vars, (get(vars))#{'tmp1765165869' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp1765165869', get(vars)),[O,DC| Stack])}),
-                         %% RABS.abs:42--42
+                         %% ABS.rpl:41--53
+                        put(vars, (get(vars))#{'q' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp233271622', get(vars)),[O,DC| Stack])}),
+                         %% ABS.rpl:41--53
+                        put(vars, (get(vars))#{'tmp233271622' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp233271622', get(vars)),[O,DC| Stack])}),
+                         %% ABS.rpl:42--42
                         put(vars, (get(vars))#{'found' => false}),
-                         %% RABS.abs:43--52
-                        put(vars, (get(vars))#{'tmp1391890442' => m_ABS_StdLib_funs:f_entries(Cog,maps:get('lr', get(vars)),[O,DC| Stack])}),
-                         %% RABS.abs:43--52
+                         %% ABS.rpl:43--52
+                        put(vars, (get(vars))#{'tmp40829249' => m_ABS_StdLib_funs:f_entries(Cog,maps:get('lr', get(vars)),[O,DC| Stack])}),
+                         %% ABS.rpl:43--52
                         []=(fun Loop ([])->
-                            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp1391890442', get(vars)),[O,DC| Stack])) of
+                            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp40829249', get(vars)),[O,DC| Stack])) of
                             false -> [];
                             true -> receive
                                     {stop_world, CogRef} ->
@@ -169,17 +169,17 @@ exported() -> #{  }.
                                         task:wait_for_token(Cog,[O,DC| Stack])
                                     after 0 -> ok
                                 end,
-                                 %% RABS.abs:43--52
-                                put(vars, (get(vars))#{'entry' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp1391890442', get(vars)),[O,DC| Stack])}),
-                                 %% RABS.abs:43--52
-                                put(vars, (get(vars))#{'tmp1391890442' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp1391890442', get(vars)),[O,DC| Stack])}),
-                                 %% RABS.abs:44--46
+                                 %% ABS.rpl:43--52
+                                put(vars, (get(vars))#{'entry' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp40829249', get(vars)),[O,DC| Stack])}),
+                                 %% ABS.rpl:43--52
+                                put(vars, (get(vars))#{'tmp40829249' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp40829249', get(vars)),[O,DC| Stack])}),
+                                 %% ABS.rpl:44--46
                                 case ((not (maps:get('found', get(vars)))) and (cmp:eq(m_ABS_StdLib_funs:f_fst(Cog,m_ABS_StdLib_funs:f_snd(Cog,maps:get('entry', get(vars)),[O,DC| Stack]),[O,DC| Stack]),dataFree))) and (m_ABS_StdLib_funs:f_isSubset(Cog,maps:get('q', get(vars)),m_ABS_StdLib_funs:f_snd(Cog,m_ABS_StdLib_funs:f_snd(Cog,maps:get('entry', get(vars)),[O,DC| Stack]),[O,DC| Stack]),[O,DC| Stack])) of
-                                    true ->  %% RABS.abs:48--48
+                                    true ->  %% ABS.rpl:48--48
                                     put(vars, (get(vars))#{'found' := true}),
-                                     %% RABS.abs:49--49
+                                     %% ABS.rpl:49--49
                                     put(vars, (get(vars))#{'result' := [m_ABS_StdLib_funs:f_fst(Cog,maps:get('entry', get(vars)),[O,DC| Stack]) | maps:get('result', get(vars))]}),
-                                     %% RABS.abs:50--50
+                                     %% ABS.rpl:50--50
                                     put(vars, (get(vars))#{'lr' := m_ABS_StdLib_funs:f_put(Cog,maps:get('lr', get(vars)),m_ABS_StdLib_funs:f_fst(Cog,maps:get('entry', get(vars)),[O,DC| Stack]),{ dataPair,dataBusy,m_ABS_StdLib_funs:f_snd(Cog,m_ABS_StdLib_funs:f_snd(Cog,maps:get('entry', get(vars)),[O,DC| Stack]),[O,DC| Stack])},[O,DC| Stack])});
                                     false ->                                 ok
                                 end,
@@ -187,16 +187,16 @@ exported() -> #{  }.
                         ([]),
                     Loop([])  end end)
                 ([]),
-                 %% RABS.abs:54--54
+                 %% ABS.rpl:54--54
                 case (not cmp:eq(m_ABS_StdLib_funs:f_length(Cog,maps:get('result', get(vars)),[O,DC| Stack]),m_ABS_StdLib_funs:f_length(Cog,maps:get('wantedResources', get(vars)),[O,DC| Stack]))) of
-                    true ->  %% RABS.abs:56--56
+                    true ->  %% ABS.rpl:56--56
                     T_1 = builtin:println(Cog,iolist_to_binary([iolist_to_binary([iolist_to_binary([<<"hold retrying: Resources = "/utf8>>, builtin:toString(Cog,C:get_val_internal(get(this), 'resources'))]), iolist_to_binary([<<" We want "/utf8>>, builtin:toString(Cog,maps:get('wantedResources', get(vars)))])]), <<""/utf8>>])),
                     T_1,
-                     %% RABS.abs:57--57
+                     %% ABS.rpl:57--57
                     put(vars, (get(vars))#{'result' := []}),
-                     %% RABS.abs:58--58
+                     %% ABS.rpl:58--58
                     put(vars, (get(vars))#{'lr' := C:get_val_internal(get(this), 'resources')}),
-                     %% RABS.abs:59--59
+                     %% ABS.rpl:59--59
                     cog:return_token(Cog,self(),{waiting_poll, get(vars), fun (Vars, OState) ->
                         put(this, OState),
                         put(vars, Vars),
@@ -224,14 +224,14 @@ exported() -> #{  }.
                             Poll(Params, Exception)
                         end end)
                     ([], none),
-                 %% RABS.abs:60--60
+                 %% ABS.rpl:60--60
                 put(vars, (get(vars))#{'lr' := C:get_val_internal(get(this), 'resources')});
-                false ->                  %% RABS.abs:68--68
+                false ->                  %% ABS.rpl:68--68
                 put(this, C:set_val_internal(get(this), 'resources',maps:get('lr', get(vars))))
             end,
         Loop([])  end end)
     ([]),
-     %% RABS.abs:73--73
+     %% ABS.rpl:73--73
     maps:get('result', get(vars))
 catch
     _:Exception:Stacktrace ->
@@ -239,20 +239,20 @@ catch
         io:format(standard_error, "stacktrace: ~tp~n", [Stacktrace]),
         object:die(O, Exception), exit(Exception)
 end.
- %% RABS.abs:76
- %% RABS.abs:76
+ %% ABS.rpl:76
+ %% ABS.rpl:76
 'm_releaseRes'(O=#object{oid=Oid,cog=Cog=#cog{ref=CogRef,dcobj=DC}},V_ids_0,Stack)->
     C=(get(this))#state.class,
     put(vars, #{ 'this' => O,
  'ids' => V_ids_0 }),
     try
-         %% RABS.abs:77--77
+         %% ABS.rpl:77--77
         put(vars, (get(vars))#{'all_ids' => m_ABS_StdLib_funs:f_keys(Cog,C:get_val_internal(get(this), 'resources'),[O,DC| Stack])}),
-         %% RABS.abs:78--83
-        put(vars, (get(vars))#{'tmp2075981552' => maps:get('ids', get(vars))}),
-         %% RABS.abs:78--83
+         %% ABS.rpl:78--83
+        put(vars, (get(vars))#{'tmp873688017' => maps:get('ids', get(vars))}),
+         %% ABS.rpl:78--83
         []=(fun Loop ([])->
-            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp2075981552', get(vars)),[O,DC| Stack])) of
+            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp873688017', get(vars)),[O,DC| Stack])) of
             false -> [];
             true -> receive
                     {stop_world, CogRef} ->
@@ -261,15 +261,15 @@ end.
                         task:wait_for_token(Cog,[O,DC| Stack])
                     after 0 -> ok
                 end,
-                 %% RABS.abs:78--83
-                put(vars, (get(vars))#{'id' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp2075981552', get(vars)),[O,DC| Stack])}),
-                 %% RABS.abs:78--83
-                put(vars, (get(vars))#{'tmp2075981552' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp2075981552', get(vars)),[O,DC| Stack])}),
-                 %% RABS.abs:79--79
+                 %% ABS.rpl:78--83
+                put(vars, (get(vars))#{'id' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp873688017', get(vars)),[O,DC| Stack])}),
+                 %% ABS.rpl:78--83
+                put(vars, (get(vars))#{'tmp873688017' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp873688017', get(vars)),[O,DC| Stack])}),
+                 %% ABS.rpl:79--79
                 case m_ABS_StdLib_funs:f_contains(Cog,maps:get('all_ids', get(vars)),maps:get('id', get(vars)),[O,DC| Stack]) of
-                    true ->  %% RABS.abs:80--80
+                    true ->  %% ABS.rpl:80--80
                     put(vars, (get(vars))#{'entry' => m_ABS_StdLib_funs:f_lookupUnsafe(Cog,C:get_val_internal(get(this), 'resources'),maps:get('id', get(vars)),[O,DC| Stack])}),
-                     %% RABS.abs:81--81
+                     %% ABS.rpl:81--81
                     put(this, C:set_val_internal(get(this), 'resources',m_ABS_StdLib_funs:f_put(Cog,C:get_val_internal(get(this), 'resources'),maps:get('id', get(vars)),{ dataPair,dataFree,m_ABS_StdLib_funs:f_snd(Cog,maps:get('entry', get(vars)),[O,DC| Stack])},[O,DC| Stack])));
                     false ->                 ok
                 end,

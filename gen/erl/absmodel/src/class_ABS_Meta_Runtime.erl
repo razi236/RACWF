@@ -3,7 +3,7 @@
 -export([get_val_internal/2,set_val_internal/3,init_internal/0,get_state_for_modelapi/1,implemented_interfaces/0,exported/0]).
 -compile(export_all).
 
-implemented_interfaces() -> [ <<"Runtime">>, <<"Object">> ].
+implemented_interfaces() -> [ <<"Object">>, <<"Runtime">> ].
 
 exported() -> #{  }.
 
@@ -34,13 +34,13 @@ exported() -> #{  }.
 
 %% --- Methods
 
- %% abs/lang/abslang.abs:1264
- %% abs/lang/abslang.abs:1264
+ %% RPL/lang/RPLlang.RPL:1264
+ %% RPL/lang/RPLlang.RPL:1264
 'm_getProductLine'(O=#object{oid=Oid,cog=Cog=#cog{ref=CogRef,dcobj=DC}},Stack)->
     C=(get(this))#state.class,
     put(vars, #{ 'this' => O }),
     try
-         %% abs/lang/abslang.abs:1264--1264
+         %% RPL/lang/RPLlang.RPL:1264--1264
         builtin:getProductLine(Cog)
     catch
         _:Exception:Stacktrace ->

@@ -4,7 +4,7 @@
 -export([get_val_internal/2,set_val_internal/3,init_internal/0,get_state_for_modelapi/1,implemented_interfaces/0,exported/0]).
 -compile(export_all).
 
-implemented_interfaces() -> [ <<"AwaitFut">>, <<"Object">> ].
+implemented_interfaces() -> [ <<"Object">>, <<"AwaitFut">> ].
 
 exported() -> #{  }.
 
@@ -14,7 +14,7 @@ exported() -> #{  }.
 'init_internal'()->
     #state{}.
 
- %% RABS.abs:105
+ %% ABS.rpl:105
 'get_val_internal'(#state{'resolved'=G},'resolved')->
     object:register_read('resolved'),
     G;
@@ -23,7 +23,7 @@ exported() -> #{  }.
     %% Will never occur in generated code.
     none.
 
- %% RABS.abs:105
+ %% ABS.rpl:105
 'set_val_internal'(S,'resolved',V)->
     object:register_write('resolved'),
     S#state{'resolved'=V}.
@@ -37,7 +37,7 @@ exported() -> #{  }.
 'init'(O=#object{oid=Oid,cog=Cog=#cog{ref=CogRef,dcobj=DC}},[Stack])->
     C=(get(this))#state.class,
     put(vars, #{}),
-     %% RABS.abs:105--105
+     %% ABS.rpl:105--105
     put(this, C:set_val_internal(get(this),'resolved',false)),
     gc:register_object(O),
     O.
@@ -45,22 +45,22 @@ exported() -> #{  }.
 
 %% --- Methods
 
- %% RABS.abs:106
- %% RABS.abs:106
+ %% ABS.rpl:106
+ %% ABS.rpl:106
 'm_awaitFut'(O=#object{oid=Oid,cog=Cog=#cog{ref=CogRef,dcobj=DC}},V_fut_0,Stack)->
     C=(get(this))#state.class,
     put(vars, #{ 'this' => O,
  'fut' => V_fut_0 }),
     try
-         %% RABS.abs:108--108
+         %% ABS.rpl:108--108
         try
-             %% RABS.abs:109--109
+             %% ABS.rpl:109--109
             case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('fut', get(vars)),[O,DC| Stack])) of
-                true ->  %% RABS.abs:110--113
-                put(vars, (get(vars))#{'tmp729867689' => maps:get('fut', get(vars))}),
-                 %% RABS.abs:110--113
+                true ->  %% ABS.rpl:110--113
+                put(vars, (get(vars))#{'tmp1843885967' => maps:get('fut', get(vars))}),
+                 %% ABS.rpl:110--113
                 []=(fun Loop ([])->
-                    case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp729867689', get(vars)),[O,DC| Stack])) of
+                    case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp1843885967', get(vars)),[O,DC| Stack])) of
                     false -> [];
                     true -> receive
                             {stop_world, CogRef} ->
@@ -69,25 +69,25 @@ exported() -> #{  }.
                                 task:wait_for_token(Cog,[O,DC| Stack])
                             after 0 -> ok
                         end,
-                         %% RABS.abs:110--113
-                        put(vars, (get(vars))#{'f' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp729867689', get(vars)),[O,DC| Stack])}),
-                         %% RABS.abs:110--113
-                        put(vars, (get(vars))#{'tmp729867689' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp729867689', get(vars)),[O,DC| Stack])}),
-                         %% RABS.abs:112--112
+                         %% ABS.rpl:110--113
+                        put(vars, (get(vars))#{'f' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp1843885967', get(vars)),[O,DC| Stack])}),
+                         %% ABS.rpl:110--113
+                        put(vars, (get(vars))#{'tmp1843885967' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp1843885967', get(vars)),[O,DC| Stack])}),
+                         %% ABS.rpl:112--112
                         future:await(maps:get('f', get(vars)), Cog, [O,DC| Stack]),
                         ok,
                     Loop([])  end end)
                 ([]),
-                 %% RABS.abs:114--114
+                 %% ABS.rpl:114--114
                 put(this, C:set_val_internal(get(this), 'resolved',true)),
-                 %% RABS.abs:115--115
+                 %% ABS.rpl:115--115
                 T_1 = builtin:println(Cog,<<"Future Resolved:)"/utf8>>),
                 T_1;
                 false ->             ok
             end
         catch
             _:dataNullPointerException->
-                 %% RABS.abs:118--118
+                 %% ABS.rpl:118--118
                 T_2 = builtin:println(Cog,<<"Future is not initialized"/utf8>>),
                 T_2
         end,
@@ -99,13 +99,13 @@ exported() -> #{  }.
             io:format(standard_error, "stacktrace: ~tp~n", [Stacktrace]),
             object:die(O, Exception), exit(Exception)
     end.
- %% RABS.abs:121
- %% RABS.abs:121
+ %% ABS.rpl:121
+ %% ABS.rpl:121
 'm_checkFut'(O=#object{oid=Oid,cog=Cog=#cog{ref=CogRef,dcobj=DC}},Stack)->
     C=(get(this))#state.class,
     put(vars, #{ 'this' => O }),
     try
-         %% RABS.abs:123--123
+         %% ABS.rpl:123--123
         C:get_val_internal(get(this), 'resolved')
     catch
         _:Exception:Stacktrace ->

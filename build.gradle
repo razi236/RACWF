@@ -38,7 +38,7 @@ subprojects {
     repositories {
         mavenCentral()
     }
-    group = 'org.abs_models'
+    group = 'org.rpl'
     version = gitVersion()
 }
 

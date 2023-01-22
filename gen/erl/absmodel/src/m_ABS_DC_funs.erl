@@ -22,7 +22,7 @@
         case V_data_0 of
             
             {dataFin,V_res_0}->V_res_0;
-            _ -> io:format("No match for data at abs/lang/abslang.abs:777~n"), 
+            _ -> io:format("No match for data at RPL/lang/RPLlang.RPL:777~n"), 
             exit(dataPatternMatchFailException)
         end
     end.
