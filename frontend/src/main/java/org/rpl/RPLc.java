@@ -70,9 +70,14 @@ public class RPLc implements Callable<Integer> {
                 description = "@|bold Prolog backend:|@ generate Prolog data file")
         public boolean prolog = false;
 
-        @Option(names = { "-t" }, required = true,
+        @Option(names = { "-s" }, required = true,
                 description = "@|bold Pretty-printer:|@ pretty print model and exit")
         public boolean prettyprint = false;
+
+        @Option(names = { "-t" }, required = true,
+            description = "@|bold Rpl to ABS:|@ translate Rpl into ABS and exit")
+        public boolean abs = false;
+
 
         @Option(names = { "-c" }, required = true,
             description = "@|bold Cost Analysis:|@ compute cost and exit")

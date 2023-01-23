@@ -50,4 +50,4 @@ The directory `RplTools/examples` has some examples. For simplicity, please put 
 
 Afterwards, move back to `RplTools` directory and use the following command to run RplTools.
 
-`./rplTools.sh`
+`make`

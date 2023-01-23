@@ -18,6 +18,7 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 
 import org.rpl.RPLc;
+import org.rpl.backend.abs.RplToABSBackEnd;
 import org.rpl.backend.common.InternalBackendException;
 import org.rpl.backend.cost.CostAnalysis;
 import org.rpl.backend.erlang.ErlangBackend;
@@ -86,6 +87,11 @@ public class Main {
 
                 if (arguments.backend.prettyprint) {
                     result = Math.max(result, PrettyPrinterBackEnd.doMain(arguments));
+                    done = true;
+                }
+
+                if (arguments.backend.abs) {
+                    result = Math.max(result, RplToABSBackEnd.doMain(arguments));
                     done = true;
                 }
 

@@ -2,23 +2,19 @@
  * Copyright (c) 2009-2011, The HATS Consortium. All rights reserved.
  * This file is licensed under the terms of the Modified BSD License.
  */
-package org.rpl.backend.prettyprint;
-
-import java.io.*;
+package org.rpl.backend.abs;
 
 import org.rpl.RPLc;
 import org.rpl.frontend.ast.Model;
 import org.rpl.frontend.parser.Main;
-import java.sql.DriverManager;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
-public class PrettyPrinterBackEnd extends Main {
+import java.io.*;
+import java.sql.*;
+
+public class RplToABSBackEnd extends Main {
 
     public static int doMain(RPLc args) {
-        PrettyPrinterBackEnd backend = new PrettyPrinterBackEnd();
+        RplToABSBackEnd backend = new RplToABSBackEnd();
         //backend.importCSV();
         backend.arguments = args;
         int result = 0;
@@ -193,10 +189,10 @@ public class PrettyPrinterBackEnd extends Main {
             br = new BufferedWriter(fr);
             writer = new PrintWriter(br);
             System.setProperty("line.separator", System.lineSeparator());
-            ABSFormatter formatter = new DefaultABSFormatter(writer);
-            model.doPrettyPrintStdLib = false;
-            model.doPrettyPrintResourceManager = false;
-            model.doPrettyPrint(writer, formatter);
+            RplToABSFormatter formatter = new DefaultABSFormatter(writer);
+            model.doABSTranslationStdLib = false;
+            model.doABSTranslationResourceManager = false;
+            model.doABSTranslation(writer, formatter);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
