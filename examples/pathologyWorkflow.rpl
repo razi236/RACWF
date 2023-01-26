@@ -1,5 +1,4 @@
 module Pathology;
-//import * from ABS.ResourceManager;
 interface Pathology
 {
     Int registerCase(Grossing g, Processing pr, Embedding em, Sectioning sc, Staining st, MicroscopicAnalysis ma);

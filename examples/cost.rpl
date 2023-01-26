@@ -70,7 +70,7 @@ class ABC implements ABC
         f2 = !lmn(c,a,c) after f&f1 dl 5;
 
         // after f1,f2 means either f1 or f2 should be resolved.
-        f3 = !efg(o1) after f1,f dl 3;
+        f3 = !efg(o1) after f,f1,f2 dl 3;
         await f3?;
         return 0;
     }

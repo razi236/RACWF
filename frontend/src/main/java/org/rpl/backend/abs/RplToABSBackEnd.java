@@ -123,12 +123,13 @@ public class RplToABSBackEnd extends Main {
 
         File file = new File("RABS.abs");
         PrintWriter writer = new PrintWriter(file);
-        writer.print("module ABS.ResourceManager;");
-        writer.println();
-        writer.print("import * from ABS.StdLib;");
-        writer.println();
-        writer.print("export *;");
-        writer.println();
+        //writer.print("module ABS.ResourceManager;");
+        //writer.println();
+        //writer.print("import * from ABS.StdLib;");
+        //writer.println();
+        //writer.print("export *;");
+        //writer.println();
+        /*
         writer.print("data Quality = ");
 
         String sql = "SELECT * FROM ResourceQuality";
@@ -182,6 +183,9 @@ public class RplToABSBackEnd extends Main {
                 outputStream.close();
             }
         }
+
+       */
+
         BufferedWriter br = null;
         FileWriter fr = null;
         try {
