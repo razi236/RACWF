@@ -64,7 +64,7 @@ aspect doABSTranslator {
             {
                 stream.println();
                 formatter.afterStmt();
-                stream.print("if () {");
+                stream.print("if (True) {");
                 stream.println();
                 formatter.afterStmt();
                 formatter.afterStmt();
@@ -77,7 +77,7 @@ aspect doABSTranslator {
                 for (int i = 1; i < getNumChild()-1; i++) {
                     stream.println();
                     formatter.afterStmt();
-                    stream.print("else if ( ) {");
+                    stream.print("else if (True) {");
                     stream.println();
                     formatter.afterStmt();
                     formatter.afterStmt();
@@ -1571,11 +1571,13 @@ aspect doABSTranslator {
             //stream.print("( ");
             //formatter.afterOpenBrace();
             getLeft().doABSTranslation(stream, formatter);
+            stream.print("?");
+            stream.print(" ");
+            doABSTranslationOperator(stream, formatter);
+            stream.print(" ");
+            getRight().doABSTranslation(stream, formatter);
             //stream.print("?");
             //stream.print(" ");
-            doABSTranslationOperator(stream, formatter);
-            //stream.print(" ");
-            getRight().doABSTranslation(stream, formatter);
             //caformatter.beforeCloseBrace();
             //stream.print(" )");
             formatter.afterCloseBrace();
