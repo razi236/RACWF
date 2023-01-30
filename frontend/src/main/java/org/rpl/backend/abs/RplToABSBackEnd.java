@@ -155,7 +155,7 @@ public class RplToABSBackEnd extends Main {
             writer.close();
             conn.close();
         }
-        FileInputStream inputStream = new FileInputStream("frontend/src/main/resources/abs/lang/ResourceManager.abs");
+        FileInputStream inputStream = new FileInputStream("frontend/src/main/resources/abs/lang/ResourceManagerForStaticABS.abs");
         FileOutputStream outputStream = new FileOutputStream(file,true);
         //PrintWriter writer = null;
         try {
