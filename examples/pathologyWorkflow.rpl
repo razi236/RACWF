@@ -10,7 +10,7 @@ class Pathology implements Pathology
     Int registerCase(Grossing g, Processing pr, Embedding em, Sectioning sc, Staining st, MicroscopicAnalysis ma)
     {
         Pair<Int,String> newSpecimen = Pair(caseNum,"Test"+toString(caseNum));
-        //consTime(1);
+        //cost(1);
         Fut<Int> f;
         f = !gross(g,pr,em,sc,st,ma,newSpecimen) after dl 110;
         println(`Time: $now()$ : case $caseNum$`);
@@ -31,7 +31,7 @@ class Grossing implements Grossing
         Int i = 1;
         List<Int> rid = list[];
         rid = hold(list[set[BioTechnician, Efficiency(2)]]);
-        consTime(5);
+        cost(5);
         List<Fut<Int>> futList = list[];
         while(i<=3)
         {
@@ -70,7 +70,7 @@ class Processing implements Processing
         List<Int> rid = list[];
         rid = hold(list[set[ProcessingMachine, Efficiency(10)]]);
         // Processing
-        consTime(5);
+        cost(5);
         blockTray = concatenate(blockTray,processingTray);
         //println("Block Tray:");
         //println(toString(blockTray));
@@ -101,7 +101,7 @@ class Embedding implements Embedding
     {
         List<Int> rid = list[];
         rid = hold(list[set[BioTechnician, Efficiency(2)]]);
-        consTime(5);
+        cost(5);
         rel(rid);
         Fut<Int> f;
         f = !section(sc,st,ma,block) after dl 100;
@@ -119,7 +119,7 @@ class Sectioning implements Sectioning
     Int section(Staining st,MicroscopicAnalysis ma,Triple<Int,Int,String> block){
         List<Int> rid = list[];
         rid = hold(list[set[BioTechnician, Efficiency(2)]]);
-        //consTime(5);
+        //cost(5);
         rel(rid);
         if(length(slideTray)<3)
             slideTray = appendright(slideTray,block);
@@ -143,7 +143,7 @@ class Staining implements Staining
     Int stain(MicroscopicAnalysis ma,List<Triple<Int,Int,String>> slideTray){
         List<Int> rid = list[];
         rid = hold(list[set[StainingMachine, Efficiency(5)]]);
-        consTime(5);
+        cost(5);
         rel(rid);
         foreach(x in slideTray){
             List<Pair<Int,String>> l = lookupDefault(specimenMap,fstT(x),list[]);
@@ -182,7 +182,7 @@ class MicroscopicAnalysis implements MicroscopicAnalysis
         println(toString(case_id)+ "->" +toString(slides));
         List<Int> rid = list[];
         rid = hold(list[set[Pathologist, Efficiency(2)]]);
-        consTime(10);
+        cost(10);
         rel(rid);
         return 0;
     }

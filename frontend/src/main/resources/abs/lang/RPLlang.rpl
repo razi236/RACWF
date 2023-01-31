@@ -724,7 +724,7 @@ data Process;
 def String method(Process p) = builtin;
 def Fut<Destiny> destinyOf(Process p) = builtin;
 def Time arrival(Process p) = builtin;
-def Duration cost(Process p) = builtin;
+def Duration cost1(Process p) = builtin;
 def Duration proc_deadline(Process p) = builtin;
 def Time start(Process p) = builtin;
 def Time finish(Process p) = builtin;
@@ -813,7 +813,7 @@ interface DeploymentComponent {
     [Atomic, Readonly] Rat getShutdownDuration();
     [Atomic, Readonly] Int getPaymentInterval();
     [Atomic, Readonly] Rat getCostPerInterval();
-    [Atomic, Readonly] Rat getAccumulatedCost(); // calculated via creation time + cost + payment interval
+    [Atomic, Readonly] Rat getAccumulatedCost(); // calculated via creation time + cost1 + payment interval
     [Atomic, Readonly] Rat getNumberOfCores();
     // Convenience methods for calling CloudProvider acquireInstance,
     // releaseInstance.  If no cloud provider is set, return True.
@@ -973,16 +973,16 @@ class CloudProvider(String name) implements CloudProviderForDeploymentComponent 
         // shutdown duration gets billed
         launchedInstances = remove(launchedInstances, nullWorkAround);
 
-        Rat cost = await instance!getAccumulatedCost();
-        accumulatedCostOfKilledDCs = accumulatedCostOfKilledDCs + cost;
+        Rat cost1 = await instance!getAccumulatedCost();
+        accumulatedCostOfKilledDCs = accumulatedCostOfKilledDCs + cost1;
     }
 
     Rat getAccumulatedCost() {
         Rat result = 0;
         Time t = now();
         foreach (dc in elements(launchedInstances)) {
-            Rat cost = await dc!getAccumulatedCost();
-            result = result + cost;
+            Rat cost1 = await dc!getAccumulatedCost();
+            result = result + cost1;
         }
         return result + accumulatedCostOfKilledDCs;
     }
@@ -1197,7 +1197,7 @@ type DC = DeploymentComponent;
 
 def DeploymentComponent thisDC() = builtin;
 
-// Annotation for method definitions: runtime cost specification
+// Annotation for method definitions: runtime cost1 specification
 type Cost = Duration;
 
 // Annotation for async method calls: size of sent data

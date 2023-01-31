@@ -8,7 +8,7 @@ class DL implements DL
     Int check()
     {
         Int i=0;
-        consTime(10); // consume 10 times unit
+        cost(10); // consume 10 times unit
         return 0;
     }
 }
@@ -24,7 +24,7 @@ class IJK implements IJK
         Int i=0;
         /*
         while(i<10){
-            consTime(1);
+            cost(1);
             i = i+1;
         }
         */
@@ -50,7 +50,7 @@ class ABC implements ABC
         ABC o1 = new ABC();
         Int x1 = 0;
         Fut<Int> f; Fut<Int> f1; Fut<Int> f2; Fut<Int> f3;
-        consTime(5);
+        cost(5);
 
         // asynchronously invocation of method jkl on object c without any dependency while the deadline is 5 times unit.
         // 1st parameter is always the name of the object on which method is going to execute.
@@ -83,7 +83,7 @@ class ABC implements ABC
 {
     DL o = new DL();
     Fut<Int> f;
-    consTime(5);
+    cost(5);
     f = !check(o) after dl 21;
     await f?;
     println("RplTools");
