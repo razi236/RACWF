@@ -3,7 +3,7 @@ interface DL
 {
     Int check();
 }
-class DL implements DL
+class DLD implements DL
 {
     Int check()
     {
@@ -81,7 +81,7 @@ class ABC implements ABC
     }
 }
 {
-    DL o = new DL();
+    DL o = new DLD();
     Fut<Int> f;
     cost(5);
     f = !check(o) after dl 21;

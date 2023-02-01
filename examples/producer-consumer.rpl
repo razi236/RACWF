@@ -1,0 +1,35 @@
+module ProdCons;
+
+interface Producer {
+	Int produce (Int a);
+}
+
+interface Consumer {
+	Int consume (Int a);
+}
+
+class Producer implements Producer {
+	Int produce (Int a) {
+		cost(a);
+		return 0;
+	}
+}
+
+class Consumer implements Consumer {
+	Int consume (Int a) {
+		cost(a);
+		return 0;
+	}
+}
+
+{
+    Fut<Int> fp1; Fut<Int> fp2; Fut<Int> fc1; Fut<Int> fc2;
+    Producer p = new Producer ();
+    Consumer c = new Consumer ();
+    fp1 = !produce(p,10) after dl 15;
+    fp2 = !produce(p,10) after fp1 dl 15;
+    fc1 = !consume(c,5) after dl 10;
+    fc2 = !consume(c,5) after fc1&fp2 dl 10;
+    await fc2?;
+}
+

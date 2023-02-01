@@ -50,7 +50,7 @@ public class CostAnalysis extends Main{
             Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> trans_result =
                 new HashMap<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>>();
             trans_result = model.translate(trans_result,sync_schema_map,sync_schema,null);
-            print_cost(trans_result);
+            store_cost(trans_result);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -131,6 +131,78 @@ public class CostAnalysis extends Main{
         }
     }
 
+public void store_cost(Map<String,Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String>> cost) throws FileNotFoundException {
+    File file = new File("CostEquations.txt");
+    PrintWriter writer = new PrintWriter(file);
+    Iterator<String> method_name_itr = cost.keySet().iterator();
+    while (method_name_itr.hasNext()) {
+        String name = method_name_itr.next();
+        writer.println("*************************************************************");
+        writer.print(name+": ");
+        Quartet<Map<String,Set<String>>, Map<Set<String>,String>, String, String> quartet = cost.get(name);
+        // I
+
+        writer.print("I : { ");
+        Map<String,Set<String>> map_I = quartet.getValue0();
+        Iterator<String> itr_I = map_I.keySet().iterator();
+        while (itr_I.hasNext()) {
+            String f = itr_I.next();
+            writer.print(f + " -> ");
+            Set<String> syn_set = map_I.get(f);
+            Iterator<String> itr_syn_set = syn_set.iterator();
+            writer.print("{");
+            if (itr_syn_set.hasNext())
+                writer.print(itr_syn_set.next());
+            while (itr_syn_set.hasNext())
+            {
+                writer.print(","+itr_syn_set.next());
+            }
+            writer.print("} ");
+        }
+        writer.print("}");
+        writer.println();
+
+        // Psi
+
+        writer.print("Psi : { ");
+        Map<Set<String>,String> map_Psi = quartet.getValue1();
+        Iterator<Set<String>> itr_Psi = map_Psi.keySet().iterator();
+        while (itr_Psi.hasNext())
+        {
+            Set<String> set_Psi = itr_Psi.next();
+            String cur_cost = map_Psi.get(set_Psi);
+            writer.print("{");
+            Iterator<String> syn_set_Psi_itr = set_Psi.iterator();
+            if (syn_set_Psi_itr.hasNext())
+                writer.print(syn_set_Psi_itr.next());
+            while (syn_set_Psi_itr.hasNext())
+            {
+                writer.print(","+syn_set_Psi_itr.next());
+            }
+            writer.print("}");
+            writer.print(" -> "+cur_cost+" ");
+        }
+        writer.print("}");
+        writer.println();
+
+        // ta
+
+        writer.print("ta :");
+        String ta = quartet.getValue2();
+        writer.print(ta);
+        writer.println();
+
+        // t
+
+        writer.print("t :");
+        String t = quartet.getValue3();
+        writer.print(t);
+        writer.println();
+        //System.out.println("*************************************************************");
+    }
+    writer.close();
+}
+
     public Map<String, Set<Set<String>>> scan_merge_schema() throws FileNotFoundException {
         Scanner scanner = new Scanner(new File("Synch_Schema.txt"));
         String method_name = null;
@@ -174,7 +246,7 @@ public class CostAnalysis extends Main{
             scanner1.close();
         }
         scanner.close();
-        print_schema(sync_schema_map);
+        //print_schema(sync_schema_map);
         return sync_schema_map;
     }
     public Set<Set<String>> merge_schema(Set<Set<String>> sync_schema, Set<String> sync_set){
