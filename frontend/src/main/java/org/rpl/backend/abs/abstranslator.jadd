@@ -688,10 +688,10 @@ aspect doABSTranslator {
         }
         stream.println();
         formatter.afterStmt();
-        stream.print("duration(");
+        stream.print("wait(");
         getMin().doABSTranslation(stream, formatter);
-        stream.print(", ");
-        getMin().doABSTranslation(stream, formatter);
+        //stream.print(", ");
+        //getMin().doABSTranslation(stream, formatter);
         stream.print(")");
         stream.print(";");
     }
