@@ -90,7 +90,11 @@ class Courier implements Courier
     Supplier sp = new Supplier();
     Courier cr = new Courier();
     Fut<Int> f;
+    Int k1 = random(10);
+    Int k2 = random(10);
+    cost(k1);
     f = !sale(rt,sp,cr,5) after dl 1000;
+    cost(k2);
     await f?;
 }
 

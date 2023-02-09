@@ -199,13 +199,17 @@ class MicroscopicAnalysis implements MicroscopicAnalysis
     //add(list[set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[Pathologist, Efficiency(2)],set[Pathologist, Efficiency(2)],set[BioTechnician, Efficiency(2)],set[ProcessingMachine, Efficiency(10)],set[StainingMachine, Efficiency(5)]]);
     List<Fut<Int>> futList = list[];
     Int i = 0;
-    Fut<Int> f;
-    f = !registerCase(p,g,pr,em,sc,st,ma) after dl 150;
+    Int k1 = random(10);
+    Int k2 = random(10);
+    cost(k1);
     Fut<Int> f1;
     f1 = !registerCase(p,g,pr,em,sc,st,ma) after dl 150;
+    cost(k2);
     Fut<Int> f2;
     f2 = !registerCase(p,g,pr,em,sc,st,ma) after dl 150;
-    await f?;
+    Fut<Int> f3;
+    f3 = !registerCase(p,g,pr,em,sc,st,ma) after dl 150;
     await f1?;
     await f2?;
+    await f3?;
 }

@@ -11,13 +11,13 @@ then
 {
   echo "Please enter the filename:"
   read file
-  start=`date +%s`
+  start=`echo $(($(gdate +%s%N)/1000000))`
   frontend/bin/absc -s ./examples/$file
   cp RABS.abs ABS.rpl
   frontend/bin/absc -e ABS.rpl
   gen/erl/run
-  end=`date +%s`
-  echo Execution time was `expr $end - $start` seconds.
+  end=`echo $(($(gdate +%s%N)/1000000))`
+  echo Execution time was `expr $end - $start` mili seconds.
 }
 # shellcheck disable=SC1073
 elif [ $option = "2" ]
