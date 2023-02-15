@@ -4,6 +4,7 @@ echo "*          Welcome to RplTools         *"
 echo "****************************************"
 echo "Press 1 for Simulation"
 echo "Press 2 for Cost Analysis"
+echo "Press 3 for RPL to ABS translation"
 read option
 if [ $option = "1" ]
 then
@@ -31,6 +32,16 @@ then
   grep -o '\bmax\b' CostEquations.txt | wc -l
 }
 # shellcheck disable=SC1131
+elif [ $option = "3" ]
+then
+{
+  echo "Please enter the filename:"
+  read file
+  start=`echo $(($(gdate +%s%N)/1000000))`
+  frontend/bin/absc -t ./examples/$file
+  end=`echo $(($(gdate +%s%N)/1000000))`
+  echo Execution time was `expr $end - $start` mili seconds.
+}
 else
 {
     echo "Wrong selection"
@@ -38,3 +49,4 @@ else
 }
 
 fi
+
