@@ -37,5 +37,3 @@ class Consumer implements Consumer {
     await fc1?;
     await fc2?;
 }
-
-k1+$c_{f_{p1}}$+$c_{f_{p2}}$+k2+max($c_{f_{c1}}$,$c_{f_{c2}}$)+k2

@@ -4,7 +4,7 @@
 -export([get_val_internal/2,set_val_internal/3,init_internal/0,get_state_for_modelapi/1,implemented_interfaces/0,exported/0]).
 -compile(export_all).
 
-implemented_interfaces() -> [ <<"CloudProviderForDeploymentComponent">>, <<"Object">>, <<"CloudProvider">> ].
+implemented_interfaces() -> [ <<"CloudProviderForDeploymentComponent">>, <<"CloudProvider">>, <<"Object">> ].
 
 exported() -> #{  }.
 
@@ -193,12 +193,12 @@ exported() -> #{  }.
                 future:get_blocking(TempFuture, Cog, [O,DC| Stack])
         end end)()}),
          %% RPL/lang/RPLlang.RPL:898--898
-        put(vars, (get(vars))#{'tmp1448580731' => cog:create_task(maps:get('result', get(vars)),'m_getStartupDuration',[[]],#task_info{method= <<"getStartupDuration"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+        put(vars, (get(vars))#{'tmp687947506' => cog:create_task(maps:get('result', get(vars)),'m_getStartupDuration',[[]],#task_info{method= <<"getStartupDuration"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
          %% RPL/lang/RPLlang.RPL:898--898
-        future:await(maps:get('tmp1448580731', get(vars)), Cog, [O,DC| Stack]),
+        future:await(maps:get('tmp687947506', get(vars)), Cog, [O,DC| Stack]),
         ok,
          %% RPL/lang/RPLlang.RPL:898--898
-        put(vars, (get(vars))#{'startup_duration' => future:get_blocking(maps:get('tmp1448580731', get(vars)), Cog, [O,DC| Stack])}),
+        put(vars, (get(vars))#{'startup_duration' => future:get_blocking(maps:get('tmp687947506', get(vars)), Cog, [O,DC| Stack])}),
          %% RPL/lang/RPLlang.RPL:899--899
         cog:suspend_current_task_for_duration(Cog,maps:get('startup_duration', get(vars)),maps:get('startup_duration', get(vars)),[O,DC| Stack]),
         ok,
@@ -258,12 +258,12 @@ exported() -> #{  }.
             false ->         ok
         end,
          %% RPL/lang/RPLlang.RPL:910--910
-        put(vars, (get(vars))#{'tmp1631143060' => cog:create_task(maps:get('dc', get(vars)),'m_getStartupDuration',[[]],#task_info{method= <<"getStartupDuration"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+        put(vars, (get(vars))#{'tmp643570300' => cog:create_task(maps:get('dc', get(vars)),'m_getStartupDuration',[[]],#task_info{method= <<"getStartupDuration"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
          %% RPL/lang/RPLlang.RPL:910--910
-        future:await(maps:get('tmp1631143060', get(vars)), Cog, [O,DC| Stack]),
+        future:await(maps:get('tmp643570300', get(vars)), Cog, [O,DC| Stack]),
         ok,
          %% RPL/lang/RPLlang.RPL:910--910
-        put(vars, (get(vars))#{'startup_duration' => future:get_blocking(maps:get('tmp1631143060', get(vars)), Cog, [O,DC| Stack])}),
+        put(vars, (get(vars))#{'startup_duration' => future:get_blocking(maps:get('tmp643570300', get(vars)), Cog, [O,DC| Stack])}),
          %% RPL/lang/RPLlang.RPL:911--911
         cog:suspend_current_task_for_duration(Cog,maps:get('startup_duration', get(vars)),maps:get('startup_duration', get(vars)),[O,DC| Stack]),
         ok,
@@ -383,12 +383,12 @@ exported() -> #{  }.
          %% RPL/lang/RPLlang.RPL:931--931
         put(vars, (get(vars))#{'result' => true}),
          %% RPL/lang/RPLlang.RPL:932--932
-        put(vars, (get(vars))#{'tmp1468685544' => cog:create_task(maps:get('instance', get(vars)),'m_getProvider',[[]],#task_info{method= <<"getProvider"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+        put(vars, (get(vars))#{'tmp1529580934' => cog:create_task(maps:get('instance', get(vars)),'m_getProvider',[[]],#task_info{method= <<"getProvider"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
          %% RPL/lang/RPLlang.RPL:932--932
-        future:await(maps:get('tmp1468685544', get(vars)), Cog, [O,DC| Stack]),
+        future:await(maps:get('tmp1529580934', get(vars)), Cog, [O,DC| Stack]),
         ok,
          %% RPL/lang/RPLlang.RPL:932--932
-        put(vars, (get(vars))#{'cp' => future:get_blocking(maps:get('tmp1468685544', get(vars)), Cog, [O,DC| Stack])}),
+        put(vars, (get(vars))#{'cp' => future:get_blocking(maps:get('tmp1529580934', get(vars)), Cog, [O,DC| Stack])}),
          %% RPL/lang/RPLlang.RPL:933--933
         put(vars, (get(vars))#{'nullableWorkAround' => maps:get('instance', get(vars))}),
          %% RPL/lang/RPLlang.RPL:934--934
@@ -464,26 +464,26 @@ exported() -> #{  }.
          %% RPL/lang/RPLlang.RPL:968--968
         put(this, C:set_val_internal(get(this), 'killedInstances',m_ABS_StdLib_funs:f_insertElement(Cog,C:get_val_internal(get(this), 'killedInstances'),maps:get('nullWorkAround', get(vars)),[O,DC| Stack]))),
          %% RPL/lang/RPLlang.RPL:969--969
-        put(vars, (get(vars))#{'tmp2084912180' => cog:create_task(maps:get('instance', get(vars)),'m_getShutdownDuration',[[]],#task_info{method= <<"getShutdownDuration"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+        put(vars, (get(vars))#{'tmp2146372416' => cog:create_task(maps:get('instance', get(vars)),'m_getShutdownDuration',[[]],#task_info{method= <<"getShutdownDuration"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
          %% RPL/lang/RPLlang.RPL:969--969
-        future:await(maps:get('tmp2084912180', get(vars)), Cog, [O,DC| Stack]),
+        future:await(maps:get('tmp2146372416', get(vars)), Cog, [O,DC| Stack]),
         ok,
          %% RPL/lang/RPLlang.RPL:969--969
-        put(vars, (get(vars))#{'shutdown_duration' => future:get_blocking(maps:get('tmp2084912180', get(vars)), Cog, [O,DC| Stack])}),
+        put(vars, (get(vars))#{'shutdown_duration' => future:get_blocking(maps:get('tmp2146372416', get(vars)), Cog, [O,DC| Stack])}),
          %% RPL/lang/RPLlang.RPL:970--970
         cog:suspend_current_task_for_duration(Cog,maps:get('shutdown_duration', get(vars)),maps:get('shutdown_duration', get(vars)),[O,DC| Stack]),
         ok,
          %% RPL/lang/RPLlang.RPL:974--974
         put(this, C:set_val_internal(get(this), 'launchedInstances',m_ABS_StdLib_funs:f_remove(Cog,C:get_val_internal(get(this), 'launchedInstances'),maps:get('nullWorkAround', get(vars)),[O,DC| Stack]))),
          %% RPL/lang/RPLlang.RPL:976--976
-        put(vars, (get(vars))#{'tmp382441865' => cog:create_task(maps:get('instance', get(vars)),'m_getAccumulatedCost',[[]],#task_info{method= <<"getAccumulatedCost"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+        put(vars, (get(vars))#{'tmp1597594849' => cog:create_task(maps:get('instance', get(vars)),'m_getAccumulatedCost',[[]],#task_info{method= <<"getAccumulatedCost"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
          %% RPL/lang/RPLlang.RPL:976--976
-        future:await(maps:get('tmp382441865', get(vars)), Cog, [O,DC| Stack]),
+        future:await(maps:get('tmp1597594849', get(vars)), Cog, [O,DC| Stack]),
         ok,
          %% RPL/lang/RPLlang.RPL:976--976
-        put(vars, (get(vars))#{'cost' => future:get_blocking(maps:get('tmp382441865', get(vars)), Cog, [O,DC| Stack])}),
+        put(vars, (get(vars))#{'cost1' => future:get_blocking(maps:get('tmp1597594849', get(vars)), Cog, [O,DC| Stack])}),
          %% RPL/lang/RPLlang.RPL:977--977
-        put(this, C:set_val_internal(get(this), 'accumulatedCostOfKilledDCs',( rationals:add(C:get_val_internal(get(this), 'accumulatedCostOfKilledDCs'),maps:get('cost', get(vars)))) )),
+        put(this, C:set_val_internal(get(this), 'accumulatedCostOfKilledDCs',( rationals:add(C:get_val_internal(get(this), 'accumulatedCostOfKilledDCs'),maps:get('cost1', get(vars)))) )),
         dataUnit
         
     catch
@@ -503,10 +503,10 @@ exported() -> #{  }.
          %% RPL/lang/RPLlang.RPL:982--982
         put(vars, (get(vars))#{'t' => m_ABS_StdLib_funs:f_now(Cog,[O,DC| Stack])}),
          %% RPL/lang/RPLlang.RPL:983--986
-        put(vars, (get(vars))#{'tmp885465900' => m_ABS_StdLib_funs:f_elements(Cog,C:get_val_internal(get(this), 'launchedInstances'),[O,DC| Stack])}),
+        put(vars, (get(vars))#{'tmp379833480' => m_ABS_StdLib_funs:f_elements(Cog,C:get_val_internal(get(this), 'launchedInstances'),[O,DC| Stack])}),
          %% RPL/lang/RPLlang.RPL:983--986
         []=(fun Loop ([])->
-            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp885465900', get(vars)),[O,DC| Stack])) of
+            case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp379833480', get(vars)),[O,DC| Stack])) of
             false -> [];
             true -> receive
                     {stop_world, CogRef} ->
@@ -516,18 +516,18 @@ exported() -> #{  }.
                     after 0 -> ok
                 end,
                  %% RPL/lang/RPLlang.RPL:983--986
-                put(vars, (get(vars))#{'dc' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp885465900', get(vars)),[O,DC| Stack])}),
+                put(vars, (get(vars))#{'dc' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp379833480', get(vars)),[O,DC| Stack])}),
                  %% RPL/lang/RPLlang.RPL:983--986
-                put(vars, (get(vars))#{'tmp885465900' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp885465900', get(vars)),[O,DC| Stack])}),
+                put(vars, (get(vars))#{'tmp379833480' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp379833480', get(vars)),[O,DC| Stack])}),
                  %% RPL/lang/RPLlang.RPL:984--984
-                put(vars, (get(vars))#{'tmp1040015904' => cog:create_task(maps:get('dc', get(vars)),'m_getAccumulatedCost',[[]],#task_info{method= <<"getAccumulatedCost"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+                put(vars, (get(vars))#{'tmp435167872' => cog:create_task(maps:get('dc', get(vars)),'m_getAccumulatedCost',[[]],#task_info{method= <<"getAccumulatedCost"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
                  %% RPL/lang/RPLlang.RPL:984--984
-                future:await(maps:get('tmp1040015904', get(vars)), Cog, [O,DC| Stack]),
+                future:await(maps:get('tmp435167872', get(vars)), Cog, [O,DC| Stack]),
                 ok,
                  %% RPL/lang/RPLlang.RPL:984--984
-                put(vars, (get(vars))#{'cost' => future:get_blocking(maps:get('tmp1040015904', get(vars)), Cog, [O,DC| Stack])}),
+                put(vars, (get(vars))#{'cost1' => future:get_blocking(maps:get('tmp435167872', get(vars)), Cog, [O,DC| Stack])}),
                  %% RPL/lang/RPLlang.RPL:985--985
-                put(vars, (get(vars))#{'result' := ( rationals:add(maps:get('result', get(vars)),maps:get('cost', get(vars)))) }),
+                put(vars, (get(vars))#{'result' := ( rationals:add(maps:get('result', get(vars)),maps:get('cost1', get(vars)))) }),
             Loop([])  end end)
         ([]),
          %% RPL/lang/RPLlang.RPL:987--987

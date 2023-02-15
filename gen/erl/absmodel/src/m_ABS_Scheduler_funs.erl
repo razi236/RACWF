@@ -11,7 +11,7 @@
 'f_arrival'(Cog=#cog{ref=CogRef},V_p_0,Stack)->
     builtin.
 
-'f_cost'(Cog=#cog{ref=CogRef},V_p_0,Stack)->
+'f_cost1'(Cog=#cog{ref=CogRef},V_p_0,Stack)->
     builtin.
 
 'f_proc_deadline'(Cog=#cog{ref=CogRef},V_p_0,Stack)->

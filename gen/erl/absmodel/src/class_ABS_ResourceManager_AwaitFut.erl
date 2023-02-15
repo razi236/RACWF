@@ -57,10 +57,10 @@ exported() -> #{  }.
              %% ABS.rpl:109--109
             case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('fut', get(vars)),[O,DC| Stack])) of
                 true ->  %% ABS.rpl:110--113
-                put(vars, (get(vars))#{'tmp40829249' => maps:get('fut', get(vars))}),
+                put(vars, (get(vars))#{'tmp2009900903' => maps:get('fut', get(vars))}),
                  %% ABS.rpl:110--113
                 []=(fun Loop ([])->
-                    case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp40829249', get(vars)),[O,DC| Stack])) of
+                    case not (m_ABS_StdLib_funs:f_isEmpty(Cog,maps:get('tmp2009900903', get(vars)),[O,DC| Stack])) of
                     false -> [];
                     true -> receive
                             {stop_world, CogRef} ->
@@ -70,9 +70,9 @@ exported() -> #{  }.
                             after 0 -> ok
                         end,
                          %% ABS.rpl:110--113
-                        put(vars, (get(vars))#{'f' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp40829249', get(vars)),[O,DC| Stack])}),
+                        put(vars, (get(vars))#{'f' => m_ABS_StdLib_funs:f_head(Cog,maps:get('tmp2009900903', get(vars)),[O,DC| Stack])}),
                          %% ABS.rpl:110--113
-                        put(vars, (get(vars))#{'tmp40829249' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp40829249', get(vars)),[O,DC| Stack])}),
+                        put(vars, (get(vars))#{'tmp2009900903' := m_ABS_StdLib_funs:f_tail(Cog,maps:get('tmp2009900903', get(vars)),[O,DC| Stack])}),
                          %% ABS.rpl:112--112
                         future:await(maps:get('f', get(vars)), Cog, [O,DC| Stack]),
                         ok,

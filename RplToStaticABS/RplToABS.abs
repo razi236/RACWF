@@ -91,68 +91,31 @@ class ResourceManager implements ResourceManager {
     }
 }
 
-module ABS;
+module ProdCons;
 import * from ABS.ResourceManager;
 
 import * from ABS.StdLib;
 
-interface DL {
-  Int check(ResourceManager rm);}
+interface Producer {
+  Int produce(ResourceManager rm,Int a);}
 
-class DLD implements DL {
+interface Consumer {
+  Int consume(ResourceManager rm,Int a);}
+
+class Producer implements Producer {
   
-  Int check(ResourceManager rm){
-    Int i = 0;
-    wait(10);
-    return 0;
-  }
-  }
-
-interface IJK {
-  Int jkl(ResourceManager rm,ABC a, IJK k);
-  Int lmn(ResourceManager rm,ABC a, IJK k);}
-
-class IJK implements IJK {
-  
-  Int jkl(ResourceManager rm,ABC a, IJK k){
-    Int i = 0;
-    return 0;
-  }
-  Int lmn(ResourceManager rm,ABC a, IJK k){
-    Int i = 0;
-    return 0;
-  }
-  }
-
-interface ABC {
-  Int xyz(ResourceManager rm,ABC a, IJK c, String x);
-  Int efg(ResourceManager rm);}
-
-class ABC implements ABC {
-  
-  Int xyz(ResourceManager rm,ABC a, IJK c, String x){
-    ABC o = new ABC();ABC o1 = new ABC();Int x1 = 0;Fut<Int> f;Fut<Int> f1;Fut<Int> f2;Fut<Int> f3;
-    wait(5);
-    f = c!jkl(rm, a, c);
-    await f?;
-    f1 = o!efg(rm);
-    await f? & f1? & f2?;
-    f2 = c!lmn(rm, a, c);
-    if (True) {
-        await f?;
-    }
-    else if (True) {
-        await f1?;
-    }
-    else {
-        await f2?;
-    }
-    f3 = o1!efg(rm);
-    await f3?;
-    return 0;
-  }
-  Int efg(ResourceManager rm){
+  Int produce(ResourceManager rm,Int a){
     
+    wait(a);
+    return 0;
+  }
+  }
+
+class Consumer implements Consumer {
+  
+  Int consume(ResourceManager rm,Int a){
+    
+    wait(a);
     return 0;
   }
   }
@@ -161,13 +124,29 @@ class ABC implements ABC {
 {
   ResourceManager rm = new ResourceManager();
   await rm!addRes(list[set[Pathologist, Efficiency(3)], set[BioTechnician, Efficiency(5)], set[BioTechnician, Efficiency(3)], set[BioTechnician, Efficiency(10)], set[VanDriver, Efficiency(5)], set[DeliveryVan, Efficiency(1500)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[ProcessingMachine, Efficiency(10)], set[ProcessingMachine, Efficiency(10)], set[StainingMachine, Efficiency(5)], set[StainingMachine, Efficiency(5)], set[Pathologist, Efficiency(2)], set[HeadWaiter, Efficiency(2)], set[RunnerWaiter, Efficiency(1)], set[RunnerWaiter, Efficiency(1)], set[Cook, Efficiency(5)], set[CookAssistant, Efficiency(1)], set[CookAssistant, Efficiency(1)], set[CookAssistant, Efficiency(1)], set[Cook, Efficiency(3)]]);
-  DL o = new DLD();
-  Fut<Int> f;
+  Fut<Int> fp1;
+  Fut<Int> fp2;
+  Fut<Int> fc1;
+  Fut<Int> fc2;
+  Producer p = new Producer();
+  Consumer c = new Consumer();
+  Int k1 = random(10);
+  Int k2 = random(10);
   
-  wait(5);
+  wait(k1);
   
-  f = o!check(rm);
+  fp1 = p!produce(rm, 10);
   
-  await f?;
-  println("RplTools");
+  await fp1?;
+  fp2 = p!produce(rm, 10);
+  
+  wait(k2);
+  
+  fc1 = c!consume(rm, 5);
+  
+  fc2 = c!consume(rm, 5);
+  
+  await fc1?;
+  
+  await fc2?;
 }

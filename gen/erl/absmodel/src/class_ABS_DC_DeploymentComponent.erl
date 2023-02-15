@@ -638,12 +638,12 @@ exported() -> #{  }.
          %% RPL/lang/RPLlang.RPL:1152--1152
         case (not cmp:eq(C:get_val_internal(get(this), 'cloudprovider'),null)) of
             true ->  %% RPL/lang/RPLlang.RPL:1153--1153
-            put(vars, (get(vars))#{'tmp940905579' => cog:create_task(C:get_val_internal(get(this), 'cloudprovider'),'m_acquireInstance',[O,[]],#task_info{method= <<"acquireInstance"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+            put(vars, (get(vars))#{'tmp506518405' => cog:create_task(C:get_val_internal(get(this), 'cloudprovider'),'m_acquireInstance',[O,[]],#task_info{method= <<"acquireInstance"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
              %% RPL/lang/RPLlang.RPL:1153--1153
-            future:await(maps:get('tmp940905579', get(vars)), Cog, [O,DC| Stack]),
+            future:await(maps:get('tmp506518405', get(vars)), Cog, [O,DC| Stack]),
             ok,
              %% RPL/lang/RPLlang.RPL:1153--1153
-            put(vars, (get(vars))#{'result' := future:get_blocking(maps:get('tmp940905579', get(vars)), Cog, [O,DC| Stack])});
+            put(vars, (get(vars))#{'result' := future:get_blocking(maps:get('tmp506518405', get(vars)), Cog, [O,DC| Stack])});
             false ->         ok
         end,
          %% RPL/lang/RPLlang.RPL:1155--1155
@@ -665,12 +665,12 @@ exported() -> #{  }.
          %% RPL/lang/RPLlang.RPL:1159--1159
         case (not cmp:eq(C:get_val_internal(get(this), 'cloudprovider'),null)) of
             true ->  %% RPL/lang/RPLlang.RPL:1160--1160
-            put(vars, (get(vars))#{'tmp1843674049' => cog:create_task(C:get_val_internal(get(this), 'cloudprovider'),'m_releaseInstance',[O,[]],#task_info{method= <<"releaseInstance"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
+            put(vars, (get(vars))#{'tmp427980296' => cog:create_task(C:get_val_internal(get(this), 'cloudprovider'),'m_releaseInstance',[O,[]],#task_info{method= <<"releaseInstance"/utf8>>, creation={dataTime,builtin:currentms(Cog)}, proc_deadline=dataInfDuration},Cog)}),
              %% RPL/lang/RPLlang.RPL:1160--1160
-            future:await(maps:get('tmp1843674049', get(vars)), Cog, [O,DC| Stack]),
+            future:await(maps:get('tmp427980296', get(vars)), Cog, [O,DC| Stack]),
             ok,
              %% RPL/lang/RPLlang.RPL:1160--1160
-            put(vars, (get(vars))#{'result' := future:get_blocking(maps:get('tmp1843674049', get(vars)), Cog, [O,DC| Stack])});
+            put(vars, (get(vars))#{'result' := future:get_blocking(maps:get('tmp427980296', get(vars)), Cog, [O,DC| Stack])});
             false ->         ok
         end,
          %% RPL/lang/RPLlang.RPL:1162--1162

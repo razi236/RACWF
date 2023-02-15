@@ -1,8 +1,6 @@
-registerCase/this,g,pr,em,sc,st,ma/g,pr,em,sc,st,ma
-gross/this,pr,em,sc,st,ma
-process/this,em,sc,st,ma
-embed/this,sc,st,ma/sc,st,ma
-section/this,st,ma/st,ma
-stain/this,ma
-analyse/this
-main/this/p,g,pr,em,sc,st,ma/p,g,pr,em,sc,st,ma/p,g,pr,em,sc,st,ma
+check/this
+jkl/this,a,k
+lmn/this,a,k
+xyz/this,a,c/c,a,c/o/c,a,c/o1
+efg/this
+main/this/o
