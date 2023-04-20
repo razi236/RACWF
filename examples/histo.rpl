@@ -40,6 +40,7 @@ class Pathology implements Pathology
                     while(i < length(case_list))
                     {
                         right = appendright (right,nth(case_list,i));
+                        i = i + 1;
                     }
                     mid = appendright (mid,c);
                     case_list = concatenate(left,concatenate(mid,right));
@@ -49,7 +50,7 @@ class Pathology implements Pathology
             }
             if (flag == True)
             {
-                case_list = appendright (case_list,c);
+                case_list = appendright (left,c);
             }
         }
     }
@@ -60,7 +61,7 @@ class Pathology implements Pathology
 }
 
 {
-    Case c = Case(123,"Blood Sample",1,"Gyno",2);
+    Case c = Case(123,"Blood Sample",3,"Gyno",2);
     Case c1 = Case(345,"Blood Sample",3,"Gyno",2);
     Case c2 = Case(678,"Blood Sample",2,"Gyno",2);
     Pathology p = new Pathology();

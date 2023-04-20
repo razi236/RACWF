@@ -151,6 +151,7 @@ class Pathology implements Pathology {
         } else {
           while (( i < length(this.case_list) )) {
             right = appendright(right, nth(this.case_list, i));
+            i = ( i + 1 );
           }
           mid = appendright(mid, c);
           this.case_list = concatenate(left, concatenate(mid, right));
@@ -159,7 +160,7 @@ class Pathology implements Pathology {
         i = ( i + 1 );
       }
       if ( ( flag == True ) ){
-        this.case_list = appendright(this.case_list, c);
+        this.case_list = appendright(left, c);
       }
     }
   }
@@ -189,7 +190,7 @@ class Pathology implements Pathology {
 {
   ResourceManager rm = new ResourceManager();
   await rm!addRes(list[set[Pathologist, Efficiency(3)], set[BioTechnician, Efficiency(5)], set[BioTechnician, Efficiency(3)], set[BioTechnician, Efficiency(10)], set[VanDriver, Efficiency(5)], set[DeliveryVan, Efficiency(1500)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[ProcessingMachine, Efficiency(10)], set[ProcessingMachine, Efficiency(10)], set[StainingMachine, Efficiency(5)], set[StainingMachine, Efficiency(5)], set[Pathologist, Efficiency(2)], set[HeadWaiter, Efficiency(2)], set[RunnerWaiter, Efficiency(1)], set[RunnerWaiter, Efficiency(1)], set[Cook, Efficiency(5)], set[CookAssistant, Efficiency(1)], set[CookAssistant, Efficiency(1)], set[CookAssistant, Efficiency(1)], set[Cook, Efficiency(3)]]);
-  Case c = Case( 123, "Blood Sample", 1, "Gyno", 2 );
+  Case c = Case( 123, "Blood Sample", 3, "Gyno", 2 );
   Case c1 = Case( 345, "Blood Sample", 3, "Gyno", 2 );
   Case c2 = Case( 678, "Blood Sample", 2, "Gyno", 2 );
   Pathology p = new Pathology();
