@@ -24,7 +24,7 @@ class Pathology implements Pathology
         }
         else
         {
-            //case_list = priority_queue (rm, case_list, c);
+
         }
         return case_list;
     }
