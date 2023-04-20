@@ -9,14 +9,14 @@ data Case = Case(Int case_ID, String case_Type, Int priority, String patho_team,
 
 interface Pathology
 {
-    List<Case> register_case(Case c); // Register cases as a priority queue
-    List<Case> priority_queue(List<Case> c_list, Case c);
+    Unit register_case(Case c); // Register cases as a priority queue
+    List<Case> get_case_list();
 }
 
 class Pathology implements Pathology
 {
     List<Case> case_list = list[];
-    List<Case> register_case(Case c)
+    Unit register_case(Case c)
     {
         if(isEmpty(case_list))
         {
@@ -24,45 +24,58 @@ class Pathology implements Pathology
         }
         else
         {
-
-        }
-        return case_list;
-    }
-    /*
-    List<Case> priority_queue(List<Case> c_list, Case c)
-    {
-        if(isEmpty(c_list))
-        {
-            c_list = appendright (c_list, c);
-        }
-        else
-        {
-            if(priority(head(c_list))<priority(c))
+            Int i = 0;
+            List<Case> left = list[];
+            List<Case> right = list[];
+            List<Case> mid = list[];
+            Bool flag = True;
+            while (i < length(case_list))
             {
-                List<Case> l = list[head(c_list)];
-                List<Case> l1 = priority_queue (rm, tail(c_list), c);
-                c_list = concatenate(l,l1);
+                if(priority(nth(case_list,i)) <= priority(c))
+                {
+                    left = appendright (left,nth(case_list,i));
+                }
+                else
+                {
+                    while(i < length(case_list))
+                    {
+                        right = appendright (right,nth(case_list,i));
+                    }
+                    mid = appendright (mid,c);
+                    case_list = concatenate(left,concatenate(mid,right));
+                    flag = False;
+                }
+                i = i + 1;
+            }
+            if (flag == True)
+            {
+                case_list = appendright (case_list,c);
             }
         }
-        return c_list;
     }
-    */
+    List<Case> get_case_list()
+    {
+        return case_list;
+    }
 }
 
 {
     Case c = Case(123,"Blood Sample",1,"Gyno",2);
-    Case c1 = Case(123,"Blood Sample",1,"Gyno",2);
-    Case c2 = Case(123,"Blood Sample",2,"Gyno",2);
+    Case c1 = Case(345,"Blood Sample",3,"Gyno",2);
+    Case c2 = Case(678,"Blood Sample",2,"Gyno",2);
     Pathology p = new Pathology();
-    List<Case> clist = list[];
-    Fut<List<Case>> f;
+    List<Case> case_list = list[];
+    Fut<Unit> f;
     f = !register_case(p,c) after dl 5;
-    clist = f.get;
-    Fut<List<Case>> f1;
+    await f?;
+    Fut<Unit> f1;
     f1 = !register_case(p,c1) after dl 5;
-    clist = f1.get;
-    Fut<List<Case>> f2;
-    f2 = !register_case(p,c) after dl 5;
-    clist = f2.get;
-    println(toString(clist));
+    await f1?;
+    Fut<Unit> f2;
+    f2 = !register_case(p,c2) after dl 5;
+    await f2?;
+    Fut<List<Case>> f3;
+    f3 = !get_case_list(p) after dl 5;
+    case_list = f3.get;
+    println(toString(case_list));
 }

@@ -131,42 +131,47 @@ import * from ABS.StdLib;
 data Case = Case(Int case_ID, String case_Type, Int priority, String patho_team, Int no_of_containers);
 
 interface Pathology {
-  List<Case> register_case(ResourceManager rm,Case c);
-  List<Case> priority_queue(ResourceManager rm,List<Case> c_list, Case c);}
+  Unit register_case(ResourceManager rm,Case c);
+  List<Case> get_case_list(ResourceManager rm);}
 
 class Pathology implements Pathology {
   List<Case> case_list = list(Nil);
-  List<Case> register_case(ResourceManager rm,Case c){
+  Unit register_case(ResourceManager rm,Case c){
     if ( isEmpty(this.case_list) ){
       this.case_list = appendright(this.case_list, c);
     } else {
-      this.case_list = priority_queue(rm, this.case_list, c);
-    }try {
+      Int i = 0;
+      List<Case> left = list(Nil);
+      List<Case> right = list(Nil);
+      List<Case> mid = list(Nil);
+      Bool flag = True;
+      while (( i < length(this.case_list) )) {
+        if ( ( priority(nth(this.case_list, i)) <= priority(c) ) ){
+          left = appendright(left, nth(this.case_list, i));
+        } else {
+          while (( i < length(this.case_list) )) {
+            right = appendright(right, nth(this.case_list, i));
+          }
+          mid = appendright(mid, c);
+          this.case_list = concatenate(left, concatenate(mid, right));
+          flag = False;
+        }
+        i = ( i + 1 );
+      }
+      if ( ( flag == True ) ){
+        this.case_list = appendright(this.case_list, c);
+      }
+    }
+  }
+  List<Case> get_case_list(ResourceManager rm){
+    try {
     Duration d = deadline();
     Rat r = durationValue(d);
     assert r > 0;
     } catch {
-    AssertionFailException => println(`The method "register_case" have missed the deadline.`);
+    AssertionFailException => println(`The method "get_case_list" have missed the deadline.`);
     }
     return this.case_list;
-  }
-  List<Case> priority_queue(ResourceManager rm,List<Case> c_list, Case c){
-    if ( isEmpty(c_list) ){
-      c_list = appendright(c_list, c);
-    } else {
-      if ( ( priority(head(c_list)) < priority(c) ) ){
-        List<Case> l = list[head(c_list)];
-        List<Case> l1 = priority_queue(rm, tail(c_list), c);
-        c_list = concatenate(l, l1);
-      }
-    }try {
-    Duration d = deadline();
-    Rat r = durationValue(d);
-    assert r > 0;
-    } catch {
-    AssertionFailException => println(`The method "priority_queue" have missed the deadline.`);
-    }
-    return c_list;
   }
   }
 
@@ -185,18 +190,21 @@ class Pathology implements Pathology {
   ResourceManager rm = new ResourceManager();
   await rm!addRes(list[set[Pathologist, Efficiency(3)], set[BioTechnician, Efficiency(5)], set[BioTechnician, Efficiency(3)], set[BioTechnician, Efficiency(10)], set[VanDriver, Efficiency(5)], set[DeliveryVan, Efficiency(1500)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[ProcessingMachine, Efficiency(10)], set[ProcessingMachine, Efficiency(10)], set[StainingMachine, Efficiency(5)], set[StainingMachine, Efficiency(5)], set[Pathologist, Efficiency(2)], set[HeadWaiter, Efficiency(2)], set[RunnerWaiter, Efficiency(1)], set[RunnerWaiter, Efficiency(1)], set[Cook, Efficiency(5)], set[CookAssistant, Efficiency(1)], set[CookAssistant, Efficiency(1)], set[CookAssistant, Efficiency(1)], set[Cook, Efficiency(3)]]);
   Case c = Case( 123, "Blood Sample", 1, "Gyno", 2 );
-  Case c1 = Case( 123, "Blood Sample", 1, "Gyno", 2 );
-  Case c2 = Case( 123, "Blood Sample", 2, "Gyno", 2 );
+  Case c1 = Case( 345, "Blood Sample", 3, "Gyno", 2 );
+  Case c2 = Case( 678, "Blood Sample", 2, "Gyno", 2 );
   Pathology p = new Pathology();
-  List<Case> clist = list(Nil);
-  Fut<List<Case>> f;
+  List<Case> case_list = list(Nil);
+  Fut<Unit> f;
   [Deadline: Duration(5)]  f = p!register_case(rm,c);
-  clist = f.get;
-  Fut<List<Case>> f1;
+  await f?;
+  Fut<Unit> f1;
   [Deadline: Duration(5)]  f1 = p!register_case(rm,c1);
-  clist = f1.get;
-  Fut<List<Case>> f2;
-  [Deadline: Duration(5)]  f2 = p!register_case(rm,c);
-  clist = f2.get;
-  println(toString(clist));
+  await f1?;
+  Fut<Unit> f2;
+  [Deadline: Duration(5)]  f2 = p!register_case(rm,c2);
+  await f2?;
+  Fut<List<Case>> f3;
+  [Deadline: Duration(5)]  f3 = p!get_case_list(rm);
+  case_list = f3.get;
+  println(toString(case_list));
 }
