@@ -123,216 +123,80 @@ class AwaitFut implements AwaitFut
         return resolved;
     }
 }
-module Pathology;
+module Pathology_Workflow;
 import * from ABS.ResourceManager;
 
 import * from ABS.StdLib;
 
+data Case = Case(Int case_ID, String case_Type, Int priority, String patho_team, Int no_of_containers);
+
 interface Pathology {
-  Int registerCase(ResourceManager rm,Grossing g, Processing pr, Embedding em, Sectioning sc, Staining st, MicroscopicAnalysis ma);}
+  List<Case> register_case(ResourceManager rm,Case c);
+  List<Case> priority_queue(ResourceManager rm,List<Case> c_list, Case c);}
 
 class Pathology implements Pathology {
-  List<Triple<Int, Int, String>> processingTray = list(Nil);
-  Int caseNum = 1;
-  Int registerCase(ResourceManager rm,Grossing g, Processing pr, Embedding em, Sectioning sc, Staining st, MicroscopicAnalysis ma){
-    Pair<Int, String> newSpecimen = Pair( this.caseNum, ( "Test" + toString(this.caseNum) ) );Fut<Int> f;[Deadline: Duration(110)]    f = g!gross(rm,pr, em, sc, st, ma, newSpecimen);println(( ( ( "Time: " + toString(now()) ) + ( " : case " + toString(this.caseNum) ) ) + "" ));this.caseNum = ( this.caseNum + 1 );await f?;try {
-    Duration d = deadline();
-    Rat r = durationValue(d);
-    assert r > 0;
-    } catch {
-    AssertionFailException => println(`The method "registerCase" have missed the deadline.`);
-    }
-    return 0;
-  }
-  }
-
-interface Grossing {
-  Int gross(ResourceManager rm,Processing pr, Embedding em, Sectioning sc, Staining st, MicroscopicAnalysis ma, Pair<Int, String> x);}
-
-class Grossing implements Grossing {
-  List<Triple<Int, Int, String>> processingTray = list(Nil);
-  Int gross(ResourceManager rm,Processing pr, Embedding em, Sectioning sc, Staining st, MicroscopicAnalysis ma, Pair<Int, String> x){
-    Int i = 1;List<Int> rid = list(Nil);rid = await rm!holdRes(list[set[BioTechnician, Efficiency( 2 )]]);duration(5, 5);List<Fut<Int>> futList = list(Nil);while (( i <= 3 )) {
-      Triple<Int, Int, String> block = Triple( fst(x), i, snd(x) );
-      if ( ( length(this.processingTray) < 3 ) ){
-        this.processingTray = appendright(this.processingTray, block);
-      }
-      if ( ( length(this.processingTray) == 3 ) ){
-        Fut<Int> f;
-        [Deadline: Duration(100)]        f = pr!process(rm,em, sc, st, ma, this.processingTray);
-        futList = appendright(futList, f);
-        this.processingTray = Nil;
-      }
-      i = ( i + 1 );
-    }await rm!releaseRes(rid);while (! isEmpty(futList)) {
-      Fut<Int> f = head(futList);
-      futList = tail(futList);
-      await f?;
+  List<Case> case_list = list(Nil);
+  List<Case> register_case(ResourceManager rm,Case c){
+    if ( isEmpty(this.case_list) ){
+      this.case_list = appendright(this.case_list, c);
+    } else {
+      this.case_list = priority_queue(rm, this.case_list, c);
     }try {
     Duration d = deadline();
     Rat r = durationValue(d);
     assert r > 0;
     } catch {
-    AssertionFailException => println(`The method "gross" have missed the deadline.`);
+    AssertionFailException => println(`The method "register_case" have missed the deadline.`);
     }
-    return 0;
+    return this.case_list;
   }
-  }
-
-interface Processing {
-  Int process(ResourceManager rm,Embedding em, Sectioning sc, Staining st, MicroscopicAnalysis ma, List<Triple<Int, Int, String>> processingTray);}
-
-class Processing implements Processing {
-  List<Triple<Int, Int, String>> blockTray = list(Nil);
-  Int process(ResourceManager rm,Embedding em, Sectioning sc, Staining st, MicroscopicAnalysis ma, List<Triple<Int, Int, String>> processingTray){
-    List<Int> rid = list(Nil);rid = await rm!holdRes(list[set[ProcessingMachine, Efficiency( 10 )]]);duration(5, 5);this.blockTray = concatenate(this.blockTray, processingTray);await rm!releaseRes(rid);List<Fut<Int>> futList = list(Nil);while (! isEmpty(this.blockTray)) {
-      Fut<Int> f;
-      [Deadline: Duration(100)]      f = em!embed(rm,sc, st, ma, head(this.blockTray));
-      futList = appendright(futList, f);
-      this.blockTray = tail(this.blockTray);
-    }while (! isEmpty(futList)) {
-      Fut<Int> f = head(futList);
-      futList = tail(futList);
-      await f?;
-    }try {
-    Duration d = deadline();
-    Rat r = durationValue(d);
-    assert r > 0;
-    } catch {
-    AssertionFailException => println(`The method "process" have missed the deadline.`);
-    }
-    return 0;
-  }
-  }
-
-interface Embedding {
-  Int embed(ResourceManager rm,Sectioning sc, Staining st, MicroscopicAnalysis ma, Triple<Int, Int, String> block);}
-
-class Embedding implements Embedding {
-  
-  Int embed(ResourceManager rm,Sectioning sc, Staining st, MicroscopicAnalysis ma, Triple<Int, Int, String> block){
-    List<Int> rid = list(Nil);rid = await rm!holdRes(list[set[BioTechnician, Efficiency( 2 )]]);duration(5, 5);await rm!releaseRes(rid);Fut<Int> f;[Deadline: Duration(100)]    f = sc!section(rm,st, ma, block);await f?;try {
-    Duration d = deadline();
-    Rat r = durationValue(d);
-    assert r > 0;
-    } catch {
-    AssertionFailException => println(`The method "embed" have missed the deadline.`);
-    }
-    return 0;
-  }
-  }
-
-interface Sectioning {
-  Int section(ResourceManager rm,Staining st, MicroscopicAnalysis ma, Triple<Int, Int, String> block);}
-
-class Sectioning implements Sectioning {
-  List<Triple<Int, Int, String>> slideTray = list(Nil);
-  Int section(ResourceManager rm,Staining st, MicroscopicAnalysis ma, Triple<Int, Int, String> block){
-    List<Int> rid = list(Nil);rid = await rm!holdRes(list[set[BioTechnician, Efficiency( 2 )]]);await rm!releaseRes(rid);if ( ( length(this.slideTray) < 3 ) ){
-      this.slideTray = appendright(this.slideTray, block);
-    }if ( ( length(this.slideTray) == 3 ) ){
-      Fut<Int> f;
-      [Deadline: Duration(100)]      f = st!stain(rm,ma, this.slideTray);
-      this.slideTray = Nil;
-      await f?;
-    }try {
-    Duration d = deadline();
-    Rat r = durationValue(d);
-    assert r > 0;
-    } catch {
-    AssertionFailException => println(`The method "section" have missed the deadline.`);
-    }
-    return 0;
-  }
-  }
-
-interface Staining {
-  Int stain(ResourceManager rm,MicroscopicAnalysis ma, List<Triple<Int, Int, String>> slideTray);}
-
-class Staining implements Staining {
-  Map<Int, List<Pair<Int, String>>> specimenMap = map(Nil);
-  Int stain(ResourceManager rm,MicroscopicAnalysis ma, List<Triple<Int, Int, String>> slideTray){
-    List<Int> rid = list(Nil);rid = await rm!holdRes(list[set[StainingMachine, Efficiency( 5 )]]);duration(5, 5);await rm!releaseRes(rid);{
-      ABS.StdLib.List<ABS.StdLib.Triple<ABS.StdLib.Int, ABS.StdLib.Int, ABS.StdLib.String>> tmp936544568 = slideTray;
-      while (! isEmpty(tmp936544568)) {
-        ABS.StdLib.Triple<ABS.StdLib.Int, ABS.StdLib.Int, ABS.StdLib.String> x = head(tmp936544568);
-        tmp936544568 = tail(tmp936544568);
-        {
-          List<Pair<Int, String>> l = lookupDefault(this.specimenMap, fstT(x), list(Nil));
-          this.specimenMap = put(this.specimenMap, fstT(x), appendright(l, Pair( sndT(x), trdT(x) )));
-        }
+  List<Case> priority_queue(ResourceManager rm,List<Case> c_list, Case c){
+    if ( isEmpty(c_list) ){
+      c_list = appendright(c_list, c);
+    } else {
+      if ( ( priority(head(c_list)) < priority(c) ) ){
+        List<Case> l = list[head(c_list)];
+        List<Case> l1 = priority_queue(rm, tail(c_list), c);
+        c_list = concatenate(l, l1);
       }
-    }List<Fut<Int>> futList = list(Nil);{
-      ABS.StdLib.List<ABS.StdLib.Pair<ABS.StdLib.Int, ABS.StdLib.List<ABS.StdLib.Pair<ABS.StdLib.Int, ABS.StdLib.String>>>> tmp2117938877 = entries(this.specimenMap);
-      while (! isEmpty(tmp2117938877)) {
-        ABS.StdLib.Pair<ABS.StdLib.Int, ABS.StdLib.List<ABS.StdLib.Pair<ABS.StdLib.Int, ABS.StdLib.String>>> entry = head(tmp2117938877);
-        tmp2117938877 = tail(tmp2117938877);
-        {
-          if ( ( length(snd(entry)) == 3 ) ){
-            Fut<Int> f;
-            [Deadline: Duration(100)]            f = ma!analyse(rm,fst(entry), snd(entry));
-            futList = appendright(futList, f);
-            this.specimenMap = removeKey(this.specimenMap, fst(entry));
-            await f?;
-          }
-        }
-      }
-    }while (! isEmpty(futList)) {
-      Fut<Int> f = head(futList);
-      futList = tail(futList);
-      await f?;
     }try {
     Duration d = deadline();
     Rat r = durationValue(d);
     assert r > 0;
     } catch {
-    AssertionFailException => println(`The method "stain" have missed the deadline.`);
+    AssertionFailException => println(`The method "priority_queue" have missed the deadline.`);
     }
-    return 0;
+    return c_list;
   }
   }
 
-interface MicroscopicAnalysis {
-  Int analyse(ResourceManager rm,Int case_id, List<Pair<Int, String>> slides);}
 
-class MicroscopicAnalysis implements MicroscopicAnalysis {
-  
-  Int analyse(ResourceManager rm,Int case_id, List<Pair<Int, String>> slides){
-    println(( ( "Time: " + toString(now()) ) + "" ));println(( ( toString(case_id) + "->" ) + toString(slides) ));List<Int> rid = list(Nil);rid = await rm!holdRes(list[set[Pathologist, Efficiency( 2 )]]);duration(10, 10);await rm!releaseRes(rid);try {
-    Duration d = deadline();
-    Rat r = durationValue(d);
-    assert r > 0;
-    } catch {
-    AssertionFailException => println(`The method "analyse" have missed the deadline.`);
-    }
-    return 0;
-  }
-  }
+
+
+
+
+
+
+
+
 
 
 {
   ResourceManager rm = new ResourceManager();
   await rm!addRes(list[set[Pathologist, Efficiency(3)], set[BioTechnician, Efficiency(5)], set[BioTechnician, Efficiency(3)], set[BioTechnician, Efficiency(10)], set[VanDriver, Efficiency(5)], set[DeliveryVan, Efficiency(1500)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[ProcessingMachine, Efficiency(10)], set[ProcessingMachine, Efficiency(10)], set[StainingMachine, Efficiency(5)], set[StainingMachine, Efficiency(5)], set[Pathologist, Efficiency(2)], set[HeadWaiter, Efficiency(2)], set[RunnerWaiter, Efficiency(1)], set[RunnerWaiter, Efficiency(1)], set[Cook, Efficiency(5)], set[CookAssistant, Efficiency(1)], set[CookAssistant, Efficiency(1)], set[CookAssistant, Efficiency(1)], set[Cook, Efficiency(3)]]);
+  Case c = Case( 123, "Blood Sample", 1, "Gyno", 2 );
+  Case c1 = Case( 123, "Blood Sample", 1, "Gyno", 2 );
+  Case c2 = Case( 123, "Blood Sample", 2, "Gyno", 2 );
   Pathology p = new Pathology();
-  Grossing g = new Grossing();
-  Processing pr = new Processing();
-  Embedding em = new Embedding();
-  Sectioning sc = new Sectioning();
-  Staining st = new Staining();
-  MicroscopicAnalysis ma = new MicroscopicAnalysis();
-  List<Fut<Int>> futList = list(Nil);
-  Int i = 0;
-  Int k1 = random(10);
-  Int k2 = random(10);
-  duration(k1, k1);
-  Fut<Int> f1;
-  [Deadline: Duration(150)]  f1 = p!registerCase(rm,g, pr, em, sc, st, ma);
-  duration(k2, k2);
-  Fut<Int> f2;
-  [Deadline: Duration(150)]  f2 = p!registerCase(rm,g, pr, em, sc, st, ma);
-  Fut<Int> f3;
-  [Deadline: Duration(150)]  f3 = p!registerCase(rm,g, pr, em, sc, st, ma);
-  await f1?;
-  await f2?;
-  await f3?;
+  List<Case> clist = list(Nil);
+  Fut<List<Case>> f;
+  [Deadline: Duration(5)]  f = p!register_case(rm,c);
+  clist = f.get;
+  Fut<List<Case>> f1;
+  [Deadline: Duration(5)]  f1 = p!register_case(rm,c1);
+  clist = f1.get;
+  Fut<List<Case>> f2;
+  [Deadline: Duration(5)]  f2 = p!register_case(rm,c);
+  clist = f2.get;
+  println(toString(clist));
 }
