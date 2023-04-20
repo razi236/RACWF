@@ -128,14 +128,35 @@ import * from ABS.ResourceManager;
 
 import * from ABS.StdLib;
 
-data Case = Case(Int case_ID, String case_Type, Int priority, String patho_team, Int no_of_containers);
+data Case = Case(Int case_ID, Int sub_ID, String case_Type, Int complexity, Int priority, String patho_team, Int no_of_containers);
 
 interface Pathology {
+  Unit start(ResourceManager rm,List<Case> cl);
   Unit register_case(ResourceManager rm,Case c);
   List<Case> get_case_list(ResourceManager rm);}
 
 class Pathology implements Pathology {
   List<Case> case_list = list(Nil);
+  List<Case> processingTray = list(Nil);
+  Unit start(ResourceManager rm,List<Case> cl){
+    Grossing g = new Grossing();
+    {
+      ABS.StdLib.List<Pathology_Workflow.Case> tmp1495382332 = cl;
+      while (! isEmpty(tmp1495382332)) {
+        Pathology_Workflow.Case x = head(tmp1495382332);
+        tmp1495382332 = tail(tmp1495382332);
+        {
+          [Deadline: Duration(5)]          this.register_case(rm,x);
+          Fut<List<Case>> f;
+          [Deadline: Duration(5)]          f = g!gross(rm,x);
+          List<Case> l = list(Nil);
+          l = f.get;
+          this.processingTray = concatenate(this.processingTray, l);
+        }
+      }
+    }
+    println(toString(this.processingTray));
+  }
   Unit register_case(ResourceManager rm,Case c){
     if ( isEmpty(this.case_list) ){
       this.case_list = appendright(this.case_list, c);
@@ -176,6 +197,31 @@ class Pathology implements Pathology {
   }
   }
 
+interface Grossing {
+  List<Case> gross(ResourceManager rm,Case c);}
+
+class Grossing implements Grossing {
+  List<Case> tray = list(Nil);
+  List<Case> gross(ResourceManager rm,Case c){
+    Int i = 1;this.tray = list(Nil);List<Int> rid = list(Nil);rid = await rm!holdRes(list[set[BioTechnician, Efficiency( 2 )]]);Rat time = ( random(100) / complexity(c) );duration(truncate(time), truncate(time));this.tray = appendright(this.tray, c);while (( i < no_of_containers(c) )) {
+      Case c1 = c;
+      i = ( i + 1 );
+      this.tray = appendright(this.tray, c1);
+    }try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "gross" have missed the deadline.`);
+    }
+    return this.tray;
+  }
+  }
+
+
+
+
+
 
 
 
@@ -190,22 +236,12 @@ class Pathology implements Pathology {
 {
   ResourceManager rm = new ResourceManager();
   await rm!addRes(list[set[Pathologist, Efficiency(3)], set[BioTechnician, Efficiency(5)], set[BioTechnician, Efficiency(3)], set[BioTechnician, Efficiency(10)], set[VanDriver, Efficiency(5)], set[DeliveryVan, Efficiency(1500)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[ProcessingMachine, Efficiency(10)], set[ProcessingMachine, Efficiency(10)], set[StainingMachine, Efficiency(5)], set[StainingMachine, Efficiency(5)], set[Pathologist, Efficiency(2)], set[HeadWaiter, Efficiency(2)], set[RunnerWaiter, Efficiency(1)], set[RunnerWaiter, Efficiency(1)], set[Cook, Efficiency(5)], set[CookAssistant, Efficiency(1)], set[CookAssistant, Efficiency(1)], set[CookAssistant, Efficiency(1)], set[Cook, Efficiency(3)]]);
-  Case c = Case( 123, "Blood Sample", 3, "Gyno", 2 );
-  Case c1 = Case( 345, "Blood Sample", 3, "Gyno", 2 );
-  Case c2 = Case( 678, "Blood Sample", 2, "Gyno", 2 );
+  Case c = Case( 123, 0, "Blood Sample", 2, 3, "Gyno", 2 );
+  Case c1 = Case( 345, 0, "Blood Sample", 3, 3, "Gyno", 4 );
+  Case c2 = Case( 678, 0, "Blood Sample", 4, 2, "Gyno", 1 );
   Pathology p = new Pathology();
-  List<Case> case_list = list(Nil);
+  List<Case> cases = list[c, c1, c2];
   Fut<Unit> f;
-  [Deadline: Duration(5)]  f = p!register_case(rm,c);
+  [Deadline: Duration(5)]  f = p!start(rm,cases);
   await f?;
-  Fut<Unit> f1;
-  [Deadline: Duration(5)]  f1 = p!register_case(rm,c1);
-  await f1?;
-  Fut<Unit> f2;
-  [Deadline: Duration(5)]  f2 = p!register_case(rm,c2);
-  await f2?;
-  Fut<List<Case>> f3;
-  [Deadline: Duration(5)]  f3 = p!get_case_list(rm);
-  case_list = f3.get;
-  println(toString(case_list));
 }

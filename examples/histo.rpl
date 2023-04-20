@@ -5,10 +5,11 @@ module Pathology_Workflow;
 // Pakkeforløp => 2
 // Regular => 3
 
-data Case = Case(Int case_ID, String case_Type, Int priority, String patho_team, Int no_of_containers);
+data Case = Case(Int case_ID, Int sub_ID, String case_Type, Int complexity, Int priority, String patho_team, Int no_of_containers);
 
 interface Pathology
 {
+    Unit start(List<Case> cl);
     Unit register_case(Case c); // Register cases as a priority queue
     List<Case> get_case_list();
 }
@@ -16,6 +17,21 @@ interface Pathology
 class Pathology implements Pathology
 {
     List<Case> case_list = list[];
+    List<Case> processingTray = list[];
+    Unit start(List<Case> cl)
+    {
+        Grossing g = new Grossing();
+        foreach(x in cl)
+        {
+            register_case(this,x) after dl 5;
+            Fut<List<Case>> f;
+            f = !gross(g,x) after dl 5;
+            List<Case> l = list[];
+            l = f.get;
+            processingTray = concatenate (processingTray,l);
+        }
+        println(toString(processingTray));
+    }
     Unit register_case(Case c)
     {
         if(isEmpty(case_list))
@@ -60,23 +76,43 @@ class Pathology implements Pathology
     }
 }
 
+interface Grossing
 {
-    Case c = Case(123,"Blood Sample",3,"Gyno",2);
-    Case c1 = Case(345,"Blood Sample",3,"Gyno",2);
-    Case c2 = Case(678,"Blood Sample",2,"Gyno",2);
+    List<Case> gross(Case c);
+}
+class Grossing implements Grossing
+{
+    List<Case> tray = list[];
+    List<Case> gross(Case c)
+    {
+        Int i = 1;
+        tray = list[];
+        List<Int> rid = list[];
+        rid = hold(list[set[BioTechnician, Efficiency(2)]]); // it should be hard coded
+        Rat time = random(100)/complexity(c);
+        //println(`Time: $now()$`);
+        cost(truncate(time));
+        //println(`Time: $now()$`);
+        tray = appendright (tray,c);
+        while(i<no_of_containers(c))
+        {
+            Case c1 = c;
+            i = i + 1;
+            tray = appendright (tray,c1);
+        }
+        //println(toString(tray));
+        return tray;
+    }
+}
+
+{
+    Case c = Case(123,0,"Blood Sample",2,3,"Gyno",2);
+    Case c1 = Case(345,0,"Blood Sample",3,3,"Gyno",4);
+    Case c2 = Case(678,0,"Blood Sample",4,2,"Gyno",1);
     Pathology p = new Pathology();
-    List<Case> case_list = list[];
+    List<Case> cases = list[c,c1,c2];
     Fut<Unit> f;
-    f = !register_case(p,c) after dl 5;
+    f = !start(p,cases) after dl 5;
     await f?;
-    Fut<Unit> f1;
-    f1 = !register_case(p,c1) after dl 5;
-    await f1?;
-    Fut<Unit> f2;
-    f2 = !register_case(p,c2) after dl 5;
-    await f2?;
-    Fut<List<Case>> f3;
-    f3 = !get_case_list(p) after dl 5;
-    case_list = f3.get;
-    println(toString(case_list));
+
 }
