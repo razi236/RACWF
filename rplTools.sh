@@ -58,12 +58,12 @@ else
     {
       echo "Please enter the filename:"
       read file
-      start=`echo $($(date +%s))`
+      start=`date +%s`
       frontend/bin/absc -s ./examples/$file
       cp RABS.abs ABS.rpl
       frontend/bin/absc -e ABS.rpl
       gen/erl/run
-      end=`echo $($(date +%s))`
+      end=`date +%s`
       echo Execution time was `expr $end - $start` seconds.
     }
     # shellcheck disable=SC1073
@@ -72,12 +72,12 @@ else
     {
         echo "Please enter the filename:"
         read file
-        start=`echo $($(date +%s))`
+        start=`date +%s`
         frontend/bin/absc -s ./examples/$file
         cp RABS.abs ABS.rpl
         frontend/bin/absc -e ABS.rpl
         gen/erl/run
-        end=`echo $($(date +%s))`
+        end=`date +%s`
         echo Execution time was `expr $end - $start` seconds.
         grep -o '\bmax\b' CostEquations.txt | wc -l
     }
@@ -87,12 +87,13 @@ else
     {
         echo "Please enter the filename:"
         read file
-        start=`echo $($(date +%s))`
+        #start=`echo $($(date +%s))`
+        start=`date +%s`
         frontend/bin/absc -s ./examples/$file
         cp RABS.abs ABS.rpl
         frontend/bin/absc -e ABS.rpl
         gen/erl/run
-        end=`echo $($(date +%s))`
+        end=`date +%s`
         echo Execution time was `expr $end - $start` seconds.
     }
     else
