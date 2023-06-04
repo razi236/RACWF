@@ -1,22 +1,18 @@
 #!/bin/bash
 echo "****************************************"
-echo "*          Welcome to RplTools         *"
+echo "*          Welcome to RACWF            *"
 echo "****************************************"
-echo "Press 1 for Simulation"
-echo "Press 2 for Cost Analysis"
-echo "Press 3 for RPL to ABS translation"
+echo "Press 1 for one to one resource mapping"
+echo "Press 2 to optimize the throughput and meed deadline"
+echo "Press 3 to optimize the resource cost"
 read option
 if [[ "$OSTYPE" == "darwin"* ]]; then
     {
     if [ $option = "1" ]
     then
     {
-      echo "Please enter the filename:"
-      read file
       start=`echo $(($(gdate +%s%N)/1000000))`
-      frontend/bin/absc -s ./examples/$file
-      cp RABS.abs ABS.rpl
-      frontend/bin/absc -e ABS.rpl
+      frontend/bin/absc -e ./examples/p1.rpl
       gen/erl/run
       end=`echo $(($(gdate +%s%N)/1000000))`
       echo Execution time was `expr $end - $start` mili seconds.
@@ -25,22 +21,19 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     elif [ $option = "2" ]
     then
     {
-      echo "Please enter the filename:"
-      read file
-      start=`echo $(($(gdate +%s%N)/1000000))`
-      frontend/bin/absc -c ./examples/$file
-      end=`echo $(($(gdate +%s%N)/1000000))`
-      echo Execution time was `expr $end - $start` mili seconds.
-      grep -o '\bmax\b' CostEquations.txt | wc -l
+        start=`echo $(($(gdate +%s%N)/1000000))`
+        frontend/bin/absc -e ./examples/p2.rpl
+        gen/erl/run
+        end=`echo $(($(gdate +%s%N)/1000000))`
+        echo Execution time was `expr $end - $start` mili seconds.
     }
     # shellcheck disable=SC1131
     elif [ $option = "3" ]
     then
     {
-      echo "Please enter the filename:"
-      read file
       start=`echo $(($(gdate +%s%N)/1000000))`
-      frontend/bin/absc -t ./examples/$file
+      frontend/bin/absc -e ./examples/p3.rpl
+      gen/erl/run
       end=`echo $(($(gdate +%s%N)/1000000))`
       echo Execution time was `expr $end - $start` mili seconds.
     }

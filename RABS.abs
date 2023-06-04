@@ -347,7 +347,7 @@ class Grossing implements Grossing {
     Int i = 1;
     this.tray = Nil;
     List<Int> rid = list(Nil);
-    rid = await rm!findRes(set[BioTechnician, Efficiency( 2 )]);
+    rid = await rm!holdRes(list[set[BioTechnician, Efficiency( 2 )]]);
     Rat time = ( random(10) / complexity(c) );
     duration(truncate(time), truncate(time));
     this.tray = appendright(this.tray, c);
@@ -361,7 +361,24 @@ class Grossing implements Grossing {
     [Deadline: Duration(5)]    f = l!setProcessingList(rm,this.tray);
     f.get;
   }
-
+  Unit gross_with_(ResourceManager rm,Lists l, Case c){
+    Int i = 1;
+    this.tray = Nil;
+    List<Int> rid = list(Nil);
+    rid = await rm!holdRes(list[set[BioTechnician, Efficiency( 2 )]]);
+    Rat time = ( random(10) / complexity(c) );
+    duration(truncate(time), truncate(time));
+    this.tray = appendright(this.tray, c);
+    while (( i < no_of_containers(c) )) {
+      Case c1 = c;
+      i = ( i + 1 );
+      this.tray = appendright(this.tray, c1);
+    }
+    await rm!releaseRes(rid);
+    Fut<Unit> f;
+    [Deadline: Duration(5)]    f = l!setProcessingList(rm,this.tray);
+    f.get;
+  }
   }
 
 interface Processing {
@@ -435,22 +452,6 @@ class MicroscopicAnalysis implements MicroscopicAnalysis {
     await rm!releaseRes(rid);
   }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {
   ResourceManager rm = new ResourceManager();
   await rm!addRes(list[set[Pathologist, Efficiency(3)], set[BioTechnician, Efficiency(5)], set[BioTechnician, Efficiency(3)], set[BioTechnician, Efficiency(10)], set[VanDriver, Efficiency(5)], set[DeliveryVan, Efficiency(1500)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[BioTechnician, Efficiency(2)], set[ProcessingMachine, Efficiency(10)], set[ProcessingMachine, Efficiency(10)], set[StainingMachine, Efficiency(5)], set[StainingMachine, Efficiency(5)], set[Pathologist, Efficiency(2)], set[HeadWaiter, Efficiency(2)], set[RunnerWaiter, Efficiency(1)], set[RunnerWaiter, Efficiency(1)], set[Cook, Efficiency(5)], set[CookAssistant, Efficiency(1)], set[CookAssistant, Efficiency(1)], set[CookAssistant, Efficiency(1)], set[Cook, Efficiency(3)]]);
