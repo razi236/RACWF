@@ -642,6 +642,8 @@ class Grossing implements Grossing {
     Fut<Unit> f;
     [Deadline: Duration(5)]    f = l!setProcessingList(rm,this.tray);
     f.get;
+    println(( ( "Grossing Time: " + toString(now()) ) + "" ));
+    println( "Resource for Grossing: " + toString(rid));
   }
 }
 
@@ -658,6 +660,8 @@ class Processing implements Processing {
     Fut<Unit> f;
     [Deadline: Duration(5)]    f = l!setBlockList(rm,cl);
     f.get;
+    println(( ( "Processing Time: " + toString(now()) ) + "" ));
+    println( "Resource for Processing: " + toString(rid));
   }
 }
 
@@ -686,6 +690,8 @@ class Embedding implements Embedding {
         List<Int> rl = Cons(fst(head(rid)),Nil);
         await rm!releaseRes(rl);
     }
+    println(( ( "Embedding Time: " + toString(now()) ) + "" ));
+    println( "Resource for Embedding: " + toString(rid));
   }
 }
 
@@ -713,6 +719,8 @@ class Sectioning implements Sectioning {
         List<Int> rl = Cons(fst(head(rid)),Nil);
         await rm!releaseRes(rl);
     }
+    println(( ( "Sectioning Time: " + toString(now()) ) + "" ));
+    println( "Resource for Sectioning: " + toString(rid));
   }
 }
 
@@ -740,6 +748,8 @@ class Staining implements Staining {
         List<Int> rl = Cons(fst(head(rid)),Nil);
         await rm!releaseRes(rl);
     }
+    println(( ( "Staining Time: " + toString(now()) ) + "" ));
+    println( "Resource for Staining: " + toString(rid));
   }
 }
 interface MicroscopicAnalysis {
@@ -767,11 +777,13 @@ class MicroscopicAnalysis implements MicroscopicAnalysis {
             List<Int> rl = Cons(fst(head(rid)),Nil);
             await rm!releaseRes(rl);
         }
+        println(( ( "Analysis Time: " + toString(now()) ) + "" ));
+        println( "Resource for Analysis: " + toString(rid));
   }
 }
 {
   ResourceManager rm = new ResourceManager();
-  await rm!addRes(list[Pair(3,Pathologist), Pair(2,BioTechnician), Pair(4,BioTechnician), Pair(4,BioTechnician), Pair(5,BioTechnician), Pair(3,BioTechnician), Pair(10,BioTechnician), Pair(8,BioTechnician),Pair(6,BioTechnician), Pair(7,BioTechnician), Pair(5,BioTechnician), Pair(2,BioTechnician), Pair(10,ProcessingMachine), Pair(10,ProcessingMachine), Pair(10,StainingMachine), Pair(5,StainingMachine), Pair(10,Pathologist)]);
+  await rm!addRes(list[Pair(3,Pathologist), Pair(2,BioTechnician), Pair(4,BioTechnician), Pair(4,BioTechnician), Pair(5,BioTechnician), Pair(3,BioTechnician), Pair(10,BioTechnician), Pair(8,BioTechnician),Pair(6,BioTechnician), Pair(7,BioTechnician), Pair(5,BioTechnician), Pair(2,BioTechnician), Pair(10,ProcessingMachine), Pair(10,ProcessingMachine), Pair(10,StainingMachine), Pair(5,StainingMachine), Pair(1,Pathologist)]);
   Case c = Case( 123, 0, "Blood Sample", 2, 3, "Gyno", 1 );
   Case c1 = Case( 345, 0, "Blood Sample", 3, 3, "Gyno", 1 );
   Case c2 = Case( 678, 0, "Blood Sample", 4, 2, "Gyno", 1 );
@@ -788,7 +800,7 @@ class MicroscopicAnalysis implements MicroscopicAnalysis {
   Case c13 = Case( 678, 0, "Blood Sample", 4, 2, "Gyno", 1 );
   Pathology p = new Pathology();
   Lists l = new Lists();
-  List<Case> cases = list[c, c1, c2, c3, c4, c5];
+  List<Case> cases = list[c, c1, c2];
   Fut<Unit> f;
   [Deadline: Duration(500)]  f = p!start(rm,l, cases);
   await f?;

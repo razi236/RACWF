@@ -642,7 +642,10 @@ class Grossing implements Grossing {
     Fut<Unit> f;
     [Deadline: Duration(5)]    f = l!setProcessingList(rm,this.tray);
     f.get;
+    println(( ( "Grossing Time: " + toString(now()) ) + "" ));
+    println( "Resource for Grossing: " + toString(rid));
   }
+
 }
 
 interface Processing {
@@ -658,7 +661,10 @@ class Processing implements Processing {
     Fut<Unit> f;
     [Deadline: Duration(5)]    f = l!setBlockList(rm,cl);
     f.get;
+    println(( ( "Processing Time: " + toString(now()) ) + "" ));
+    println( "Resource for Processing: " + toString(rid));
   }
+
 }
 
 interface Embedding {
@@ -686,7 +692,10 @@ class Embedding implements Embedding {
         List<Int> rl = Cons(fst(head(rid)),Nil);
         await rm!releaseRes(rl);
     }
+    println(( ( "Embedding Time: " + toString(now()) ) + "" ));
+    println( "Resource for Embedding: " + toString(rid));
   }
+
 }
 
 interface Sectioning {
@@ -713,6 +722,8 @@ class Sectioning implements Sectioning {
         List<Int> rl = Cons(fst(head(rid)),Nil);
         await rm!releaseRes(rl);
     }
+    println(( ( "Sectioning Time: " + toString(now()) ) + "" ));
+    println( "Resource for Sectioning: " + toString(rid));
   }
 }
 
@@ -740,6 +751,8 @@ class Staining implements Staining {
         List<Int> rl = Cons(fst(head(rid)),Nil);
         await rm!releaseRes(rl);
     }
+    println(( ( "Staining Time: " + toString(now()) ) + "" ));
+    println( "Resource for Staining: " + toString(rid));
   }
 }
 interface MicroscopicAnalysis {
@@ -767,6 +780,8 @@ class MicroscopicAnalysis implements MicroscopicAnalysis {
             List<Int> rl = Cons(fst(head(rid)),Nil);
             await rm!releaseRes(rl);
         }
+        println(( ( "Analysis Time: " + toString(now()) ) + "" ));
+        println( "Resource for Analysis: " + toString(rid));
   }
 }
 {
@@ -788,7 +803,7 @@ class MicroscopicAnalysis implements MicroscopicAnalysis {
   Case c13 = Case( 678, 0, "Blood Sample", 4, 2, "Gyno", 1 );
   Pathology p = new Pathology();
   Lists l = new Lists();
-  List<Case> cases = list[c, c1, c2, c3, c4, c5];
+  List<Case> cases = list[c, c1, c2];
   Fut<Unit> f;
   [Deadline: Duration(500)]  f = p!start(rm,l, cases);
   await f?;
