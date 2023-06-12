@@ -571,9 +571,10 @@ class Pathology implements Pathology {
                                 [Deadline: Duration(5)]                  f6 = st!stain(rm,l, y, 15);
                                 await f4?&f5?&f6?;
                                 [Deadline: Duration(5)]                  f4 = ma!analyse(rm,l, y, 10);
-                                [Deadline: Duration(5)]                  f4 = ma!analyse(rm,l, y, 10);
-                                [Deadline: Duration(5)]                  f4 = ma!analyse(rm,l, y, 10);
+                                [Deadline: Duration(5)]                  f5 = ma!analyse(rm,l, y, 10);
+                                [Deadline: Duration(5)]                  f6 = ma!analyse(rm,l, y, 10);
                                 await f4?&f5?&f6?;
+                                println("]");
                               }
                             //}
             }
@@ -807,7 +808,7 @@ class MicroscopicAnalysis implements MicroscopicAnalysis {
         //println(( ( "Analysis Time: " + toString(now()) ) + "" ));
         //println( "Resource for Analysis: " + toString(rid));
         print(toString(now()) + ",");
-        print(toString(rid) + ",");
+        print(toString(rid)+ ",");
   }
 }
 {
@@ -833,5 +834,5 @@ class MicroscopicAnalysis implements MicroscopicAnalysis {
   Fut<Unit> f;
   [Deadline: Duration(500)]  f = p!start(rm,l, cases);
   await f?;
-  println(toString(now()) + " ]");
+  //println(toString(now()) + " ]");
 }

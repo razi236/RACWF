@@ -29,7 +29,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         [ -f simulation.csv ] && rm simulation.csv
         echo GrossT1,GrossR1,GrossT2,Grossr2,GrossT3,GrossR3,PT,PR,ET1,ER1,ET2,ER2,ET3,ER3,SecT1,SecR1,SecT2,SecR2,SecT3,SecR3,StT1,StR1,StT2,StR2,StT3,StR3,AT,AR,AT,AR,AT,AR,TT >> simulation.csv
         c=1
-        while [ $c -le 5 ]
+        while [ $c -le 100 ]
         do
             frontend/bin/absc -e ./examples/p2a.rpl
             gen/erl/run >> simulation.csv
