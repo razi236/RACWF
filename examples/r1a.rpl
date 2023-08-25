@@ -1,7 +1,7 @@
 module ABS.ResourceManager;
 import * from ABS.StdLib;
 export *;
-data Quality = Pathologist | BioTechnician | ProcessingMachine | EmbeddingMachine | StainingMachine | Receptionist | VanDriver | DeliveryVan | HeadWaiter | RunnerWaiter | Cook | CookAssistant;
+data Quality = Ferry | Doctor | SmokeMask | PoliceMan | Clerk | EODTech | FireFighter | FireExt | FirstAidBox;
 
 // Resource Management
 // Translation fetches resources from the database and store them in a resource map in the ABS program.
@@ -12,7 +12,7 @@ interface ResourceManager {
     List<Int> holdRes(List<Pair<Int,Quality>> wantedResources);
     List<Int> findRes(Pair<Int,Quality> wantedResource);
     List<Int> findMoreEfficientRes(Pair<Int,Quality> wantedResource);
-    List<Pair<Int,Int>> findNearestMoreEfficientRes(Pair<Int,Quality> wantedResource);
+    List<Int> findNearestMoreEfficientRes(Pair<Int,Quality> wantedResource);
     List<Int> findLessEfficientRes(Pair<Int,Quality> wantedResource);
     List<Pair<Int,Int>> findNearestLessEfficientRes(Pair<Int,Quality> wantedResource);
     List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> getResources(Quality q);
@@ -26,6 +26,7 @@ class ResourceManager implements ResourceManager {
     Int resource_counter = 0;
 
     Unit print() {
+
         println(toString(resources));
     }
     List<Int> addRes(List<Pair<Int,Quality>> newResources) {
@@ -168,9 +169,9 @@ class ResourceManager implements ResourceManager {
         return result;
     }
 
-    List<Pair<Int,Int>> findNearestMoreEfficientRes(Pair<Int,Quality> wantedResource) // when all required resources are not available
+    List<Int> findNearestMoreEfficientRes(Pair<Int,Quality> wantedResource) // when all required resources are not available
     {
-        List<Pair<Int,Int>> result = list[];
+        List<Int> result = list[];
         Map<Int, Pair<Availability, Pair<Int,Quality>>> lr = this.resources;
         List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> getResList = this.getResources(snd(wantedResource));
         //println("Got Resources");
@@ -186,7 +187,7 @@ class ResourceManager implements ResourceManager {
                     && fst(wantedResource) == fst(snd(snd(entry))) && snd(wantedResource) == snd(snd(snd(entry))))
                 {
                     found = True;
-                    result = Cons(Pair(fst(entry),fst(snd(snd(entry)))), result);
+                    result = Cons(fst(entry), result);
                     lr = put(lr, fst(entry), Pair(Busy, snd(snd(entry))));
                 }
             }
@@ -200,7 +201,7 @@ class ResourceManager implements ResourceManager {
                         if(fst(wantedResource) < fst(snd(snd(entry))))
                         {
                             found = True;
-                            result = Cons(Pair(fst(entry),fst(snd(snd(entry)))), result);
+                            result = Cons(fst(entry), result);
                             lr = put(lr, fst(entry), Pair(Busy, snd(snd(entry))));
                             /*
                             println("***********************************************");
@@ -432,423 +433,460 @@ class AwaitFut implements AwaitFut
         return resolved;
     }
 }
-module Pathology_Workflow;
+module Rescue;
 import * from ABS.ResourceManager;
 
 import * from ABS.StdLib;
 
-data Case = Case(Int case_ID, Int sub_ID, String case_Type, Int complexity, Int priority, String patho_team, Int no_of_containers);
+interface Police {
+  Int alarm(ResourceManager rm,ECC ecc, EOD eod, FB fb, Hospital h);
+  Int repEmgInfo(ResourceManager rm,ECC ecc, EOD eod, FB fb, Hospital h);
+  Int rushToSite(ResourceManager rm);
+  Int dealSituation(ResourceManager rm);
+  Int evacuation(ResourceManager rm);
+  Int rescue(ResourceManager rm);}
 
-interface Lists {
-  Unit setProcessingList(ResourceManager rm,List<Case> l);
-  List<Case> checkProcessingList(ResourceManager rm);
-  Case getProcessingList(ResourceManager rm);
-  Unit setBlockList(ResourceManager rm,List<Case> l);
-  List<Case> checkBlockList(ResourceManager rm);
-  Case getBlockList(ResourceManager rm);}
-
-class Lists implements Lists {
-  List<Case> processingTray = list(Nil);
-  List<Case> blockTray = list(Nil);
-  Unit setProcessingList(ResourceManager rm,List<Case> l){
-    this.processingTray = concatenate(this.processingTray, l);
-  }
-  List<Case> checkProcessingList(ResourceManager rm){
+class Police implements Police {
+  List<Int> rid = list(Nil);
+  Int alarm(ResourceManager rm,ECC ecc, EOD eod, FB fb, Hospital h){
+    Int x = 0;
+    this.rid = await rm!holdRes(list[Pair(40,PoliceMan),Pair(40,PoliceMan),Pair(40,PoliceMan),Pair(40,PoliceMan),Pair(40,PoliceMan),Pair(40,PoliceMan),
+    Pair(100,SmokeMask),Pair(100,SmokeMask),Pair(100,SmokeMask),Pair(100,SmokeMask),
+    Pair(100,SmokeMask),Pair(100,SmokeMask)]);
+    //print(toString(now()) + ",");
+    print(toString(this.rid) + ",");
+    [Deadline: Duration(75)]    x = this.repEmgInfo(rm,ecc, eod, fb, h);
     try {
     Duration d = deadline();
     Rat r = durationValue(d);
     assert r > 0;
     } catch {
-    AssertionFailException => println(`The method "checkProcessingList" have missed the deadline.`);
+    AssertionFailException => println(`The method "alarm" have missed the deadline.`);
     }
-    return this.processingTray;
+    return 0;
   }
-  Unit setBlockList(ResourceManager rm,List<Case> l){
-    this.blockTray = concatenate(this.blockTray, l);
-  }
-  List<Case> checkBlockList(ResourceManager rm){
+  Int repEmgInfo(ResourceManager rm,ECC ecc, EOD eod, FB fb, Hospital h){
+    Police p1 = new Police();
+    Police p2 = new Police();
+    Fut<Int> f1;
+    Fut<Int> f2;
+    Fut<Int> f3;
+    Fut<Int> f4;
+    Int x = 0;
+    List<Int> temp = list(Nil);
+    temp = await rm!holdRes(list[Pair(40,Clerk)]);
+    duration(5,5);
+    await rm!releaseRes(temp);
+    print(toString(now()) + ",");
+    print(toString(temp) + ",");
+    [Deadline: Duration(90)]    f1 = ecc!estEmgCtr(rm);
+    [Deadline: Duration(25)]    x = this.rushToSite(rm);
+    [Deadline: Duration(25)]    f2 = p1!dealSituation(rm);
+    [Deadline: Duration(25)]    f3 = p2!evacuation(rm);
+    [Deadline: Duration(25)]    x = this.rescue(rm);
+    await f1?;
+    await f2?;
+    await f3?;
+    [Deadline: Duration(100)]    f4 = ecc!makeEmgPlan(rm,eod, fb, h);
+    await f4?;
+    await rm!releaseRes(rid);
+
     try {
     Duration d = deadline();
     Rat r = durationValue(d);
     assert r > 0;
     } catch {
-    AssertionFailException => println(`The method "checkBlockList" have missed the deadline.`);
+    AssertionFailException => println(`The method "repEmgInfo" have missed the deadline.`);
     }
-    return this.blockTray;
+    return 0;
   }
-  Case getProcessingList(ResourceManager rm){
-    Case c = head(this.processingTray);this.processingTray = tail(this.processingTray);try {
-    Duration d = deadline();
-    Rat r = durationValue(d);
-    assert r > 0;
-    } catch {
-    AssertionFailException => println(`The method "getProcessingList" have missed the deadline.`);
-    }
-    return c;
-  }
-  Case getBlockList(ResourceManager rm){
-    Case c = head(this.blockTray);this.blockTray = tail(this.blockTray);try {
-    Duration d = deadline();
-    Rat r = durationValue(d);
-    assert r > 0;
-    } catch {
-    AssertionFailException => println(`The method "getBlockList" have missed the deadline.`);
-    }
-    return c;
-  }
-  }
-
-interface Pathology {
-  Unit start(ResourceManager rm,Lists l, List<Case> cl);
-  Unit register_case(ResourceManager rm,Case c);
-  List<Case> get_case_list(ResourceManager rm);}
-
-class Pathology implements Pathology {
-  List<Case> case_list = list(Nil);
-  Unit start(ResourceManager rm,Lists l, List<Case> cl){
-    Grossing g = new Grossing();
-    Processing p = new Processing();
-    Embedding e = new Embedding();
-    Sectioning s = new Sectioning();
-    Staining st = new Staining();
-    MicroscopicAnalysis ma = new MicroscopicAnalysis();
-    {
-      ABS.StdLib.List<Pathology_Workflow.Case> tmp383005108 = cl;
-      while (! isEmpty(tmp383005108)) {
-        Pathology_Workflow.Case x = head(tmp383005108);
-        tmp383005108 = tail(tmp383005108);
-        {
-          [Deadline: Duration(5)]          this.register_case(rm,x);
-          Fut<Unit> f;
-          [Deadline: Duration(5)]          f = g!gross(rm,l,x,25);
-          await f?;
-          Fut<List<Case>> f1;
-          List<Case> l1 = list(Nil);
-          [Deadline: Duration(5)]          f1 = l!checkProcessingList(rm);
-          l1 = f1.get;
-          //println(toString(l1));
-          if ( ( length(l1) >= 3 ) ){
-            Int i = 0;
-            List<Case> l2 = list(Nil);
-            while (( i < 3 )) {
-              Fut<Case> f2;
-              [Deadline: Duration(5)]              f2 = l!getProcessingList(rm);
-              Case c = f2.get;
-              l2 = appendright(l2, c);
-              i = ( i + 1 );
-            }
-            Fut<Unit> f2;
-            [Deadline: Duration(5)]            f2 = p!process(rm,l, l2, 50);
-            await f2?;
-            Fut<List<Case>> f3;
-            List<Case> l3 = list(Nil);
-            [Deadline: Duration(5)]            f3 = l!checkBlockList(rm);
-            l3 = f3.get;
-            //println(toString(l3));
-            {
-              ABS.StdLib.List<Pathology_Workflow.Case> tmp1620368915 = l3;
-              //while (! isEmpty(tmp1620368915)) {
-                              Pathology_Workflow.Case y = head(tmp1620368915);
-                              tmp1620368915 = tail(tmp1620368915);
-                              Pathology_Workflow.Case y1 = head(tmp1620368915);
-                              tmp1620368915 = tail(tmp1620368915);
-                              Pathology_Workflow.Case y2 = head(tmp1620368915);
-                              tmp1620368915 = tail(tmp1620368915);
-                              {
-                                Fut<Unit> f4;
-                                [Deadline: Duration(5)]                  f4 = e!embed(rm,l, y, 20);
-                                Fut<Unit> f5;
-                                [Deadline: Duration(5)]                  f5 = e!embed(rm,l, y, 20);
-                                Fut<Unit> f6;
-                                [Deadline: Duration(5)]                  f6 = e!embed(rm,l, y, 20);
-                                await f4?&f5?&f6?;
-                                [Deadline: Duration(5)]                  f4 = s!section(rm,l, y, 25);
-                                [Deadline: Duration(5)]                  f5 = s!section(rm,l, y, 25);
-                                [Deadline: Duration(5)]                  f6 = s!section(rm,l, y, 25);
-                                await f4?&f5?&f6?;
-                                [Deadline: Duration(5)]                  f4 = st!stain(rm,l, y, 15);
-                                [Deadline: Duration(5)]                  f5 = st!stain(rm,l, y, 15);
-                                [Deadline: Duration(5)]                  f6 = st!stain(rm,l, y, 15);
-                                await f4?&f5?&f6?;
-                                [Deadline: Duration(5)]                  f4 = ma!analyse(rm,l, y, 10);
-                                [Deadline: Duration(5)]                  f5 = ma!analyse(rm,l, y, 10);
-                                [Deadline: Duration(5)]                  f6 = ma!analyse(rm,l, y, 10);
-                                await f4?&f5?&f6?;
-                                println("]");
-                              }
-                            //}
-            }
-          }
-        }
-      }
-    }
-  }
-  Unit register_case(ResourceManager rm,Case c){
-    if ( isEmpty(this.case_list) ){
-      this.case_list = appendright(this.case_list, c);
-    } else {
-      Int i = 0;
-      List<Case> left = list(Nil);
-      List<Case> right = list(Nil);
-      List<Case> mid = list(Nil);
-      Bool flag = True;
-      while (( i < length(this.case_list) )) {
-        if ( ( priority(nth(this.case_list, i)) <= priority(c) ) ){
-          left = appendright(left, nth(this.case_list, i));
-        } else {
-          while (( i < length(this.case_list) )) {
-            right = appendright(right, nth(this.case_list, i));
-            i = ( i + 1 );
-          }
-          mid = appendright(mid, c);
-          this.case_list = concatenate(left, concatenate(mid, right));
-          flag = False;
-        }
-        i = ( i + 1 );
-      }
-      if ( ( flag == True ) ){
-        this.case_list = appendright(left, c);
-      }
-    }
-  }
-  List<Case> get_case_list(ResourceManager rm){
+  Int rushToSite(ResourceManager rm){
+    List<Int> temp = list(Nil);
+    temp = await rm!holdRes(list[Pair(30,Ferry)]);
+    duration(20, 20);
+    await rm!releaseRes(temp);
+    print(toString(now()) + ",");
+    print(toString(temp) + ",");
     try {
     Duration d = deadline();
     Rat r = durationValue(d);
     assert r > 0;
     } catch {
-    AssertionFailException => println(`The method "get_case_list" have missed the deadline.`);
+    AssertionFailException => println(`The method "rushToSite" have missed the deadline.`);
     }
-    return this.case_list;
+    return 0;
   }
-}
-interface Grossing {
-  Unit gross(ResourceManager rm,Lists l, Case c, Int task_length);
-}
-class Grossing implements Grossing {
-  List<Case> tray = list(Nil);
-  Unit gross(ResourceManager rm,Lists l, Case c,Int task_length){
-    Int i = 1;
-    this.tray = Nil;
-    List<Pair<Int,Int>> rid = Nil;
+  Int dealSituation(ResourceManager rm){
+    duration(20, 20);try {
     Duration d = deadline();
     Rat r = durationValue(d);
-    Int x = truncate(r);
-    Int y = 0;
-    if (x != 0) {
-    y = truncate(task_length/x);}
-    rid = await rm!findNearestMoreEfficientRes(Pair(y,BioTechnician));
-    if (isEmpty(rid))
-    {
-        println(`Did not find the BioTechnician for Grossing, to meet the deadline please add BioTechnician having $y$ efficiency`);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "dealSituation" have missed the deadline.`);
     }
-    else
-    {
-        duration(task_length/snd(head(rid)));
-        List<Int> rl = Cons(fst(head(rid)),Nil);
-        await rm!releaseRes(rl);
+    return 0;
+  }
+  Int evacuation(ResourceManager rm){
+    duration(20, 20);try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "evacuation" have missed the deadline.`);
     }
-    this.tray = appendright(this.tray, c);
-    while (( i < no_of_containers(c) )) {
-      Case c1 = c;
-      i = ( i + 1 );
-      this.tray = appendright(this.tray, c1);
+    return 0;
+  }
+  Int rescue(ResourceManager rm){
+    duration(20, 20);try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "rescue" have missed the deadline.`);
     }
-    Fut<Unit> f;
-    [Deadline: Duration(5)]    f = l!setProcessingList(rm,this.tray);
-    f.get;
-    //println(( ( "Grossing Time: " + toString(now()) ) + "" ));
-    //println( "Resource for Grossing: " + toString(rid));
+    return 0;
+  }
+  }
+
+interface ECC {
+  Int estEmgCtr(ResourceManager rm);
+  Int makeEmgPlan(ResourceManager rm,EOD eod, FB fb, Hospital h);
+  Int doMediaCoverage(ResourceManager rm);}
+
+class ECC implements ECC {
+
+  Int estEmgCtr(ResourceManager rm){
+    duration(50, 50);try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "estEmgCtr" have missed the deadline.`);
+    }
+    return 0;
+  }
+  Int makeEmgPlan(ResourceManager rm,EOD eod, FB fb, Hospital h){
+    Int x = 0;Fut<Int> f1;Fut<Int> f2;Fut<Int> f3;
+    List<Int> temp = list(Nil);
+    temp = await rm!holdRes(list[Pair(40,Clerk)]);
+    duration(5,5);
+    await rm!releaseRes(temp);
     print(toString(now()) + ",");
-    print(toString(rid)+ ",");
-  }
-
-}
-
-interface Processing {
-  Unit process(ResourceManager rm,Lists l, List<Case> c, Int task_length);
-}
-
-class Processing implements Processing {
-  Unit process(ResourceManager rm,Lists l, List<Case> cl, Int task_length){
-    List<Pair<Int,Int>> rid = Nil;
+    print(toString(temp) + ",");
+    [Deadline: Duration(50)]    f1 = eod!start(rm);
+    [Deadline: Duration(90)]    f2 = fb!start(rm);
+    [Deadline: Duration(80)]    f3 = h!start(rm);
+    await f1?;
+    await f2?;
+    await f3?;
+    [Deadline: Duration(100)]    x = this.doMediaCoverage(rm);
+    //println("Plan Done");
+    try {
     Duration d = deadline();
     Rat r = durationValue(d);
-    Int x = truncate(r);
-    Int y = 0;
-    if (x != 0) {
-        y = truncate(task_length/x);
-        rid = await rm!findNearestMoreEfficientRes(Pair(y,ProcessingMachine));
-        if (isEmpty(rid))
-        {
-           println(`Did not find the Processing Machine for Grossing, to meet the deadline please add BioTechnician having $y$ efficiency`);
-        }
-        else
-        {
-           duration(task_length/snd(head(rid)));
-           List<Int> rl = Cons(fst(head(rid)),Nil);
-           await rm!releaseRes(rl);
-        }
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "makeEmgPlan" have missed the deadline.`);
     }
-    Fut<Unit> f;
-    [Deadline: Duration(5)]    f = l!setBlockList(rm,cl);
-    f.get;
-    //println(( ( "Processing Time: " + toString(now()) ) + "" ));
-    //println( "Resource for Processing: " + toString(rid));
+    return 0;
+  }
+  Int doMediaCoverage(ResourceManager rm){
+    duration(2);try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "doMediaCoverage" have missed the deadline.`);
+    }
+    return 0;
+  }
+  }
+
+interface EOD {
+  Int start(ResourceManager rm);
+  Int rushToSite(ResourceManager rm);
+  Int searchEOD(ResourceManager rm);
+  Int reportEOD(ResourceManager rm);}
+
+class EOD implements EOD {
+  List<Int> rid = list(Nil);
+  Int start(ResourceManager rm){
+    Int x = 0;
+    this.rid = await rm!holdRes(list[Pair(40,EODTech),Pair(40,EODTech)]);
+    //print(toString(now()) + ",");
+    print(toString(rid) + ",");
+    [Deadline: Duration(25)]    x = this.rushToSite(rm);
+    [Deadline: Duration(15)]    x = this.searchEOD(rm);
+    [Deadline: Duration(10)]    x = this.reportEOD(rm);
+    try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "start" have missed the deadline.`);
+    }
+    return 0;
+  }
+  Int rushToSite(ResourceManager rm){
+    List<Int> temp = list(Nil);
+    temp = await rm!holdRes(list[Pair(30,Ferry)]);
+    duration(20, 20);
+    await rm!releaseRes(temp);
     print(toString(now()) + ",");
-    print(toString(rid)+ ",");
-  }
-
-}
-
-interface Embedding {
-  Unit embed(ResourceManager rm,Lists l, Case c, Int task_length);
-}
-
-class Embedding implements Embedding {
-
-  Unit embed(ResourceManager rm,Lists l, Case c, Int task_length){
-    List<Pair<Int,Int>> rid = list(Nil);
+    print(toString(temp) + ",");
+    try {
     Duration d = deadline();
     Rat r = durationValue(d);
-    Int x = truncate(r);
-    Int y = 0;
-    if (x != 0) {
-    y = truncate(task_length/x);}
-    rid = await rm!findNearestMoreEfficientRes(Pair(y,BioTechnician));
-    if (isEmpty(rid))
-    {
-        println(`Did not find the BioTechnician for Embedding, to meet the deadline please add BioTechnician having $y$ efficiency`);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "rushToSite" have missed the deadline.`);
     }
-    else
-    {
-        duration(task_length/snd(head(rid)));
-        List<Int> rl = Cons(fst(head(rid)),Nil);
-        await rm!releaseRes(rl);
+    return 0;
+  }
+  Int searchEOD(ResourceManager rm){
+    duration(10, 10);try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "searchEOD" have missed the deadline.`);
     }
-    //println(( ( "Embedding Time: " + toString(now()) ) + "" ));
-    //println( "Resource for Embedding: " + toString(rid));
+    return 0;
+  }
+  Int reportEOD(ResourceManager rm){
+    List<Int> temp = list(Nil);
+    temp = await rm!holdRes(list[Pair(40,Clerk)]);
+    duration(5,5);
+    await rm!releaseRes(temp);
     print(toString(now()) + ",");
-    print(toString(rid)+ ",");
-  }
-
-}
-
-interface Sectioning {
-  Unit section(ResourceManager rm,Lists l, Case c, Int task_length);
-}
-
-class Sectioning implements Sectioning {
-  Unit section(ResourceManager rm,Lists l, Case c, Int task_length){
-    List<Pair<Int,Int>> rid = list(Nil);
+    print(toString(temp) + ",");
+    try {
     Duration d = deadline();
     Rat r = durationValue(d);
-    Int x = truncate(r);
-    Int y = 0;
-    if (x != 0) {
-    y = truncate(task_length/x);}
-    rid = await rm!findNearestMoreEfficientRes(Pair(y,BioTechnician));
-    if (isEmpty(rid))
-    {
-        println(`Did not find the BioTechnician for Sectioning, to meet the deadline please add BioTechnician having $y$ efficiency`);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "reportEOD" have missed the deadline.`);
     }
-    else
-    {
-        duration(task_length/snd(head(rid)));
-        List<Int> rl = Cons(fst(head(rid)),Nil);
-        await rm!releaseRes(rl);
-    }
-    //println(( ( "Sectioning Time: " + toString(now()) ) + "" ));
-    //println( "Resource for Sectioning: " + toString(rid));
+    return 0;
+  }
+  }
+
+interface FB {
+  Int start(ResourceManager rm);
+  Int rushToSite(ResourceManager rm);
+  Int fightFire(ResourceManager rm);
+  Int mitigate(ResourceManager rm);
+  Int recoverSite(ResourceManager rm);
+  Int reportFireRescue(ResourceManager rm);}
+
+class FB implements FB {
+  List<Int> rid = list(Nil);
+  Int start(ResourceManager rm){
+    Int x = 0;FB fb1 = new FB();Fut<Int> f1;
+    this.rid = await rm!holdRes(list[Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),
+    Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),
+    Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),
+    Pair(40,FireExt),Pair(40,FireExt)]);
+    //print(toString(now()) + ",");
+    print(toString(rid) + ",");
+    [Deadline: Duration(25)]    x = this.rushToSite(rm);
+    [Deadline: Duration(35)]    x = this.fightFire(rm);
+    [Deadline: Duration(15)]    f1 = fb1!mitigate(rm);
+    [Deadline: Duration(35)]    x = this.recoverSite(rm);
+    await f1?;
+    [Deadline: Duration(25)]    x = this.reportFireRescue(rm);
+    await rm!releaseRes(rid);
     print(toString(now()) + ",");
-    print(toString(rid)+ ",");
-  }
-}
-
-interface Staining {
-  Unit stain(ResourceManager rm,Lists l, Case c, Int task_length);
-}
-class Staining implements Staining {
-
-  Unit stain(ResourceManager rm,Lists l, Case c, Int task_length){
-    List<Pair<Int,Int>> rid = list(Nil);
+    try {
     Duration d = deadline();
     Rat r = durationValue(d);
-    Int x = truncate(r);
-    Int y = 0;
-    if (x != 0) {
-    y = truncate(task_length/x);}
-    rid = await rm!findNearestMoreEfficientRes(Pair(y,BioTechnician));
-    if (isEmpty(rid))
-    {
-        println(`Did not find the BioTechnician for Staining, to meet the deadline please add BioTechnician having $y$ efficiency`);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "start" have missed the deadline.`);
     }
-    else
-    {
-        duration(task_length/snd(head(rid)));
-        List<Int> rl = Cons(fst(head(rid)),Nil);
-        await rm!releaseRes(rl);
-    }
-    //println(( ( "Staining Time: " + toString(now()) ) + "" ));
-    //println( "Resource for Staining: " + toString(rid));
+    return 0;
+  }
+  Int rushToSite(ResourceManager rm){
+    List<Int> temp = list(Nil);
+    temp = await rm!holdRes(list[Pair(30,Ferry)]);
+    duration(20, 20);
+    await rm!releaseRes(temp);
     print(toString(now()) + ",");
-    print(toString(rid)+ ",");
-  }
-}
-interface MicroscopicAnalysis {
-  Unit analyse(ResourceManager rm,Lists l, Case c, Int task_length);
-}
-
-class MicroscopicAnalysis implements MicroscopicAnalysis {
-
-  Unit analyse(ResourceManager rm,Lists l, Case c, Int task_length){
-    List<Pair<Int,Int>> rid = list(Nil);
+    print(toString(temp) + ",");
+    try {
     Duration d = deadline();
     Rat r = durationValue(d);
-    Int x = truncate(r);
-    Int y = 0;
-    if (x != 0) {
-    y = truncate(task_length/x);}
-    rid = await rm!findNearestMoreEfficientRes(Pair(y,Pathologist));
-        if (isEmpty(rid))
-        {
-            println(`Did not find the Pathologist for Analysis, to meet the deadline please add Pathologist having $y$ efficiency`);
-        }
-        else
-        {
-            duration(task_length/snd(head(rid)));
-            List<Int> rl = Cons(fst(head(rid)),Nil);
-            await rm!releaseRes(rl);
-        }
-        //println(( ( "Analysis Time: " + toString(now()) ) + "" ));
-        //println( "Resource for Analysis: " + toString(rid));
-        print(toString(now()) + ",");
-        print(toString(rid)+ ",");
-        print(toString(now()) + ",");
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "rushToSite" have missed the deadline.`);
+    }
+    return 0;
   }
-}
+  Int fightFire(ResourceManager rm){
+    duration(25,25);try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "fightFire" have missed the deadline.`);
+    }
+    return 0;
+  }
+  Int mitigate(ResourceManager rm){
+    duration(10, 10);try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "mitigate" have missed the deadline.`);
+    }
+    return 0;
+  }
+  Int recoverSite(ResourceManager rm){
+    duration(2, 2);try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "recoverSite" have missed the deadline.`);
+    }
+    return 0;
+  }
+  Int reportFireRescue(ResourceManager rm){
+    List<Int> temp = list(Nil);
+    temp = await rm!holdRes(list[Pair(40,Clerk)]);
+    duration(5,5);
+    await rm!releaseRes(temp);
+    print(toString(now()) + ",");
+    print(toString(temp) + ",");
+    try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "reportFireRescue" have missed the deadline.`);
+    }
+    return 0;
+  }
+  }
+
+interface Hospital {
+  Int start(ResourceManager rm);
+  Int rushToSite(ResourceManager rm);
+  Int shuntWounded(ResourceManager rm);
+  Int treatSliInj(ResourceManager rm);
+  Int treatSevInj(ResourceManager rm);
+  Int reportMedRescue(ResourceManager rm);}
+
+class Hospital implements Hospital {
+  List<Int> rid = list(Nil);
+  Int start(ResourceManager rm){
+    Int x = 0;
+    Hospital h1 = new Hospital();
+    Fut<Int> f1;
+    this.rid = await rm!holdRes(list[Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),
+    Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,FirstAidBox),Pair(40,FirstAidBox),
+    Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox)]);
+    print(toString(rid) + ",");
+    [Deadline: Duration(25)]    x = this.rushToSite(rm);
+    [Deadline: Duration(25)]    x = this.shuntWounded(rm);
+    [Deadline: Duration(25)]    f1 = h1!treatSliInj(rm);
+    [Deadline: Duration(25)]    x = this.treatSevInj(rm);
+    await f1?;
+    [Deadline: Duration(10)]    x = this.reportMedRescue(rm);
+    await rm!releaseRes(rid);
+    try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "start" have missed the deadline.`);
+    }
+    return 0;
+  }
+  Int rushToSite(ResourceManager rm){
+    List<Int> temp = list(Nil);
+    temp = await rm!holdRes(list[Pair(30,Ferry)]);
+    duration(20, 20);
+    await rm!releaseRes(temp);
+    print(toString(now()) + ",");
+    print(toString(temp) + ",");
+    try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "rushToSite" have missed the deadline.`);
+    }
+    return 0;
+  }
+  Int shuntWounded(ResourceManager rm){
+    duration(10, 10);try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "shuntWounded" have missed the deadline.`);
+    }
+    return 0;
+  }
+  Int treatSliInj(ResourceManager rm){
+    duration(10, 10);try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "treatSliInj" have missed the deadline.`);
+    }
+    return 0;
+  }
+  Int treatSevInj(ResourceManager rm){
+    duration(10, 10);try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "treatSevInj" have missed the deadline.`);
+    }
+    return 0;
+  }
+  Int reportMedRescue(ResourceManager rm){
+    List<Int> temp = list(Nil);
+    temp = await rm!holdRes(list[Pair(40,Clerk)]);
+    duration(5,5);
+    await rm!releaseRes(temp);
+    print(toString(now()) + ",");
+    print(toString(temp) + ",");
+    try {
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    assert r > 0;
+    } catch {
+    AssertionFailException => println(`The method "reportMedRescue" have missed the deadline.`);
+    }
+    return 0;
+  }
+  }
+
+
 {
   ResourceManager rm = new ResourceManager();
-  await rm!addRes(list[Pair(20,Pathologist), Pair(20,Pathologist), Pair(30,Pathologist) , Pair(20,BioTechnician), Pair(40,BioTechnician), Pair(40,BioTechnician), Pair(50,BioTechnician), Pair(30,BioTechnician), Pair(30,BioTechnician), Pair(80,BioTechnician),Pair(60,BioTechnician), Pair(70,BioTechnician), Pair(50,BioTechnician), Pair(20,BioTechnician), Pair(50,ProcessingMachine), Pair(50,ProcessingMachine), Pair(30,StainingMachine), Pair(60,StainingMachine), Pair(50,Pathologist)]);
-  Case c = Case( 123, 0, "Blood Sample", 2, 3, "Gyno", 1 );
-  Case c1 = Case( 345, 0, "Blood Sample", 3, 3, "Gyno", 1 );
-  Case c2 = Case( 678, 0, "Blood Sample", 4, 2, "Gyno", 1 );
-  Case c3 = Case( 345, 0, "Blood Sample", 3, 3, "Gyno", 1 );
-  Case c4 = Case( 678, 0, "Blood Sample", 4, 2, "Gyno", 1 );
-  Case c5 = Case( 123, 0, "Blood Sample", 2, 3, "Gyno", 1 );
-  Case c6 = Case( 345, 0, "Blood Sample", 3, 3, "Gyno", 1 );
-  Case c7 = Case( 678, 0, "Blood Sample", 4, 2, "Gyno", 1 );
-  Case c8 = Case( 123, 0, "Blood Sample", 2, 3, "Gyno", 1 );
-  Case c9 = Case( 345, 0, "Blood Sample", 3, 3, "Gyno", 1 );
-  Case c10 = Case( 678, 0, "Blood Sample", 4, 2, "Gyno", 1 );
-  Case c11 = Case( 123, 0, "Blood Sample", 2, 3, "Gyno", 1 );
-  Case c12 = Case( 345, 0, "Blood Sample", 3, 3, "Gyno", 1 );
-  Case c13 = Case( 678, 0, "Blood Sample", 4, 2, "Gyno", 1 );
-  Pathology p = new Pathology();
-  Lists l = new Lists();
-  List<Case> cases = list[c, c1, c2];
-  Fut<Unit> f;
-  [Deadline: Duration(500)]  f = p!start(rm,l, cases);
+  await rm!addRes(list[Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),
+   Pair(30,Ferry), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask),
+   Pair(40,PoliceMan),Pair(40,PoliceMan),Pair(40,PoliceMan),Pair(40,PoliceMan),Pair(40,PoliceMan),Pair(40,PoliceMan),
+   Pair(40,EODTech),Pair(40,EODTech), Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),
+   Pair(40,FireFighter), Pair(40,FireFighter), Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),
+   Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),
+   Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),
+   Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox)]);
+  Police p = new Police();
+  ECC ecc = new ECC();
+  EOD eod = new EOD();
+  FB fb = new FB();
+  Hospital h = new Hospital();
+  Fut<Int> f;
+  [Deadline: Duration(300)]  f = p!alarm(rm,ecc, eod, fb, h);
   await f?;
-  //println(toString(now()) + " ]");
+  //println("Cool Job Done");
+  println(( ( "Time: " + toString(now()) ) + "" ));
 }

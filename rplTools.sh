@@ -2,50 +2,69 @@
 echo "****************************************"
 echo "*          Welcome to RACWF            *"
 echo "****************************************"
-echo "Press 1 for one to one resource mapping"
-echo "Press 2 to optimize the throughput and meed deadline"
-echo "Press 3 to optimize the resource cost"
+echo "Press 1 for aquiring when all the resources are available"
+echo "Press 2 for aquiring when 70% of the resources are available"
+echo "Press 3 for aquiring when 50% of the resources are available"
+echo "Press 4 for aquiring efficient resources"
 read option
 if [[ "$OSTYPE" == "darwin"* ]]; then
     {
     if [ $option = "1" ]
     then
     {
-        [ -f sim1.csv ] && rm sim1.csv
-        echo GrossT1,GrossR1,GrossT2,Grossr2,GrossT3,GrossR3,PT,PR,ET1,ER1,ET2,ER2,ET3,ER3,SecT1,SecR1,SecT2,SecR2,SecT3,SecR3,StT1,StR1,StT2,StR2,StT3,StR3,AT,AR,AT,AR,AT,AR,TT >> sim1.csv
+        [ -f rescue_sim1.csv ] && rm rescue_sim1.csv
+        echo PoliceRescueR,PoliceReportT,PoliceReportR,PoliceRushT,PoliceRushR,ECCMakeEmgPlanT,ECCMakeEmgPlanR,EODR,EODRushT,EODRushR,EODReportT,EODReportR,FBR,FBRushT,FBRushR,FBReportT,FBReportR,FBT,HosR >> rescue_sim1.csv
 
         c=1
+        frontend/bin/absc -e ./examples/r1.rpl
         while [ $c -le 100 ]
         do
-            frontend/bin/absc -e ./examples/p1.rpl
-            gen/erl/run >> sim1.csv
+            gen/erl/run >> rescue_sim1.csv
             (( c++ ))
         done
     }
-    # shellcheck disable=SC1073
     elif [ $option = "2" ]
     then
     {
-        [ -f simulation.csv ] && rm simulation.csv
-        echo GrossT1,GrossR1,GrossT2,Grossr2,GrossT3,GrossR3,PT,PR,ET1,ER1,ET2,ER2,ET3,ER3,SecT1,SecR1,SecT2,SecR2,SecT3,SecR3,StT1,StR1,StT2,StR2,StT3,StR3,AT,AR,AT,AR,AT,AR,TT >> simulation.csv
+      [ -f rescue_sim1_a.csv ] && rm rescue_sim1_a.csv
+      echo GrossT1,GrossR1,GrossT2,Grossr2,GrossT3,GrossR3,PT,PR,ET1,ER1,ET2,ER2,ET3,ER3,SecT1,SecR1,SecT2,SecR2,SecT3,SecR3,StT1,StR1,StT2,StR2,StT3,StR3,AT,AR,AT,AR,AT,AR,TT >> rescue_sim1_a.csv
+      c=1
+      frontend/bin/absc -e ./examples/r1a.rpl
+      while [ $c -le 100 ]
+      do
+          gen/erl/run >> rescue_sim1_a.csv
+          (( c++ ))
+      done
+    }
+    elif [ $option = "3" ]
+    then
+    {
+      [ -f rescue_sim1_b.csv ] && rm rescue_sim1_b.csv
+      echo GrossT1,GrossR1,GrossT2,Grossr2,GrossT3,GrossR3,PT,PR,ET1,ER1,ET2,ER2,ET3,ER3,SecT1,SecR1,SecT2,SecR2,SecT3,SecR3,StT1,StR1,StT2,StR2,StT3,StR3,AT,AR,AT,AR,AT,AR,TT >> rescue_sim1_b.csv
+      c=1
+      frontend/bin/absc -e ./examples/r1b.rpl
+      while [ $c -le 100 ]
+      do
+          gen/erl/run >> rescue_sim1_b.csv
+          (( c++ ))
+      done
+    }
+    # shellcheck disable=SC1073
+    elif [ $option = "4" ]
+    then
+    {
+        [ -f rescue_sim2.csv ] && rm rescue_sim2.csv
+        echo PoliceRescueR,PoliceReportT,PoliceReportR,PoliceRushT,PoliceRushR,ECCMakeEmgPlanT,ECCMakeEmgPlanR,EODR,EODRushT,EODRushR,EODReportT,EODReportR,FBR,FBRushT,FBRushR,FBReportT,FBReportR,FBT,HosR >> rescue_sim2.csv
         c=1
+        frontend/bin/absc -e ./examples/r2a.rpl
         while [ $c -le 100 ]
         do
-            frontend/bin/absc -e ./examples/p2a.rpl
-            gen/erl/run >> simulation.csv
+            gen/erl/run >> rescue_sim2.csv
             (( c++ ))
         done
     }
     # shellcheck disable=SC1131
-    elif [ $option = "3" ]
-    then
-    {
-      start=`echo $(($(gdate +%s%N)/1000000))`
-      frontend/bin/absc -e ./examples/p3a.rpl
-      gen/erl/run
-      end=`echo $(($(gdate +%s%N)/1000000))`
-      echo Execution time was `expr $end - $start` mili seconds.
-    }
+
     else
     {
         echo "Wrong selection"

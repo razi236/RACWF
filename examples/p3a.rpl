@@ -526,7 +526,7 @@ class Pathology implements Pathology {
           List<Case> l1 = list(Nil);
           [Deadline: Duration(5)]          f1 = l!checkProcessingList(rm);
           l1 = f1.get;
-          println(toString(l1));
+          //println(toString(l1));
           if ( ( length(l1) >= 3 ) ){
             Int i = 0;
             List<Case> l2 = list(Nil);
@@ -538,13 +538,13 @@ class Pathology implements Pathology {
               i = ( i + 1 );
             }
             Fut<Unit> f2;
-            [Deadline: Duration(5)]            f2 = p!process(rm,l, l2);
+            [Deadline: Duration(5)]            f2 = p!process(rm,l, l2, 50);
             await f2?;
             Fut<List<Case>> f3;
             List<Case> l3 = list(Nil);
             [Deadline: Duration(5)]            f3 = l!checkBlockList(rm);
             l3 = f3.get;
-            println(toString(l3));
+            //println(toString(l3));
             {
               ABS.StdLib.List<Pathology_Workflow.Case> tmp1620368915 = l3;
               //while (! isEmpty(tmp1620368915)) {
@@ -571,9 +571,10 @@ class Pathology implements Pathology {
                                               [Deadline: Duration(5)]                  f6 = st!stain(rm,l, y, 15);
                                               await f4?&f5?&f6?;
                                               [Deadline: Duration(5)]                  f4 = ma!analyse(rm,l, y, 10);
-                                              [Deadline: Duration(5)]                  f4 = ma!analyse(rm,l, y, 10);
-                                              [Deadline: Duration(5)]                  f4 = ma!analyse(rm,l, y, 10);
+                                              [Deadline: Duration(5)]                  f5 = ma!analyse(rm,l, y, 10);
+                                              [Deadline: Duration(5)]                  f6 = ma!analyse(rm,l, y, 10);
                                               await f4?&f5?&f6?;
+                                              println("]");
                                             }
                                           //}
             }
@@ -635,7 +636,7 @@ class Grossing implements Grossing {
     Int x = truncate(r);
     Int y = 0;
     if (x != 0) {
-    y = truncate(task_length/x);}
+    y = truncate(task_length/x);
     rid = await rm!findNearestLessEfficientRes(Pair(y,BioTechnician));
     if (isEmpty(rid))
     {
@@ -647,6 +648,7 @@ class Grossing implements Grossing {
         List<Int> rl = Cons(fst(head(rid)),Nil);
         await rm!releaseRes(rl);
     }
+    }
     this.tray = appendright(this.tray, c);
     while (( i < no_of_containers(c) )) {
       Case c1 = c;
@@ -656,26 +658,41 @@ class Grossing implements Grossing {
     Fut<Unit> f;
     [Deadline: Duration(5)]    f = l!setProcessingList(rm,this.tray);
     f.get;
-    println(( ( "Grossing Time: " + toString(now()) ) + "" ));
-    println( "Resource for Grossing: " + toString(rid));
+    print(toString(now()) + ",");
+            print(toString(rid)+ ",");
   }
 }
 
 interface Processing {
-  Unit process(ResourceManager rm,Lists l, List<Case> c);
+  Unit process(ResourceManager rm,Lists l, List<Case> c, Int task_length);
 }
 
 class Processing implements Processing {
-  Unit process(ResourceManager rm,Lists l, List<Case> cl){
-    List<Int> rid = list(Nil);
-    rid = await rm!holdRes(list[Pair(10,ProcessingMachine)]);
-    duration(50, 50);
-    await rm!releaseRes(rid);
+  Unit process(ResourceManager rm,Lists l, List<Case> cl, Int task_length){
+    List<Pair<Int,Int>> rid = Nil;
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    Int x = truncate(r);
+    Int y = 0;
+    if (x != 0) {
+    y = truncate(task_length/x);
+    rid = await rm!findNearestLessEfficientRes(Pair(y,BioTechnician));
+    if (isEmpty(rid))
+    {
+        println(`Did not find the BioTechnician for Grossing, to meet the deadline please add BioTechnician having $y$ efficiency`);
+    }
+    else
+    {
+        duration(task_length/snd(head(rid)));
+        List<Int> rl = Cons(fst(head(rid)),Nil);
+        await rm!releaseRes(rl);
+    }
+    }
     Fut<Unit> f;
     [Deadline: Duration(5)]    f = l!setBlockList(rm,cl);
     f.get;
-    println(( ( "Processing Time: " + toString(now()) ) + "" ));
-    println( "Resource for Processing: " + toString(rid));
+    print(toString(now()) + ",");
+            print(toString(rid)+ ",");
   }
 }
 
@@ -692,7 +709,7 @@ class Embedding implements Embedding {
     Int x = truncate(r);
     Int y = 0;
     if (x != 0) {
-    y = truncate(task_length/x);}
+    y = truncate(task_length/x);
     rid = await rm!findNearestLessEfficientRes(Pair(y,BioTechnician));
     if (isEmpty(rid))
     {
@@ -704,8 +721,9 @@ class Embedding implements Embedding {
         List<Int> rl = Cons(fst(head(rid)),Nil);
         await rm!releaseRes(rl);
     }
-    println(( ( "Embedding Time: " + toString(now()) ) + "" ));
-    println( "Resource for Embedding: " + toString(rid));
+    }
+    print(toString(now()) + ",");
+            print(toString(rid)+ ",");
   }
 }
 
@@ -721,7 +739,7 @@ class Sectioning implements Sectioning {
     Int x = truncate(r);
     Int y = 0;
     if (x != 0) {
-    y = truncate(task_length/x);}
+    y = truncate(task_length/x);
     rid = await rm!findNearestLessEfficientRes(Pair(y,BioTechnician));
     if (isEmpty(rid))
     {
@@ -733,8 +751,9 @@ class Sectioning implements Sectioning {
         List<Int> rl = Cons(fst(head(rid)),Nil);
         await rm!releaseRes(rl);
     }
-    println(( ( "Sectioning Time: " + toString(now()) ) + "" ));
-    println( "Resource for Sectioning: " + toString(rid));
+    }
+    print(toString(now()) + ",");
+            print(toString(rid)+ ",");
   }
 }
 
@@ -750,7 +769,7 @@ class Staining implements Staining {
     Int x = truncate(r);
     Int y = 0;
     if (x != 0) {
-    y = truncate(task_length/x);}
+    y = truncate(task_length/x);
     rid = await rm!findNearestLessEfficientRes(Pair(y,BioTechnician));
     if (isEmpty(rid))
     {
@@ -762,8 +781,9 @@ class Staining implements Staining {
         List<Int> rl = Cons(fst(head(rid)),Nil);
         await rm!releaseRes(rl);
     }
-    println(( ( "Staining Time: " + toString(now()) ) + "" ));
-    println( "Resource for Staining: " + toString(rid));
+    }
+    print(toString(now()) + ",");
+            print(toString(rid)+ ",");
   }
 }
 interface MicroscopicAnalysis {
@@ -779,8 +799,8 @@ class MicroscopicAnalysis implements MicroscopicAnalysis {
     Int x = truncate(r);
     Int y = 0;
     if (x != 0) {
-    y = truncate(task_length/x);}
-    rid = await rm!findNearestLessEfficientRes(Pair(y,Pathologist));
+        y = truncate(task_length/x);
+        rid = await rm!findNearestLessEfficientRes(Pair(y,Pathologist));
         if (isEmpty(rid))
         {
             println(`Did not find the Pathologist for Analysis, to meet the deadline please add Pathologist having $y$ efficiency`);
@@ -791,14 +811,16 @@ class MicroscopicAnalysis implements MicroscopicAnalysis {
             List<Int> rl = Cons(fst(head(rid)),Nil);
             await rm!releaseRes(rl);
         }
-        println(( ( "Analysis Time: " + toString(now()) ) + "" ));
-        println( "Resource for Analysis: " + toString(rid));
+    }
+    print(toString(now()) + ",");
+    print(toString(rid)+ ",");
+    print(toString(now()) + ",");
   }
 }
 {
   ResourceManager rm = new ResourceManager();
-  await rm!addRes(list[Pair(1,Pathologist), Pair(2,BioTechnician), Pair(4,BioTechnician), Pair(4,BioTechnician), Pair(5,BioTechnician), Pair(3,BioTechnician), Pair(10,BioTechnician), Pair(8,BioTechnician),Pair(6,BioTechnician), Pair(7,BioTechnician), Pair(5,BioTechnician), Pair(2,BioTechnician), Pair(10,ProcessingMachine), Pair(10,ProcessingMachine), Pair(10,StainingMachine), Pair(5,StainingMachine), Pair(1,Pathologist)]);
-  await rm!addRes(list[Pair(1,Pathologist), Pair(2,BioTechnician), Pair(4,BioTechnician), Pair(4,BioTechnician), Pair(5,BioTechnician), Pair(3,BioTechnician), Pair(10,BioTechnician), Pair(8,BioTechnician),Pair(6,BioTechnician), Pair(7,BioTechnician), Pair(5,BioTechnician), Pair(2,BioTechnician), Pair(10,ProcessingMachine), Pair(10,ProcessingMachine), Pair(10,StainingMachine), Pair(5,StainingMachine), Pair(1,Pathologist)]);
+  await rm!addRes(list[Pair(1,Pathologist), Pair(2,BioTechnician), Pair(1,BioTechnician), Pair(1,BioTechnician), Pair(1,BioTechnician), Pair(1,BioTechnician), Pair(1,BioTechnician), Pair(2,BioTechnician),Pair(1,BioTechnician), Pair(2,BioTechnician), Pair(1,BioTechnician), Pair(1,BioTechnician), Pair(1,ProcessingMachine), Pair(1,ProcessingMachine), Pair(1,StainingMachine), Pair(1,StainingMachine), Pair(1,Pathologist), Pair(1,Pathologist)]);
+ // await rm!addRes(list[Pair(1,Pathologist), Pair(2,BioTechnician), Pair(4,BioTechnician), Pair(4,BioTechnician), Pair(5,BioTechnician), Pair(3,BioTechnician), Pair(10,BioTechnician), Pair(8,BioTechnician),Pair(6,BioTechnician), Pair(7,BioTechnician), Pair(5,BioTechnician), Pair(2,BioTechnician), Pair(10,ProcessingMachine), Pair(10,ProcessingMachine), Pair(10,StainingMachine), Pair(5,StainingMachine), Pair(1,Pathologist)]);
   Case c = Case( 123, 0, "Blood Sample", 2, 3, "Gyno", 1 );
   Case c1 = Case( 345, 0, "Blood Sample", 3, 3, "Gyno", 1 );
   Case c2 = Case( 678, 0, "Blood Sample", 4, 2, "Gyno", 1 );
@@ -819,5 +841,5 @@ class MicroscopicAnalysis implements MicroscopicAnalysis {
   Fut<Unit> f;
   [Deadline: Duration(500)]  f = p!start(rm,l, cases);
   await f?;
-  println(( ( "Time: " + toString(now()) ) + "" ));
+  //println(( ( "Time: " + toString(now()) ) + "" ));
 }
