@@ -6,6 +6,8 @@ echo "Press 1 for aquiring when all the resources are available"
 echo "Press 2 for aquiring when 70% of the resources are available"
 echo "Press 3 for aquiring when 50% of the resources are available"
 echo "Press 4 for aquiring efficient resources"
+echo "Press 5 for aquiring efficient resources (70 % available)"
+echo "Press 6 for aquiring efficient resources (scarcity)"
 read option
 if [[ "$OSTYPE" == "darwin"* ]]; then
     {
@@ -54,15 +56,42 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     then
     {
         [ -f rescue_sim2.csv ] && rm rescue_sim2.csv
-        echo PoliceRescueR,PoliceReportT,PoliceReportR,PoliceRushT,PoliceRushR,ECCMakeEmgPlanT,ECCMakeEmgPlanR,EODR,EODRushT,EODRushR,EODReportT,EODReportR,FBR,FBRushT,FBRushR,FBReportT,FBReportR,FBT,HosR >> rescue_sim2.csv
         c=1
         frontend/bin/absc -e ./examples/r2a.rpl
-        while [ $c -le 100 ]
+        while [ $c -le 10 ]
         do
+            echo Simulation $c >> rescue_sim2.csv
             gen/erl/run >> rescue_sim2.csv
             (( c++ ))
         done
     }
+
+    elif [ $option = "5" ]
+        then
+        {
+            [ -f rescue_sim2_b.csv ] && rm rescue_sim2_b.csv
+            c=1
+            frontend/bin/absc -e ./examples/r2b.rpl
+            while [ $c -le 100 ]
+            do
+                echo Simulation $c >> rescue_sim2_b.csv
+                gen/erl/run >> rescue_sim2_b.csv
+                (( c++ ))
+            done
+        }
+        elif [ $option = "6" ]
+                then
+                {
+                    [ -f rescue_sim2_c.csv ] && rm rescue_sim2_c.csv
+                    c=1
+                    frontend/bin/absc -e ./examples/r2c.rpl
+                    while [ $c -le 100 ]
+                    do
+                        echo Simulation $c >> rescue_sim2_c.csv
+                        gen/erl/run >> rescue_sim2_c.csv
+                        (( c++ ))
+                    done
+                }
     # shellcheck disable=SC1131
 
     else

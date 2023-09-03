@@ -477,7 +477,7 @@ class Police implements Police {
     Int x = 0;
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(40,Clerk)]);
-    duration((random(4)+1)*10);
+    duration((random(4)+1)*20);
     await rm!releaseRes(temp);
     print(`;Emergency information report finished at time = `);
     print(toString(now()));
@@ -505,7 +505,7 @@ class Police implements Police {
   Int rushToSite(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(30,Ferry)]);
-    duration(20+random(5)*3);
+    duration(50+random(5)*3);
     await rm!releaseRes(temp);
     print(`;Ferry acquired to take police to site = `);
     print(toString(temp));
@@ -551,7 +551,9 @@ class Police implements Police {
             print("Please add more policemen.");
         }
     }
-    Int tim= truncate(tl/c);
+    Int tim = 0;
+if(c!=0)
+        tim= truncate(tl/c);
     print(`;Time taken by Police for Deal_with_Scene = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -613,7 +615,9 @@ class Police implements Police {
             print("Please add more policemen.");
         }
     }
-    Int tim= truncate(tl/c);
+    Int tim = 0;
+if(c!=0)
+        tim= truncate(tl/c);
     print(`;Time taken by Police for Evacuation = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -675,7 +679,9 @@ class Police implements Police {
             print("Please add more policemen.");
         }
     }
-    Int tim= truncate(tl/c);
+    Int tim = 0;
+if(c!=0)
+        tim= truncate(tl/c);
     print(`;Time taken by Police for Rescue = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -798,7 +804,7 @@ class EOD implements EOD {
   Int rushToSite(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(30,Ferry)]);
-    duration(20+random(5)*3);
+    duration(50+random(5)*3);
     await rm!releaseRes(temp);
     print(`;Ferry acquired to take EOD_Tech to site = `);
     print(toString(temp));
@@ -844,7 +850,9 @@ class EOD implements EOD {
             print("Please add more EOD_Tech.");
         }
     }
-    Int tim= truncate(tl/c);
+    Int tim = 0;
+if(c!=0)
+        tim= truncate(tl/c);
     print(`;Time taken by EOD_Tech for Search_EOD = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -879,7 +887,7 @@ class EOD implements EOD {
   Int reportEOD(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(40,Clerk)]);
-    duration((random(4)+2));
+    duration((random(4)+20));
     await rm!releaseRes(temp);
     print(`;EOD report finished at time = `);
     print(toString(now()));
@@ -935,7 +943,7 @@ class FB implements FB {
   Int rushToSite(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(30,Ferry)]);
-    duration(20+random(5)*3);
+    duration(50+random(5)*3);
     await rm!releaseRes(temp);
     print(`;Ferry acquired to take FireFighter to site = `);
     print(toString(temp));
@@ -981,7 +989,10 @@ class FB implements FB {
             print("Please add more FireFighter.");
         }
     }
-    Int tim= truncate(tl/c);
+
+    Int tim = 0;
+if(c!=0)
+        tim= truncate(tl/c);
     print(`;Time taken by FireFighter for Fight_fire = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1044,7 +1055,9 @@ class FB implements FB {
             print("Please add more FireFighter.");
         }
     }
-    Int tim= truncate(tl/c);
+    Int tim = 0;
+if(c!=0)
+        tim= truncate(tl/c);
     print(`;Time taken by FireFighter for Mitigate = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1106,7 +1119,9 @@ class FB implements FB {
             print("Please add more FireFighter.");
         }
     }
-    Int tim= truncate(tl/c);
+    Int tim = 0;
+if(c!=0)
+        tim= truncate(tl/c);
     print(`;Time taken by FireFighter for Recover_Site = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1141,7 +1156,7 @@ class FB implements FB {
   Int reportFireRescue(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(40,Clerk)]);
-    duration((random(4)+2));
+    duration((random(4)+20));
     await rm!releaseRes(temp);
     print(`;Fire_Rescue report finished at time = `);
     print(toString(now()));
@@ -1191,7 +1206,7 @@ class Hospital implements Hospital {
   Int rushToSite(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(30,Ferry)]);
-    duration(20+random(5)*3);
+    duration(50+random(5)*3);
     await rm!releaseRes(temp);
     print(`;Ferry acquired to take Doctor to site = `);
     print(toString(temp));
@@ -1237,7 +1252,9 @@ class Hospital implements Hospital {
             print("Please add more Doctor.");
         }
     }
-    Int tim= truncate(tl/c);
+    Int tim = 0;
+if(c!=0)
+        tim= truncate(tl/c);
     print(`;Time taken by Doctor for Shunt_Wounded = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1299,7 +1316,9 @@ class Hospital implements Hospital {
             print("Please add more Doctor.");
         }
     }
-    Int tim= truncate(tl/c);
+    Int tim = 0;
+if(c!=0)
+        tim= truncate(tl/c);
     print(`;Time taken by Doctor for Treat_Slightly_Injured = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1361,7 +1380,9 @@ class Hospital implements Hospital {
             print("Please add more Doctor.");
         }
     }
-    Int tim= truncate(tl/c);
+    Int tim = 0;
+if(c!=0)
+        tim= truncate(tl/c);
     print(`;Time taken by Doctor for Treat_Severly_Injured = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1396,7 +1417,7 @@ class Hospital implements Hospital {
   Int reportMedRescue(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(40,Clerk)]);
-    duration((random(2)+2));
+    duration((random(2)+20));
     await rm!releaseRes(temp);
     print(`;Medical_Rescue report finished at time = `);
     print(toString(now()));
@@ -1419,12 +1440,12 @@ class Hospital implements Hospital {
   println("***************************************************");
   ResourceManager rm = new ResourceManager();
   await rm!addRes(list[Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),
-   Pair(30,Ferry), Pair(30,Ferry), Pair(30,Ferry), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask),
-   Pair(40,PoliceMan),Pair(50,PoliceMan),Pair(20,PoliceMan),Pair(45,PoliceMan),Pair(30,PoliceMan),Pair(40,PoliceMan),
-   Pair(40,EODTech),Pair(40,EODTech), Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),
-   Pair(40,FireFighter), Pair(40,FireFighter), Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),
+   Pair(30,Ferry),Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask),
+   Pair(40,PoliceMan),Pair(50,PoliceMan),Pair(20,PoliceMan),
+   Pair(20,Doctor),Pair(20,Doctor),
+   Pair(40,EODTech),Pair(40,EODTech), Pair(40,Clerk),
+   Pair(40,FireFighter),
    Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),
-   Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),
    Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox)]);
   Police p = new Police();
   ECC ecc = new ECC();
