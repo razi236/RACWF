@@ -15,18 +15,30 @@ interface ResourceManager {
     List<Pair<Int,Int>> findNearestMoreEfficientRes(Pair<Int,Quality> wantedResource);
     List<Int> findLessEfficientRes(Pair<Int,Quality> wantedResource);
     List<Pair<Int,Int>> findNearestLessEfficientRes(Pair<Int,Quality> wantedResource);
+    List<Pair<Int,Int>> findNearestRes(Pair<Int,Quality> wantedResource);
     List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> getResources(Quality q);
     List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> sortResources(List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> lr);
     Unit releaseRes(List<Int> ids);
     Unit print();
+    Unit updateEfficiency();
 }
 
 class ResourceManager implements ResourceManager {
     Map<Int, Pair<Availability, Pair<Int,Quality>>> resources = map[];
     Int resource_counter = 0;
-
+    Unit updateEfficiency()
+    {
+        foreach (entry in entries(this.resources)) {
+            if (fst(snd(entry)) == Free)
+            {
+                Pair<Int,Quality> p = snd(snd(entry));
+                Pair<Int,Quality> p1 = Pair(random(50)+10,snd(p));
+                this.resources = put(this.resources, fst(entry), Pair(Free,p1));
+            }
+        }
+    }
     Unit print() {
-        println(toString(resources));
+        print(toString(resources));
     }
     List<Int> addRes(List<Pair<Int,Quality>> newResources) {
         List<Int> result = list[];
@@ -35,7 +47,7 @@ class ResourceManager implements ResourceManager {
             resources = insert(resources, Pair(resource_counter, Pair(Free, r)));
             result = Cons(resource_counter, result);
         }
-        //println(toString(resources));
+        //print(toString(resources));
         return result;
     }
 
@@ -58,7 +70,7 @@ class ResourceManager implements ResourceManager {
             }
             if (length(result) != length(wantedResources)) {
                 // we did not find all needed resources
-                println(`hold retrying: Resources = $this.resources$ We want $wantedResources$`);
+                print(`;hold retrying: Resources = $this.resources$ We want $wantedResources$`);
                 result = Nil;
                 lr = this.resources;
                 await this.resources != lr;
@@ -66,15 +78,15 @@ class ResourceManager implements ResourceManager {
             } else {
                 // we're happy
                 /*
-                println("***********************************************");
-                println("We have acquired all the requested resources :)");
-                println("***********************************************");
+                print("***********************************************");
+                print("We have acquired all the requested resources :)");
+                print("***********************************************");
                 */
                 this.resources = lr;
             }
         }
 
-        //println(toString(this.resources));
+        //print(toString(this.resources));
         return result;
     }
 
@@ -98,7 +110,7 @@ class ResourceManager implements ResourceManager {
                 //}
                 if (length(result) != 1 ){
                     // we did not find the required resource
-                    println(`hold retrying: Resources = $this.resources$ We want $wantedResource$`);
+                    print(`;hold retrying: Resources = $this.resources$ We want $wantedResource$`);
                     result = Nil;
                     lr = this.resources;
                     await this.resources != lr;
@@ -106,15 +118,15 @@ class ResourceManager implements ResourceManager {
                 } else {
                     // we're happy
                     /*
-                    println("***********************************************");
-                    println("We have acquired the requested resource :)");
-                    println("***********************************************");
+                    print("***********************************************");
+                    print("We have acquired the requested resource :)");
+                    print("***********************************************");
                     */
                     this.resources = lr;
                 }
             }
 
-            //println(toString(this.resources));
+            //print(toString(this.resources));
             return result;
         }
     List<Int> findMoreEfficientRes(Pair<Int,Quality> wantedResource) // when all required resources are not available
@@ -147,9 +159,9 @@ class ResourceManager implements ResourceManager {
                             found = True;
                             result = Cons(fst(entry), result);
                             lr = put(lr, fst(entry), Pair(Busy, snd(snd(entry))));
-                            //println("***********************************************");
-                            //println("We have acquired the more efficient resource :)");
-                            //println("***********************************************");
+                            //print("***********************************************");
+                            //print("We have acquired the more efficient resource :)");
+                            //print("***********************************************");
                             this.resources = lr;
                         }
                     }
@@ -157,14 +169,14 @@ class ResourceManager implements ResourceManager {
             } else {
                 // we're happy
                 /*
-                println("***********************************************");
-                println("We have acquired the requested resource :)");
-                println("***********************************************");
+                print("***********************************************");
+                print("We have acquired the requested resource :)");
+                print("***********************************************");
                 */
                 this.resources = lr;
             }
         //}
-        //println(toString(this.resources));
+        //print(toString(this.resources));
         return result;
     }
 
@@ -173,11 +185,11 @@ class ResourceManager implements ResourceManager {
         List<Pair<Int,Int>> result = list[];
         Map<Int, Pair<Availability, Pair<Int,Quality>>> lr = this.resources;
         List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> getResList = this.getResources(snd(wantedResource));
-        //println("Got Resources");
-        //println(toString(getResList));
+        //print("Got Resources");
+        //print(toString(getResList));
         List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> resList = this.sortResources(getResList);
-        //println("Sorted Resources");
-        //println(toString(resList));
+        //print("Sorted Resources");
+        //print(toString(resList));
         //while (result == Nil) {
             Bool found = False;
             foreach (entry in resList) {
@@ -203,9 +215,9 @@ class ResourceManager implements ResourceManager {
                             result = Cons(Pair(fst(entry),fst(snd(snd(entry)))), result);
                             lr = put(lr, fst(entry), Pair(Busy, snd(snd(entry))));
                             /*
-                            println("***********************************************");
-                            println("We have acquired the nearest more efficient resource :)");
-                            println("***********************************************");
+                            print("***********************************************");
+                            print("We have acquired the nearest more efficient resource :)");
+                            print("***********************************************");
                             */
                             this.resources = lr;
                         }
@@ -214,14 +226,14 @@ class ResourceManager implements ResourceManager {
             } else {
                 // we're happy
                 /*
-                println("***********************************************");
-                println("We have acquired the requested resource :)");
-                println("***********************************************");
+                print("***********************************************");
+                print("We have acquired the requested resource :)");
+                print("***********************************************");
                 */
                 this.resources = lr;
             }
         //}
-        //println(toString(this.resources));
+        //print(toString(this.resources));
         return result;
     }
     List<Int> findLessEfficientRes(Pair<Int,Quality> wantedResource) // when all required resources are not available
@@ -255,9 +267,9 @@ class ResourceManager implements ResourceManager {
                             result = Cons(fst(entry), result);
                             lr = put(lr, fst(entry), Pair(Busy, snd(snd(entry))));
                             /*
-                            println("***********************************************");
-                            println("We have acquired the less efficient resource :)");
-                            println("***********************************************");
+                            print("***********************************************");
+                            print("We have acquired the less efficient resource :)");
+                            print("***********************************************");
                             */
                             this.resources = lr;
                         }
@@ -266,14 +278,14 @@ class ResourceManager implements ResourceManager {
             } else {
                 // we're happy
                 /*
-                println("***********************************************");
-                println("We have acquired the requested resource :)");
-                println("***********************************************");
+                print("***********************************************");
+                print("We have acquired the requested resource :)");
+                print("***********************************************");
                 */
                 this.resources = lr;
             }
             //}
-            //println(toString(this.resources));
+            //print(toString(this.resources));
             return result;
         }
 
@@ -282,14 +294,14 @@ class ResourceManager implements ResourceManager {
             List<Pair<Int,Int>> result = list[];
             Map<Int, Pair<Availability, Pair<Int,Quality>>> lr = this.resources;
             List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> getResList = this.getResources(snd(wantedResource));
-            //println("Got Resources");
-            //println(toString(getResList));
+            //print("Got Resources");
+            //print(toString(getResList));
             List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> resList = this.sortResources(getResList);
-            //println("Sorted Resources");
-            //println(toString(resList));
+            //print("Sorted Resources");
+            //print(toString(resList));
             resList = reverse(resList);
-            //println("Reversed Resources");
-            //println(toString(resList));
+            //print("Reversed Resources");
+            //print(toString(resList));
             //while (result == Nil) {
                 Bool found = False;
                 foreach (entry in resList) {
@@ -315,9 +327,9 @@ class ResourceManager implements ResourceManager {
                                 result = Cons(Pair(fst(entry),fst(snd(snd(entry)))), result);
                                 lr = put(lr, fst(entry), Pair(Busy, snd(snd(entry))));
                                 /*
-                                println("***********************************************");
-                                println("We have acquired the nearest less efficient resource :)");
-                                println("***********************************************");
+                                print("***********************************************");
+                                print("We have acquired the nearest less efficient resource :)");
+                                print("***********************************************");
                                 */
                                 this.resources = lr;
                             }
@@ -326,14 +338,14 @@ class ResourceManager implements ResourceManager {
                 } else {
                     // we're happy
                     /*
-                    println("***********************************************");
-                    println("We have acquired the requested resource :)");
-                    println("***********************************************");
+                    print("***********************************************");
+                    print("We have acquired the requested resource :)");
+                    print("***********************************************");
                     */
                     this.resources = lr;
                 }
             //}
-            //println(toString(this.resources));
+            //print(toString(this.resources));
             return result;
         }
     List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> getResources(Quality q)
@@ -382,7 +394,15 @@ class ResourceManager implements ResourceManager {
         }
         return mapToList;
     }
-
+    List<Pair<Int,Int>> findNearestRes(Pair<Int,Quality> wantedResource)
+    {
+        this.updateEfficiency();
+        List<Pair<Int,Int>> r = list(Nil);
+        r = this.findNearestMoreEfficientRes(wantedResource);
+        if(isEmpty(r))
+            r = this.findNearestLessEfficientRes(wantedResource);
+        return r;
+    }
     Unit releaseRes(List<Int> ids) {
         Set<Int> all_ids = keys(resources);
         foreach (id in ids) {
@@ -392,11 +412,11 @@ class ResourceManager implements ResourceManager {
             }
         }
         /*
-        println("***********************************************");
-        println("We have released all the acquired resources :)");
-        println("***********************************************");
+        print("***********************************************");
+        print("We have released all the acquired resources :)");
+        print("***********************************************");
         */
-        //println(toString(this.resources));
+        //print(toString(this.resources));
     }
 }
 

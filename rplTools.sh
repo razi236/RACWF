@@ -58,9 +58,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         [ -f rescue_sim2.csv ] && rm rescue_sim2.csv
         c=1
         frontend/bin/absc -e ./examples/r2a.rpl
-        while [ $c -le 10 ]
+        while [ $c -le 100 ]
         do
-            echo Simulation $c >> rescue_sim2.csv
             gen/erl/run >> rescue_sim2.csv
             (( c++ ))
         done
@@ -74,24 +73,36 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
             frontend/bin/absc -e ./examples/r2b.rpl
             while [ $c -le 100 ]
             do
-                echo Simulation $c >> rescue_sim2_b.csv
                 gen/erl/run >> rescue_sim2_b.csv
                 (( c++ ))
             done
         }
         elif [ $option = "6" ]
-                then
-                {
-                    [ -f rescue_sim2_c.csv ] && rm rescue_sim2_c.csv
-                    c=1
-                    frontend/bin/absc -e ./examples/r2c.rpl
-                    while [ $c -le 100 ]
-                    do
-                        echo Simulation $c >> rescue_sim2_c.csv
-                        gen/erl/run >> rescue_sim2_c.csv
-                        (( c++ ))
-                    done
-                }
+        then
+        {
+            [ -f rescue_sim2_c.csv ] && rm rescue_sim2_c.csv
+            c=1
+            frontend/bin/absc -e ./examples/r2c.rpl
+            while [ $c -le 100 ]
+            do
+                echo Simulation $c >> rescue_sim2_c.csv
+                gen/erl/run >> rescue_sim2_c.csv
+                (( c++ ))
+            done
+        }
+        elif [ $option = "7" ]
+        then
+        {
+            [ -f nearest_efficient_with_cost.csv ] && rm nearest_efficient_with_cost.csv
+            c=1
+            frontend/bin/absc -e ./examples/less_eff_cost.rpl
+            while [ $c -le 100 ]
+            do
+
+                gen/erl/run >> nearest_efficient_with_cost.csv
+                (( c++ ))
+            done
+        }
     # shellcheck disable=SC1131
 
     else

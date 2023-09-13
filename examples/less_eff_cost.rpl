@@ -11,19 +11,21 @@ interface ResourceManager {
     List<Int> addRes(List<Pair<Int,Quality>> newResources);
     List<Int> holdRes(List<Pair<Int,Quality>> wantedResources);
     List<Int> findRes(Pair<Int,Quality> wantedResource);
-    List<Int> findMoreEfficientRes(Pair<Int,Quality> wantedResource);
+    List<Pair<Int,Int>> findMoreEfficientRes(Pair<Int,Quality> wantedResource);
     List<Pair<Int,Int>> findNearestMoreEfficientRes(Pair<Int,Quality> wantedResource);
-    List<Int> findLessEfficientRes(Pair<Int,Quality> wantedResource);
+    List<Pair<Int,Int>> findLessEfficientRes(Pair<Int,Quality> wantedResource);
     List<Pair<Int,Int>> findNearestLessEfficientRes(Pair<Int,Quality> wantedResource);
     List<Pair<Int,Int>> findNearestRes(Pair<Int,Quality> wantedResource);
     List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> getResources(Quality q);
     List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> sortResources(List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> lr);
     Unit releaseRes(List<Int> ids);
     Unit print();
+    Unit updateCost(Int x);
     Unit updateEfficiency();
 }
 
 class ResourceManager implements ResourceManager {
+    Int cst = 0;
     Map<Int, Pair<Availability, Pair<Int,Quality>>> resources = map[];
     Int resource_counter = 0;
     Unit updateEfficiency()
@@ -32,13 +34,13 @@ class ResourceManager implements ResourceManager {
             if (fst(snd(entry)) == Free && snd(snd(snd(entry))) != Ferry)
             {
                 Pair<Int,Quality> p = snd(snd(entry));
-                Pair<Int,Quality> p1 = Pair(random(50)+10,snd(p));
+                Pair<Int,Quality> p1 = Pair(random(10)+1,snd(p));
                 this.resources = put(this.resources, fst(entry), Pair(Free,p1));
             }
         }
     }
     Unit print() {
-        print(toString(resources));
+        print(`;Cost = %$cst$`);
     }
     List<Int> addRes(List<Pair<Int,Quality>> newResources) {
         List<Int> result = list[];
@@ -129,9 +131,9 @@ class ResourceManager implements ResourceManager {
             //print(toString(this.resources));
             return result;
         }
-    List<Int> findMoreEfficientRes(Pair<Int,Quality> wantedResource) // when all required resources are not available
+    List<Pair<Int,Int>> findMoreEfficientRes(Pair<Int,Quality> wantedResource) // when all required resources are not available
     {
-        List<Int> result = Nil;
+        List<Pair<Int,Int>> result = Nil;
         Map<Int, Pair<Availability, Pair<Int,Quality>>> lr = this.resources;
         //while (result == Nil) {
             //foreach (q in wantedResources) {
@@ -142,7 +144,7 @@ class ResourceManager implements ResourceManager {
                         && fst(wantedResource) == fst(snd(snd(entry))) && snd(wantedResource) == snd(snd(snd(entry))))
                     {
                         found = True;
-                        result = Cons(fst(entry), result);
+                        result = Cons(Pair(fst(entry),fst(snd(snd(entry)))), result);
                         lr = put(lr, fst(entry), Pair(Busy, snd(snd(entry))));
                     }
                 }
@@ -157,7 +159,7 @@ class ResourceManager implements ResourceManager {
                         if(fst(wantedResource) < fst(snd(snd(entry))))
                         {
                             found = True;
-                            result = Cons(fst(entry), result);
+                            result = Cons(Pair(fst(entry),fst(snd(snd(entry)))), result);
                             lr = put(lr, fst(entry), Pair(Busy, snd(snd(entry))));
                             //print("***********************************************");
                             //print("We have acquired the more efficient resource :)");
@@ -236,9 +238,9 @@ class ResourceManager implements ResourceManager {
         //print(toString(this.resources));
         return result;
     }
-    List<Int> findLessEfficientRes(Pair<Int,Quality> wantedResource) // when all required resources are not available
+    List<Pair<Int,Int>> findLessEfficientRes(Pair<Int,Quality> wantedResource) // when all required resources are not available
     {
-        List<Int> result = Nil;
+        List<Pair<Int,Int>> result = Nil;
         Map<Int, Pair<Availability, Pair<Int,Quality>>> lr = this.resources;
         //while (result == Nil) {
             //foreach (q in wantedResources) {
@@ -249,7 +251,7 @@ class ResourceManager implements ResourceManager {
                         && fst(wantedResource) == fst(snd(snd(entry))) && snd(wantedResource) == snd(snd(snd(entry))))
                     {
                         found = True;
-                        result = Cons(fst(entry), result);
+                        result = Cons(Pair(fst(entry),fst(snd(snd(entry)))), result);
                         lr = put(lr, fst(entry), Pair(Busy, snd(snd(entry))));
                     }
                 }
@@ -264,7 +266,7 @@ class ResourceManager implements ResourceManager {
                         if(fst(wantedResource) > fst(snd(snd(entry))))
                         {
                             found = True;
-                            result = Cons(fst(entry), result);
+                            result = Cons(Pair(fst(entry),fst(snd(snd(entry)))), result);
                             lr = put(lr, fst(entry), Pair(Busy, snd(snd(entry))));
                             /*
                             print("***********************************************");
@@ -396,24 +398,19 @@ class ResourceManager implements ResourceManager {
     }
     List<Pair<Int,Int>> findNearestRes(Pair<Int,Quality> wantedResource)
     {
-
         List<Pair<Int,Int>> r = list(Nil);
         while(isEmpty(r)){
-            r = this.findNearestMoreEfficientRes(wantedResource);
-
-            if(isEmpty(r)){
-                r = this.findNearestLessEfficientRes(wantedResource);
-                if(isEmpty(r))
-                {
-                    Map<Int, Pair<Availability, Pair<Int,Quality>>> lr = map[];
-
-                    lr = this.resources;
-                    this.updateEfficiency();
-                    await this.resources != lr;
-                }
-            }
-
+            this.updateEfficiency();
+            r = this.findLessEfficientRes(wantedResource);
+            //if(isEmpty(r))
+              //  r = this.findNearestLessEfficientRes(wantedResource);
         }
+        /*
+        foreach(q in r)
+        {
+            this.cst = this.cst + snd(q);
+        }
+        */
         return r;
     }
     Unit releaseRes(List<Int> ids) {
@@ -430,6 +427,10 @@ class ResourceManager implements ResourceManager {
         print("***********************************************");
         */
         //print(toString(this.resources));
+    }
+    Unit updateCost(Int x)
+    {
+        this.cst = this.cst + x;
     }
 }
 
@@ -502,14 +503,16 @@ class Police implements Police {
     Int x = 0;
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(40,Clerk)]);
-    duration((random(4)+1)*10);
+    Int y = random((4)+1)*10;
+    await rm!updateCost(30*y);
+    duration(y);
     await rm!releaseRes(temp);
     print(`;Emergency information report finished at time = `);
     print(toString(now()));
     print(`;Clerk acquired for emergency information report = `);
     print(toString(temp));
     [Deadline: Duration(50)]    f1 = ecc!estEmgCtr(rm);
-    [Deadline: Duration(100)]    x = this.rushToSite(rm);
+    [Deadline: Duration(50)]    x = this.rushToSite(rm);
     [Deadline: Duration(25)]    f2 = p1!dealSituation(rm);
     [Deadline: Duration(25)]    f3 = p2!evacuation(rm);
     [Deadline: Duration(25)]    x = this.rescue(rm);
@@ -530,7 +533,9 @@ class Police implements Police {
   Int rushToSite(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(30,Ferry)]);
-    duration(30);
+    Int y = random((4)+1)*10;
+    await rm!updateCost(30*y);
+    duration(y);
     await rm!releaseRes(temp);
     print(`;Ferry acquired to take police to site = `);
     print(toString(temp));
@@ -560,11 +565,9 @@ class Police implements Police {
     }
     print(`;Required police resource efficiency for Deal_with_Scene = $b$`);
     Int c = 0;
-     temp = await rm!findNearestRes(Pair(b,PoliceMan));
-    /*
     while (b > 0 )
     {
-
+        temp = await rm!findNearestRes(Pair(b,PoliceMan));
         this.rid = concatenate(this.rid,temp);
         if(!isEmpty(temp))
         {
@@ -578,9 +581,8 @@ class Police implements Police {
             print("Please add more policemen.");
         }
     }
-    */
-    print(`;Acquired police resource efficiency for Evacuation = $snd(head(temp))$`);
-    Int tim= truncate(tl/snd(head(temp)));
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by Police for Deal_with_Scene = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -626,11 +628,9 @@ class Police implements Police {
     }
     print(`;Required police resource efficiency for Evacuation = $b$`);
     Int c = 0;
-    temp = await rm!findNearestRes(Pair(b,PoliceMan));
-    /*
     while (b > 0 )
     {
-
+        temp = await rm!findNearestRes(Pair(b,PoliceMan));
         this.rid = concatenate(this.rid,temp);
         if(!isEmpty(temp))
         {
@@ -644,9 +644,8 @@ class Police implements Police {
             print("Please add more policemen.");
         }
     }
-    */
-    print(`;Acquired police resource efficiency for Evacuation = $snd(head(temp))$`);
-    Int tim= truncate(tl/snd(head(temp)));
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by Police for Evacuation = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -692,11 +691,9 @@ class Police implements Police {
     }
     print(`;Required police resource efficiency for Rescue = $b$`);
     Int c = 0;
-     temp = await rm!findNearestRes(Pair(b,PoliceMan));
-    /*
     while (b > 0 )
     {
-
+        temp = await rm!findNearestRes(Pair(b,PoliceMan));
         this.rid = concatenate(this.rid,temp);
         if(!isEmpty(temp))
         {
@@ -710,9 +707,8 @@ class Police implements Police {
             print("Please add more policemen.");
         }
     }
-    */
-    print(`;Acquired police resource efficiency for Evacuation = $snd(head(temp))$`);
-    Int tim= truncate(tl/snd(head(temp)));
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by Police for Rescue = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -754,7 +750,7 @@ interface ECC {
 class ECC implements ECC {
   List<Pair<Int,Int>> rid = Nil;
   Int estEmgCtr(ResourceManager rm){
-    duration((random(3)*5)+30);
+    duration((random(3)));
     print(`;Emergency center established at time = `);
     print(toString(now()));
     try {
@@ -781,27 +777,24 @@ class ECC implements ECC {
     }
     print(`;Required Clerk resource efficiency for makeEmgPlan = $b$`);
     Int c = 0;
-     temp = await rm!findNearestRes(Pair(b,Clerk));
-        /*
-        while (b > 0 )
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,Clerk));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
         {
-
-            this.rid = concatenate(this.rid,temp);
-            if(!isEmpty(temp))
-            {
-                Pair<Int,Int>  temp1 = head(temp);
-                //print(toString(temp1));
-                b = b - snd(temp1);
-                c = c + snd(temp1);
-            }
-            else
-            {
-                print("Please add more policemen.");
-            }
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
         }
-        */
-        print(`;Acquired clerk resource efficiency for makeEmgPlan = $snd(head(temp))$`);
-        Int tim= truncate(tl/snd(head(temp)));
+        else
+        {
+            print("Please add more Clerks.");
+        }
+    }
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by Clerks for makeEmgPlan = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -841,7 +834,7 @@ class ECC implements ECC {
     return 0;
   }
   Int doMediaCoverage(ResourceManager rm){
-    duration(random(3)+5);
+    duration(random(3));
     print(`;Media coverage finished at time = ` + toString(now()));
     try {
     Duration d = deadline();
@@ -867,7 +860,7 @@ class EOD implements EOD {
     //this.rid = await rm!holdRes(list[Pair(40,EODTech),Pair(40,EODTech)]);
     //print(toString(now()) + ",");
     //print(toString(rid) + ",");
-    [Deadline: Duration(100)]    x = this.rushToSite(rm);
+    [Deadline: Duration(25)]    x = this.rushToSite(rm);
     [Deadline: Duration(15)]    x = this.searchEOD(rm);
     [Deadline: Duration(25)]    x = this.reportEOD(rm);
     try {
@@ -882,7 +875,9 @@ class EOD implements EOD {
   Int rushToSite(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(30,Ferry)]);
-    duration(30);
+    Int y = random((4)+1)*10;
+    await rm!updateCost(30*y);
+    duration(y);
     await rm!releaseRes(temp);
     print(`;Ferry acquired to take EOD_Tech to site = `);
     print(toString(temp));
@@ -912,28 +907,24 @@ class EOD implements EOD {
     }
     print(`;Required EOD_Tech resource efficiency for Search_EOD = $b$`);
     Int c = 0;
-     temp = await rm!findNearestRes(Pair(b,EODTech));
-        /*
-        while (b > 0 )
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,EODTech));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
         {
-
-            this.rid = concatenate(this.rid,temp);
-            if(!isEmpty(temp))
-            {
-                Pair<Int,Int>  temp1 = head(temp);
-                //print(toString(temp1));
-                b = b - snd(temp1);
-                c = c + snd(temp1);
-            }
-            else
-            {
-                print("Please add more policemen.");
-            }
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
         }
-        */
-        print(`;Acquired EOD_Tech resource efficiency for Search_EOD = $snd(head(temp))$`);
-        Int tim= truncate(tl/snd(head(temp)));
-
+        else
+        {
+            print("Please add more EOD_Tech.");
+        }
+    }
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by EOD_Tech for Search_EOD = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -979,27 +970,24 @@ class EOD implements EOD {
     }
     print(`;Required Clerk resource efficiency for reportEOD = $b$`);
     Int c = 0;
-    temp = await rm!findNearestRes(Pair(b,Clerk));
-            /*
-            while (b > 0 )
-            {
-
-                this.rid = concatenate(this.rid,temp);
-                if(!isEmpty(temp))
-                {
-                    Pair<Int,Int>  temp1 = head(temp);
-                    //print(toString(temp1));
-                    b = b - snd(temp1);
-                    c = c + snd(temp1);
-                }
-                else
-                {
-                    print("Please add more policemen.");
-                }
-            }
-            */
-            print(`;Acquired Clerks resource efficiency for reportEOD = $snd(head(temp))$`);
-            Int tim= truncate(tl/snd(head(temp)));
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,Clerk));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more Clerks.");
+        }
+    }
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by Clerks for reportEOD = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1044,7 +1032,7 @@ class FB implements FB {
   List<Pair<Int,Int>> rid = list(Nil);
   Int start(ResourceManager rm){
     Int x = 0;FB fb1 = new FB();Fut<Int> f1;
-    [Deadline: Duration(100)]    x = this.rushToSite(rm);
+    [Deadline: Duration(25)]    x = this.rushToSite(rm);
     [Deadline: Duration(35)]    x = this.fightFire(rm);
     [Deadline: Duration(15)]    f1 = fb1!mitigate(rm);
     [Deadline: Duration(35)]    x = this.recoverSite(rm);
@@ -1072,7 +1060,9 @@ class FB implements FB {
   Int rushToSite(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(30,Ferry)]);
-    duration(30);
+    Int y = random((4)+1)*10;
+    await rm!updateCost(30*y);
+    duration(y);
     await rm!releaseRes(temp);
     print(`;Ferry acquired to take FireFighter to site = `);
     print(toString(temp));
@@ -1102,27 +1092,24 @@ class FB implements FB {
     }
     print(`;Required FireFighter resource efficiency for Fight_fire = $b$`);
     Int c = 0;
-    temp = await rm!findNearestRes(Pair(b,FireFighter));
-                /*
-                while (b > 0 )
-                {
-
-                    this.rid = concatenate(this.rid,temp);
-                    if(!isEmpty(temp))
-                    {
-                        Pair<Int,Int>  temp1 = head(temp);
-                        //print(toString(temp1));
-                        b = b - snd(temp1);
-                        c = c + snd(temp1);
-                    }
-                    else
-                    {
-                        print("Please add more policemen.");
-                    }
-                }
-                */
-                print(`;Acquired FireFighter resource efficiency for Fight_fire = $snd(head(temp))$`);
-                Int tim= truncate(tl/snd(head(temp)));
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,FireFighter));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more FireFighter.");
+        }
+    }
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by FireFighter for Fight_fire = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1169,27 +1156,24 @@ class FB implements FB {
     }
     print(`;Required FireFighter resource efficiency for Mitigate = $b$`);
     Int c = 0;
-    temp = await rm!findNearestRes(Pair(b,FireFighter));
-                /*
-                while (b > 0 )
-                {
-
-                    this.rid = concatenate(this.rid,temp);
-                    if(!isEmpty(temp))
-                    {
-                        Pair<Int,Int>  temp1 = head(temp);
-                        //print(toString(temp1));
-                        b = b - snd(temp1);
-                        c = c + snd(temp1);
-                    }
-                    else
-                    {
-                        print("Please add more policemen.");
-                    }
-                }
-                */
-                print(`;Acquired FireFighter resource efficiency for mitigate = $snd(head(temp))$`);
-                Int tim= truncate(tl/snd(head(temp)));
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,FireFighter));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more FireFighter.");
+        }
+    }
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by FireFighter for Mitigate = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1235,27 +1219,24 @@ class FB implements FB {
     }
     print(`;Required FireFighter resource efficiency for Recover_Site = $b$`);
     Int c = 0;
-    temp = await rm!findNearestRes(Pair(b,FireFighter));
-                /*
-                while (b > 0 )
-                {
-
-                    this.rid = concatenate(this.rid,temp);
-                    if(!isEmpty(temp))
-                    {
-                        Pair<Int,Int>  temp1 = head(temp);
-                        //print(toString(temp1));
-                        b = b - snd(temp1);
-                        c = c + snd(temp1);
-                    }
-                    else
-                    {
-                        print("Please add more policemen.");
-                    }
-                }
-                */
-                print(`;Acquired FireFighter resource efficiency for Recover_Site = $snd(head(temp))$`);
-                Int tim= truncate(tl/snd(head(temp)));
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,FireFighter));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more FireFighter.");
+        }
+    }
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by FireFighter for Recover_Site = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1301,27 +1282,24 @@ class FB implements FB {
     }
     print(`;Required Clerk resource efficiency for reportFireRescue = $b$`);
     Int c = 0;
-    temp = await rm!findNearestRes(Pair(b,Clerk));
-                /*
-                while (b > 0 )
-                {
-
-                    this.rid = concatenate(this.rid,temp);
-                    if(!isEmpty(temp))
-                    {
-                        Pair<Int,Int>  temp1 = head(temp);
-                        //print(toString(temp1));
-                        b = b - snd(temp1);
-                        c = c + snd(temp1);
-                    }
-                    else
-                    {
-                        print("Please add more policemen.");
-                    }
-                }
-                */
-                print(`;Acquired Clerks resource efficiency for reportFireRescue = $snd(head(temp))$`);
-                Int tim= truncate(tl/snd(head(temp)));
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,Clerk));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more Clerks.");
+        }
+    }
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by Clerks for reportFireRescue = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1370,7 +1348,7 @@ class Hospital implements Hospital {
     Hospital h1 = new Hospital();
     Fut<Int> f1;
 
-    [Deadline: Duration(50)]    x = this.rushToSite(rm);
+    [Deadline: Duration(25)]    x = this.rushToSite(rm);
     [Deadline: Duration(25)]    x = this.shuntWounded(rm);
     [Deadline: Duration(25)]    f1 = h1!treatSliInj(rm);
     [Deadline: Duration(20)]    x = this.treatSevInj(rm);
@@ -1388,7 +1366,9 @@ class Hospital implements Hospital {
   Int rushToSite(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(30,Ferry)]);
-    duration(30);
+    Int y = random((4)+1)*10;
+    await rm!updateCost(30*y);
+    duration(y);
     await rm!releaseRes(temp);
     print(`;Ferry acquired to take Doctor to site = `);
     print(toString(temp));
@@ -1418,27 +1398,24 @@ class Hospital implements Hospital {
     }
     print(`;Required Doctor resource efficiency for Shunt_Wounded = $b$`);
     Int c = 0;
-    temp = await rm!findNearestRes(Pair(b,Doctor));
-                /*
-                while (b > 0 )
-                {
-
-                    this.rid = concatenate(this.rid,temp);
-                    if(!isEmpty(temp))
-                    {
-                        Pair<Int,Int>  temp1 = head(temp);
-                        //print(toString(temp1));
-                        b = b - snd(temp1);
-                        c = c + snd(temp1);
-                    }
-                    else
-                    {
-                        print("Please add more policemen.");
-                    }
-                }
-                */
-                print(`;Acquired Doctor resource efficiency for Shunt_Wound = $snd(head(temp))$`);
-                Int tim= truncate(tl/snd(head(temp)));
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,Doctor));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more Doctor.");
+        }
+    }
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by Doctor for Shunt_Wounded = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1484,27 +1461,24 @@ class Hospital implements Hospital {
     }
     print(`;Required Doctor resource efficiency for Treat_Slightly_Injured = $b$`);
     Int c = 0;
-    temp = await rm!findNearestRes(Pair(b,Doctor));
-                /*
-                while (b > 0 )
-                {
-
-                    this.rid = concatenate(this.rid,temp);
-                    if(!isEmpty(temp))
-                    {
-                        Pair<Int,Int>  temp1 = head(temp);
-                        //print(toString(temp1));
-                        b = b - snd(temp1);
-                        c = c + snd(temp1);
-                    }
-                    else
-                    {
-                        print("Please add more policemen.");
-                    }
-                }
-                */
-                print(`;Acquired Doctor resource efficiency for Trear_Slightly_Injured = $snd(head(temp))$`);
-                Int tim= truncate(tl/snd(head(temp)));
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,Doctor));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more Doctor.");
+        }
+    }
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by Doctor for Treat_Slightly_Injured = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1550,27 +1524,24 @@ class Hospital implements Hospital {
     }
     print(`;Required Doctor resource efficiency for Treat_Severly_Injured = $b$`);
     Int c = 0;
-    temp = await rm!findNearestRes(Pair(b,Doctor));
-                /*
-                while (b > 0 )
-                {
-
-                    this.rid = concatenate(this.rid,temp);
-                    if(!isEmpty(temp))
-                    {
-                        Pair<Int,Int>  temp1 = head(temp);
-                        //print(toString(temp1));
-                        b = b - snd(temp1);
-                        c = c + snd(temp1);
-                    }
-                    else
-                    {
-                        print("Please add more policemen.");
-                    }
-                }
-                */
-                print(`;Acquired Doctor resource efficiency for Treat_Severly_Injured = $snd(head(temp))$`);
-                Int tim= truncate(tl/snd(head(temp)));
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,Doctor));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more Doctor.");
+        }
+    }
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by Doctor for Treat_Severly_Injured = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1616,27 +1587,24 @@ class Hospital implements Hospital {
     }
     print(`;Required Clerk resource efficiency for reportMedRescue = $b$`);
     Int c = 0;
-    temp = await rm!findNearestRes(Pair(b,Clerk));
-                /*
-                while (b > 0 )
-                {
-
-                    this.rid = concatenate(this.rid,temp);
-                    if(!isEmpty(temp))
-                    {
-                        Pair<Int,Int>  temp1 = head(temp);
-                        //print(toString(temp1));
-                        b = b - snd(temp1);
-                        c = c + snd(temp1);
-                    }
-                    else
-                    {
-                        print("Please add more policemen.");
-                    }
-                }
-                */
-                print(`;Acquired Clerks resource efficiency for reportMedRescue = $snd(head(temp))$`);
-                Int tim= truncate(tl/snd(head(temp)));
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,Clerk));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more Clerks.");
+        }
+    }
+    Int tim= truncate(tl/c)+1;
+    await rm!updateCost(tim*c);
     print(`;Time taken by Clerks for reportMedRescue = $tim$`);
     if (isEmpty(this.rid))
     {
@@ -1675,22 +1643,46 @@ class Hospital implements Hospital {
 
 {
   ResourceManager rm = new ResourceManager();
-  await rm!addRes(list[Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),
-   Pair(30,Ferry), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask),
-   Pair(40,PoliceMan),Pair(50,PoliceMan),Pair(20,PoliceMan),Pair(45,PoliceMan),Pair(30,PoliceMan),Pair(40,PoliceMan),
-   Pair(40,EODTech),Pair(40,EODTech), Pair(40,Clerk),Pair(40,Clerk),
-   Pair(40,FireFighter), Pair(40,FireFighter), Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),
-   Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),
-   Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox)]);
+await rm!addRes(list[Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),
+Pair(30,Ferry), Pair(30,Ferry), Pair(30,Ferry), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask),
+Pair(40,PoliceMan),Pair(50,PoliceMan),Pair(20,PoliceMan),Pair(45,PoliceMan),Pair(30,PoliceMan),Pair(40,PoliceMan),
+Pair(40,EODTech),Pair(40,EODTech), Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),
+Pair(40,FireFighter), Pair(40,FireFighter), Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),
+Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),
+Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),
+Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),
+Pair(30,Ferry), Pair(30,Ferry), Pair(30,Ferry), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask),
+Pair(40,PoliceMan),Pair(50,PoliceMan),Pair(20,PoliceMan),Pair(45,PoliceMan),Pair(30,PoliceMan),Pair(40,PoliceMan),
+Pair(40,EODTech),Pair(40,EODTech), Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),
+Pair(40,FireFighter), Pair(40,FireFighter), Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),
+Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),
+Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),
+Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),
+Pair(30,Ferry), Pair(30,Ferry), Pair(30,Ferry), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask),
+Pair(40,PoliceMan),Pair(50,PoliceMan),Pair(20,PoliceMan),Pair(45,PoliceMan),Pair(30,PoliceMan),Pair(40,PoliceMan),
+Pair(40,EODTech),Pair(40,EODTech), Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),
+Pair(40,FireFighter), Pair(40,FireFighter), Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),
+Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),
+Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),
+Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),
+Pair(30,Ferry), Pair(30,Ferry), Pair(30,Ferry), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask),
+Pair(40,PoliceMan),Pair(50,PoliceMan),Pair(20,PoliceMan),Pair(45,PoliceMan),Pair(30,PoliceMan),Pair(40,PoliceMan),
+Pair(40,EODTech),Pair(40,EODTech), Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),Pair(40,Clerk),
+Pair(40,FireFighter), Pair(40,FireFighter), Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),Pair(40,FireFighter),
+Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),Pair(40,FireExt),
+Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),Pair(40,Doctor),
+Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox),Pair(40,FirstAidBox)]);
   Police p = new Police();
   ECC ecc = new ECC();
   EOD eod = new EOD();
   FB fb = new FB();
   Hospital h = new Hospital();
   Fut<Int> f;
-  [Deadline: Duration(150)]  f = p!alarm(rm,ecc, eod, fb, h);
+  [Deadline: Duration(130)]  f = p!alarm(rm,ecc, eod, fb, h);
   await f?;
   Rat t = timeValue(now());
   Int t1 = truncate(t);
-  println(`;$t1$`);
+  rm.print();
+  println(`%$t1$`);
 }
+// More efficient with cost

@@ -20,12 +20,23 @@ interface ResourceManager {
     List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> sortResources(List<Pair<Int,Pair<Availability, Pair<Int,Quality>>>> lr);
     Unit releaseRes(List<Int> ids);
     Unit print();
+    Unit updateEfficiency();
 }
 
 class ResourceManager implements ResourceManager {
     Map<Int, Pair<Availability, Pair<Int,Quality>>> resources = map[];
     Int resource_counter = 0;
-
+    Unit updateEfficiency()
+    {
+        foreach (entry in entries(this.resources)) {
+            if (fst(snd(entry)) == Free && snd(snd(snd(entry))) != Ferry)
+            {
+                Pair<Int,Quality> p = snd(snd(entry));
+                Pair<Int,Quality> p1 = Pair(random(50)+20,snd(p));
+                this.resources = put(this.resources, fst(entry), Pair(Free,p1));
+            }
+        }
+    }
     Unit print() {
         print(toString(resources));
     }
@@ -385,6 +396,7 @@ class ResourceManager implements ResourceManager {
     }
     List<Pair<Int,Int>> findNearestRes(Pair<Int,Quality> wantedResource)
     {
+        this.updateEfficiency();
         List<Pair<Int,Int>> r = list(Nil);
         r = this.findNearestMoreEfficientRes(wantedResource);
         if(isEmpty(r))
@@ -505,7 +517,7 @@ class Police implements Police {
   Int rushToSite(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(30,Ferry)]);
-    duration(20+random(5)*3);
+    duration(30);
     await rm!releaseRes(temp);
     print(`;Ferry acquired to take police to site = `);
     print(toString(temp));
@@ -523,7 +535,7 @@ class Police implements Police {
   }
   Int dealSituation(ResourceManager rm){
     List<Pair<Int,Int>> temp = Nil;
-    Int tl = (random(90)+1)*10;
+    Int tl = (random(90)+1)+10;
     print(`;Length of Deal_with_Scene = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
@@ -585,7 +597,7 @@ class Police implements Police {
   }
   Int evacuation(ResourceManager rm){
     List<Pair<Int,Int>> temp = Nil;
-    Int tl = (random(90)+1)*10;
+    Int tl = (random(90)+1)+10;
     print(`;Length of Evacuation = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
@@ -647,7 +659,7 @@ class Police implements Police {
   }
   Int rescue(ResourceManager rm){
     List<Pair<Int,Int>> temp = Nil;
-    Int tl = (random(90)+1)*10;
+    Int tl = (random(90)+1)+10;
     print(`;Length of Rescue = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
@@ -715,7 +727,7 @@ interface ECC {
   Int doMediaCoverage(ResourceManager rm);}
 
 class ECC implements ECC {
-
+  List<Pair<Int,Int>> rid = Nil;
   Int estEmgCtr(ResourceManager rm){
     duration((random(3)*5)+30);
     print(`;Emergency center established at time = `);
@@ -731,14 +743,57 @@ class ECC implements ECC {
   }
   Int makeEmgPlan(ResourceManager rm,EOD eod, FB fb, Hospital h){
     Int x = 0;Fut<Int> f1;Fut<Int> f2;Fut<Int> f3;
-    List<Int> temp = list(Nil);
-    temp = await rm!holdRes(list[Pair(40,Clerk)]);
-    Int ran = (random(3)*5)+25;
-    duration(ran);
-    await rm!releaseRes(temp);
-    print(`;Emergency plan will take time = $ran$`);
-    print(`;Emergency plan is made at time = `);
-    print(toString(now()));
+    List<Pair<Int,Int>> temp = Nil;
+    Int tl = (random(90)+1)+10;
+    print(`;Length of makeEmgPlan = $tl$`);
+    Duration d = deadline();
+    Rat r = durationValue(d);
+    Int a = truncate(r);
+    print(`;Remaining time for Clerk to finish makeEmgPlan = $a$`);
+    Int b = 0;
+    if (a != 0) {
+        b = truncate(tl/a)+1;
+    }
+    print(`;Required Clerk resource efficiency for makeEmgPlan = $b$`);
+    Int c = 0;
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,Clerk));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more Clerks.");
+        }
+    }
+    Int tim= truncate(tl/c);
+    print(`;Time taken by Clerks for makeEmgPlan = $tim$`);
+    if (isEmpty(this.rid))
+    {
+        print(`;Did not find the Clerk, to meet the deadline please add Clerks having $b$ efficiency`);
+    }
+    else
+    {
+        duration(tim);
+        //List<Int> rl = Cons(fst(head(this.rid)),Nil);
+        //await rm!releaseRes(rl);
+    }
+    print(`;List of Clerk resources for makeEmgPlan = ` + toString(this.rid));
+    List<Int> rr = list(Nil);
+    while(!isEmpty(this.rid))
+    {
+        Pair<Int,Int> y = head(this.rid);
+        this.rid = tail(this.rid);
+        rr = appendright(rr,fst(y));
+    }
+    await rm!releaseRes(rr);
+    print(`;Emergency plan is made at time = `+ toString(now()));
     [Deadline: Duration(100)]    f1 = eod!start(rm);
     [Deadline: Duration(100)]    f2 = fb!start(rm);
     [Deadline: Duration(100)]    f3 = h!start(rm);
@@ -748,8 +803,8 @@ class ECC implements ECC {
     [Deadline: Duration(5)]    x = this.doMediaCoverage(rm);
     //print("Plan Done");
     try {
-    Duration d = deadline();
-    Rat r = durationValue(d);
+    d = deadline();
+    r = durationValue(d);
     assert r > 0;
     } catch {
     AssertionFailException => print(`;The method "makeEmgPlan" have missed the deadline.`);
@@ -798,7 +853,7 @@ class EOD implements EOD {
   Int rushToSite(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(30,Ferry)]);
-    duration(20+random(5)*3);
+    duration(30);
     await rm!releaseRes(temp);
     print(`;Ferry acquired to take EOD_Tech to site = `);
     print(toString(temp));
@@ -816,7 +871,7 @@ class EOD implements EOD {
   }
   Int searchEOD(ResourceManager rm){
     List<Pair<Int,Int>> temp = Nil;
-    Int tl = (random(90)+1)*10;
+    Int tl = (random(90)+1)+10;
     print(`;Length of Search_EOD = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
@@ -877,17 +932,61 @@ class EOD implements EOD {
     return 0;
   }
   Int reportEOD(ResourceManager rm){
-    List<Int> temp = list(Nil);
-    temp = await rm!holdRes(list[Pair(40,Clerk)]);
-    duration((random(4)+2));
-    await rm!releaseRes(temp);
-    print(`;EOD report finished at time = `);
-    print(toString(now()));
-    print(`;Clerk acquired for EOD report = `);
-    print(toString(temp));
-    try {
+    List<Pair<Int,Int>> temp = Nil;
+    Int tl = (random(90)+1)+10;
+    print(`;Length of reportEOD = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
+    Int a = truncate(r);
+    print(`;Remaining time for Clerk to finish reportEOD = $a$`);
+    Int b = 0;
+    if (a != 0) {
+        b = truncate(tl/a)+1;
+    }
+    print(`;Required Clerk resource efficiency for reportEOD = $b$`);
+    Int c = 0;
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,Clerk));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more Clerks.");
+        }
+    }
+    Int tim= truncate(tl/c);
+    print(`;Time taken by Clerks for reportEOD = $tim$`);
+    if (isEmpty(this.rid))
+    {
+        print(`;Did not find the Clerk, to meet the deadline please add Clerks having $b$ efficiency`);
+    }
+    else
+    {
+        duration(tim);
+        //List<Int> rl = Cons(fst(head(this.rid)),Nil);
+        //await rm!releaseRes(rl);
+    }
+    print(`;List of Clerk resources for reportEOD = ` + toString(this.rid));
+    List<Int> rr = list(Nil);
+    while(!isEmpty(this.rid))
+    {
+        Pair<Int,Int> y = head(this.rid);
+        this.rid = tail(this.rid);
+        rr = appendright(rr,fst(y));
+    }
+    await rm!releaseRes(rr);
+    print(`;EOD report finished at time = `);
+    print(toString(now()));
+    try {
+    d = deadline();
+    r = durationValue(d);
     assert r > 0;
     } catch {
     AssertionFailException => print(`;The method "reportEOD" have missed the deadline.`);
@@ -935,7 +1034,7 @@ class FB implements FB {
   Int rushToSite(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(30,Ferry)]);
-    duration(20+random(5)*3);
+    duration(30);
     await rm!releaseRes(temp);
     print(`;Ferry acquired to take FireFighter to site = `);
     print(toString(temp));
@@ -953,7 +1052,7 @@ class FB implements FB {
   }
   Int fightFire(ResourceManager rm){
     List<Pair<Int,Int>> temp = Nil;
-    Int tl = (random(90)+1)*10;
+    Int tl = (random(90)+1)+10;
     print(`;Length of Fight_fire = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
@@ -1016,7 +1115,7 @@ class FB implements FB {
   }
   Int mitigate(ResourceManager rm){
     List<Pair<Int,Int>> temp = Nil;
-    Int tl = (random(90)+1)*10;
+    Int tl = (random(90)+1)+10;
     print(`;Length of Mitigate = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
@@ -1078,7 +1177,7 @@ class FB implements FB {
   }
   Int recoverSite(ResourceManager rm){
     List<Pair<Int,Int>> temp = Nil;
-    Int tl = (random(90)+1)*10;
+    Int tl = (random(90)+1)+10;
     print(`;Length of Search_EOD = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
@@ -1139,17 +1238,61 @@ class FB implements FB {
     return 0;
   }
   Int reportFireRescue(ResourceManager rm){
-    List<Int> temp = list(Nil);
-    temp = await rm!holdRes(list[Pair(40,Clerk)]);
-    duration((random(4)+2));
-    await rm!releaseRes(temp);
-    print(`;Fire_Rescue report finished at time = `);
-    print(toString(now()));
-    print(`;Clerk acquired for Fire_Rescue report = `);
-    print(toString(temp));
-    try {
+    List<Pair<Int,Int>> temp = Nil;
+    Int tl = (random(90)+1)+10;
+    print(`;Length of reportFireRescue = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
+    Int a = truncate(r);
+    print(`;Remaining time for Clerk to finish reportFireRescue = $a$`);
+    Int b = 0;
+    if (a != 0) {
+        b = truncate(tl/a)+1;
+    }
+    print(`;Required Clerk resource efficiency for reportFireRescue = $b$`);
+    Int c = 0;
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,Clerk));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more Clerks.");
+        }
+    }
+    Int tim= truncate(tl/c);
+    print(`;Time taken by Clerks for reportFireRescue = $tim$`);
+    if (isEmpty(this.rid))
+    {
+        print(`;Did not find the Clerk, to meet the deadline please add Clerks having $b$ efficiency`);
+    }
+    else
+    {
+        duration(tim);
+        //List<Int> rl = Cons(fst(head(this.rid)),Nil);
+        //await rm!releaseRes(rl);
+    }
+    print(`;List of Clerk resources for reportFireRescue = ` + toString(this.rid));
+    List<Int> rr = list(Nil);
+    while(!isEmpty(this.rid))
+    {
+        Pair<Int,Int> y = head(this.rid);
+        this.rid = tail(this.rid);
+        rr = appendright(rr,fst(y));
+    }
+    await rm!releaseRes(rr);
+    print(`;Fire_Rescue report finished at time = `);
+    print(toString(now()));
+    try {
+    d = deadline();
+    r = durationValue(d);
     assert r > 0;
     } catch {
     AssertionFailException => print(`;The method "reportFireRescue" have missed the deadline.`);
@@ -1191,7 +1334,7 @@ class Hospital implements Hospital {
   Int rushToSite(ResourceManager rm){
     List<Int> temp = list(Nil);
     temp = await rm!holdRes(list[Pair(30,Ferry)]);
-    duration(20+random(5)*3);
+    duration(30);
     await rm!releaseRes(temp);
     print(`;Ferry acquired to take Doctor to site = `);
     print(toString(temp));
@@ -1209,7 +1352,7 @@ class Hospital implements Hospital {
   }
   Int shuntWounded(ResourceManager rm){
     List<Pair<Int,Int>> temp = Nil;
-    Int tl = (random(90)+1)*10;
+    Int tl = (random(90)+1)+10;
     print(`;Length of Shunt_Wounded = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
@@ -1271,7 +1414,7 @@ class Hospital implements Hospital {
   }
   Int treatSliInj(ResourceManager rm){
     List<Pair<Int,Int>> temp = Nil;
-    Int tl = (random(90)+1)*10;
+    Int tl = (random(90)+1)+10;
     print(`;Length of Treat_Slightly_Injured = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
@@ -1333,7 +1476,7 @@ class Hospital implements Hospital {
   }
   Int treatSevInj(ResourceManager rm){
     List<Pair<Int,Int>> temp = Nil;
-    Int tl = (random(90)+1)*10;
+    Int tl = (random(90)+1)+10;
     print(`;Length of Treat_Slightly_Injured = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
@@ -1394,18 +1537,63 @@ class Hospital implements Hospital {
     return 0;
   }
   Int reportMedRescue(ResourceManager rm){
-    List<Int> temp = list(Nil);
-    temp = await rm!holdRes(list[Pair(40,Clerk)]);
-    duration((random(2)+2));
-    await rm!releaseRes(temp);
-    print(`;Medical_Rescue report finished at time = `);
-    print(toString(now()));
-    print(`;Clerk acquired for Medical_Rescue report = `);
-    print(toString(temp));
-    /*
-    try {
+    List<Pair<Int,Int>> temp = Nil;
+    Int tl = (random(90)+1)+10;
+    print(`;Length of reportMedRescue = $tl$`);
     Duration d = deadline();
     Rat r = durationValue(d);
+    Int a = truncate(r);
+    print(`;Remaining time for Clerk to finish reportMedRescue = $a$`);
+    Int b = 0;
+    if (a != 0) {
+        b = truncate(tl/a)+1;
+    }
+    print(`;Required Clerk resource efficiency for reportMedRescue = $b$`);
+    Int c = 0;
+    while (b > 0 )
+    {
+        temp = await rm!findNearestRes(Pair(b,Clerk));
+        this.rid = concatenate(this.rid,temp);
+        if(!isEmpty(temp))
+        {
+            Pair<Int,Int>  temp1 = head(temp);
+            //print(toString(temp1));
+            b = b - snd(temp1);
+            c = c + snd(temp1);
+        }
+        else
+        {
+            print("Please add more Clerks.");
+        }
+    }
+    Int tim= truncate(tl/c);
+    print(`;Time taken by Clerks for reportMedRescue = $tim$`);
+    if (isEmpty(this.rid))
+    {
+        print(`;Did not find the Clerk, to meet the deadline please add Clerks having $b$ efficiency`);
+    }
+    else
+    {
+        duration(tim);
+        //List<Int> rl = Cons(fst(head(this.rid)),Nil);
+        //await rm!releaseRes(rl);
+    }
+    print(`;List of Clerk resources for reportMedRescue = ` + toString(this.rid));
+    List<Int> rr = list(Nil);
+    while(!isEmpty(this.rid))
+    {
+        Pair<Int,Int> y = head(this.rid);
+        this.rid = tail(this.rid);
+        rr = appendright(rr,fst(y));
+    }
+    await rm!releaseRes(rr);
+    print(`;Medical_Rescue report finished at time = `);
+    print(toString(now()));
+
+    /*
+    try {
+    d = deadline();
+    r = durationValue(d);
     assert r > 0;
     } catch {
     AssertionFailException => print(`;The method "reportMedRescue" have missed the deadline.`);
@@ -1416,7 +1604,6 @@ class Hospital implements Hospital {
 
 
 {
-  println("***************************************************");
   ResourceManager rm = new ResourceManager();
   await rm!addRes(list[Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),Pair(20,Doctor), Pair(20,Doctor),
    Pair(30,Ferry), Pair(30,Ferry), Pair(30,Ferry), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask), Pair(100,SmokeMask),
@@ -1432,9 +1619,10 @@ class Hospital implements Hospital {
   FB fb = new FB();
   Hospital h = new Hospital();
   Fut<Int> f;
-  [Deadline: Duration(500)]  f = p!alarm(rm,ecc, eod, fb, h);
+  [Deadline: Duration(200)]  f = p!alarm(rm,ecc, eod, fb, h);
   await f?;
-  //print("Cool Job Done");
-  print(( ( "Time: " + toString(now()) ) + "" ));
-  println("***************************************************");
+  Rat t = timeValue(now());
+  Int t1 = truncate(t);
+  println(`;$t1$`);
 }
+// Nearest efficient

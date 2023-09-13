@@ -1,0 +1,195 @@
+Grossing Time: Time(5)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1)]
+Grossing Time: Time(10)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1)]
+Grossing Time: Time(15)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1), Case(678,0,Blood Sample,4,2,Gyno,1)]
+Processing Time: Time(65)
+Resource for Processing: list[16]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1), Case(678,0,Blood Sample,4,2,Gyno,1)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(6,4)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(5,4)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(13,5)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(13,5)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(7,5)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(11,6)]
+Staining Time: Time(1223/12)
+Resource for Staining: list[Pair(8,3)]
+Staining Time: Time(1313/12)
+Resource for Staining: list[Pair(6,4)]
+Staining Time: Time(1313/12)
+Resource for Staining: list[Pair(14,2)]
+Analysis Time: Time(459/4)
+Resource for Analysis: list[Pair(19,10)]
+Analysis Time: Time(459/4)
+Resource for Analysis: list[Pair(2,10)]
+Time: Time(459/4)
+Analysis Time: Time(459/4)
+Resource for Analysis: list[Pair(3,3)]
+Execution time was 6596 mili seconds.
+Grossing Time: Time(5)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1)]
+Grossing Time: Time(10)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1)]
+Grossing Time: Time(15)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1), Case(678,0,Blood Sample,4,2,Gyno,1)]
+Processing Time: Time(65)
+Resource for Processing: list[16]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1), Case(678,0,Blood Sample,4,2,Gyno,1)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(6,4)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(13,5)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(5,4)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(11,6)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(7,5)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(13,5)]
+Staining Time: Time(317/3)
+Resource for Staining: list[Pair(6,4)]
+Staining Time: Time(317/3)
+Resource for Staining: list[Pair(5,4)]
+Staining Time: Time(317/3)
+Resource for Staining: list[Pair(8,3)]
+Analysis Time: Time(110)
+Resource for Analysis: list[Pair(3,3)]
+Analysis Time: Time(110)
+Resource for Analysis: list[Pair(19,10)]
+Time: Time(110)
+Analysis Time: Time(111)
+Resource for Analysis: list[Pair(2,10)]
+Execution time was 6175 mili seconds.
+Grossing Time: Time(5)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1)]
+Grossing Time: Time(10)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1)]
+Grossing Time: Time(15)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1), Case(678,0,Blood Sample,4,2,Gyno,1)]
+Processing Time: Time(65)
+Resource for Processing: list[16]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1), Case(678,0,Blood Sample,4,2,Gyno,1)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(6,4)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(13,5)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(5,4)]
+Sectioning Time: Time(529/6)
+Resource for Sectioning: list[Pair(13,5)]
+Sectioning Time: Time(529/6)
+Resource for Sectioning: list[Pair(11,6)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(7,5)]
+Staining Time: Time(1223/12)
+Resource for Staining: list[Pair(8,3)]
+Staining Time: Time(1223/12)
+Resource for Staining: list[Pair(6,4)]
+Staining Time: Time(317/3)
+Resource for Staining: list[Pair(5,4)]
+Analysis Time: Time(111)
+Resource for Analysis: list[Pair(3,3)]
+Analysis Time: Time(111)
+Resource for Analysis: list[Pair(2,10)]
+Analysis Time: Time(111)
+Resource for Analysis: list[Pair(19,10)]
+Time: Time(111)
+Execution time was 6031 mili seconds.
+Grossing Time: Time(5)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1)]
+Grossing Time: Time(10)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1)]
+Grossing Time: Time(15)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1), Case(678,0,Blood Sample,4,2,Gyno,1)]
+Processing Time: Time(65)
+Resource for Processing: list[16]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1), Case(678,0,Blood Sample,4,2,Gyno,1)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(6,4)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(13,5)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(5,4)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(7,5)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(11,6)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(13,5)]
+Staining Time: Time(317/3)
+Resource for Staining: list[Pair(6,4)]
+Staining Time: Time(317/3)
+Resource for Staining: list[Pair(5,4)]
+Staining Time: Time(317/3)
+Resource for Staining: list[Pair(8,3)]
+Analysis Time: Time(110)
+Resource for Analysis: list[Pair(3,3)]
+Analysis Time: Time(110)
+Resource for Analysis: list[Pair(19,10)]
+Analysis Time: Time(111)
+Resource for Analysis: list[Pair(2,10)]
+Time: Time(111)
+Execution time was 5859 mili seconds.
+Grossing Time: Time(5)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1)]
+Grossing Time: Time(10)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1)]
+Grossing Time: Time(15)
+Resource for Grossing: list[Pair(13,5)]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1), Case(678,0,Blood Sample,4,2,Gyno,1)]
+Processing Time: Time(65)
+Resource for Processing: list[16]
+list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1), Case(678,0,Blood Sample,4,2,Gyno,1)]
+Embedding Time: Time(74)
+Resource for Embedding: list[Pair(6,4)]
+Embedding Time: Time(74)
+Resource for Embedding: list[Pair(13,5)]
+Embedding Time: Time(79)
+Resource for Embedding: list[Pair(5,4)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(13,5)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(11,6)]
+Sectioning Time: Time(559/6)
+Resource for Sectioning: list[Pair(7,5)]
+Staining Time: Time(317/3)
+Resource for Staining: list[Pair(8,3)]
+Staining Time: Time(317/3)
+Resource for Staining: list[Pair(5,4)]
+Staining Time: Time(317/3)
+Resource for Staining: list[Pair(6,4)]
+Analysis Time: Time(110)
+Resource for Analysis: list[Pair(3,3)]
+Analysis Time: Time(340/3)
+Resource for Analysis: list[Pair(19,10)]
+Analysis Time: Time(340/3)
+Resource for Analysis: list[Pair(3,3)]
+Time: Time(340/3)
+Execution time was 6194 mili seconds.
+Time(5),list[39],list[Case(123,0,Blood Sample,2,3,Gyno,1)]
+Time(10),list[39],list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1)]
+Time(15),list[39],list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1), Case(678,0,Blood Sample,4,2,Gyno,1)]
+Time(65),list[43],list[Case(123,0,Blood Sample,2,3,Gyno,1), Case(345,0,Blood Sample,3,3,Gyno,1), Case(678,0,Blood Sample,4,2,Gyno,1)]
+Time(75),list[29],Time(80),list[27],Time(80),list[28],Time(90),list[40],Time(95),list[30],Time(95),list[17],Time(110),list[33],Time(110),list[35],Time(110),list[34],Time(120),list[26],Time(125),list[3],Time(125),list[25],Time: Time(125)
